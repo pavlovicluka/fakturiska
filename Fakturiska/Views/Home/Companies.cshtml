@@ -1,0 +1,92 @@
+﻿@model IEnumerable<Fakturiska.Models.CompanyModel>
+
+@{
+    ViewBag.Title = "Companies";
+}
+
+<h2>Companies</h2>
+
+<p>
+    @Html.ActionLink("Create New", "CreateCompany")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FaxNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Address)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Website)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PersonalNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PIB)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MIB)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AccountNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BankCode)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PhoneNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FaxNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Address)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Website)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PersonalNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PIB)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MIB)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AccountNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BankCode)
+        </td>
+        <td>
+            @Html.ActionLink("Izmeni", "EditCompany", new {  id=item.CompanyGuid  }) |
+            @Html.ActionLink("Obrisi", "DeleteCompany", new {  id=item.CompanyGuid })
+        </td>
+    </tr>
+}
+
+</table>

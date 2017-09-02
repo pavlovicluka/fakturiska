@@ -1,0 +1,41 @@
+﻿using Fakturiska.Business.Enumerations;
+using Fakturiska.Business.Logic;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace Fakturiska.Models
+{
+    public class UserModel
+    {
+        public Guid UserGuid { get; set; }
+        public String Email { get; set; }
+        public String Password { get; set; }
+        public String RoleName { get; set; }
+        public RoleEnum Role { get; set; }
+
+        public UserModel()
+        {
+
+        }
+
+        public UserModel(Guid id)
+        {
+            var user = UserLogic.GetUserById(id);
+            this.UserGuid = id;
+            this.Email = user.Email;
+            this.Password = user.Password;
+        }
+
+        public static IEnumerable<UserModel> GetAllUsers()
+        {
+            return UserLogic.GetAllUsers().Select(user => new UserModel
+            {
+                UserGuid = user.UserGuid,
+                Email = user.Email,
+                RoleName = ((RoleEnum) user.RoleId).ToString(),
+            });
+        }
+    }
+}

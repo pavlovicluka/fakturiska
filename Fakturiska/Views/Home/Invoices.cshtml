@@ -1,0 +1,161 @@
+﻿@model IEnumerable<Fakturiska.Models.InvoiceModel>
+
+@{
+    ViewBag.Title = "Invoices";
+}
+
+<p>
+    @Html.ActionLink("Create New", "CreateInvoice")
+</p>
+
+<h2>New Invoices</h2>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.InvoiceId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+    </tr>
+
+@foreach (var item in Model)
+{
+    if (item.Archive == null)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.InvoiceId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.ActionLink("Izmeni", "EditInvoice", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Arhiviraj", "ArchiveInvoice", new { id = item.InvoiceGuid }) |
+                @Ajax.ActionLink("Stampaj", "PrintInvoice", new { filePath = item.FilePath },  new AjaxOptions{}) |
+                @Html.ActionLink("Obrisi", "DeleteInvoice", new { id = item.InvoiceGuid })
+            </td>
+        </tr>
+    }
+}
+
+</table>
+
+<h2>Archived Invoices</h2>
+<table id="table1" class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.InvoiceId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InvoiceEstimate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InvoiceTotal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Incoming)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Paid)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Risk)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sum)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PriorityName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceiverName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PayerName)
+            </th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            if (item.Archive == 1)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.InvoiceId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.InvoiceEstimate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.InvoiceTotal)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Incoming)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Paid)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Risk)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Sum)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PriorityName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReceiverName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PayerName)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Izmeni", "EditInvoice", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Obrisi", "DeleteInvoice", new { id = item.InvoiceGuid }) |
+                        @Ajax.ActionLink("Stampaj", "PrintInvoice", new { filePath = item.FilePath }, new AjaxOptions { })
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/dropzone.js")
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/dt-1.10.15/r-2.1.1/datatables.min.css" />
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/dt-1.10.15/r-2.1.1/datatables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#table1').DataTable();
+        });
+
+      /*new Dropzone(document.body, {
+          url: "/Home/Upload", 
+          dragenter: function () {
+              //$(document.body).fadeOut();
+              $('.dropzone').show();
+          },
+          dragleave: function () {
+              //$(document.body).show();
+              $('.dropzone').hide();
+          },
+       });*/
+    </script>
+}
+
