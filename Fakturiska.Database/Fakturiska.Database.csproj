@@ -103,6 +103,7 @@
       <DependentUpon>FakturiskaDB.edmx</DependentUpon>
       <LastGenOutput>FakturiskaDB.Context.cs</LastGenOutput>
     </Content>
+    <Content Include="FakturiskaDB.edmx.sql" />
     <Content Include="FakturiskaDB.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>FakturiskaDB.edmx</DependentUpon>
