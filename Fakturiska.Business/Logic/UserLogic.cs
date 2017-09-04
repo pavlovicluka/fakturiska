@@ -11,19 +11,20 @@ namespace Fakturiska.Business.Logic
     public class UserLogic
     {
 
-        public static int AuthorizeUser(string email, string password)
+        public static string AuthorizeUser(string email, string password)
         {
             using (var dc = new FakturiskaDBEntities())
             {
                 var user = dc.Users.Where(u => u.Email == email && u.Password == password && u.DeleteDate == null).ToList();
-
-                /*var user = (from u in dc.Users
-                            where u.Email == email && u.Password == password && u.DeleteDate == null
-                            select u).ToList();*/
-
-                if (user.Any()) return user.First().UserId;
-                return 0;
+                if (user.Any()) return user.First().Role.Description;
+                return "";
             }
+        }
+
+        public static string[] GetUserRights(string v)
+        {
+            string[] a = new string[] { "Admin", "User"};
+            return a;
         }
 
         public static void CreateUser(UserDTO user)

@@ -5,6 +5,9 @@ using Fakturiska.Business.DTOs;
 using Fakturiska.Models;
 using System.Collections.Generic;
 using System.Web;
+using System.Security.Claims;
+using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
 
 namespace Fakturiska.Controllers
 {
@@ -24,10 +27,18 @@ namespace Fakturiska.Controllers
         [HttpPost]
         public ActionResult Login(UserModel model)
         {
-            int userId = UserLogic.AuthorizeUser(model.Email, model.Password);
-            if (userId != 0)
+            string role = UserLogic.AuthorizeUser(model.Email, model.Password);
+            if (role != null)
             {
-                Session["userId"] = userId;
+                var ident = new ClaimsIdentity(
+                 new[] {
+                  new Claim(ClaimTypes.NameIdentifier, model.Email),
+                  new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "ASP.NET Identity", "http://www.w3.org/2001/XMLSchema#string"),
+                  new Claim(ClaimTypes.Name, model.Email),
+                  new Claim(ClaimTypes.Role, role),
+                }, DefaultAuthenticationTypes.ApplicationCookie);
+
+                HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = false }, ident);
                 return RedirectToAction("Index");
             }
             return RedirectToAction("Login");
@@ -227,9 +238,9 @@ namespace Fakturiska.Controllers
             return RedirectToAction("Invoices");
         }
 
+        [AuthorizeUser(Roles = "Admin")]
         public ActionResult Invoices()
         {
-            if (Session["userId"] == null) return RedirectToAction("Login");
             return View(InvoiceModel.GetAllInvoices());
         }
 

@@ -159,7 +159,6 @@
             });
 
             $('#searchArchive').on('keyup change', function () {
-                console.log("src");
                 if (tableArchive.search() !== this.value || this.value == "") {
                     tableArchive
                         .columns($('#categorySelect').val())
