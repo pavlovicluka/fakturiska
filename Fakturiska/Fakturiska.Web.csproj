@@ -285,7 +285,6 @@
     <Content Include="Views\Home\Users.cshtml" />
     <Content Include="Views\Home\Companies.cshtml" />
     <Content Include="Views\Home\CreateCompany.cshtml" />
-    <Content Include="Views\Home\EditUser.cshtml" />
     <Content Include="Views\Home\Invoices.cshtml" />
     <Content Include="Views\Home\CreateInvoice.cshtml" />
     <Content Include="Views\Home\EditCompany.cshtml" />

@@ -58,19 +58,13 @@ namespace Fakturiska.Controllers
             return RedirectToAction("Login");
         }
 
-        public ActionResult EditUser(Guid id)
-        {
-            return View(new UserModel(id));
-        }
-
         [HttpPost]
-        public ActionResult EditUser(UserModel model)
+        public ActionResult EditUser(string value, string pk)
         {
             UserLogic.EditUser(new UserDTO
             {
-                UserGuid = model.UserGuid,
-                Email = model.Email,
-                Password = model.Password,
+                UserGuid = new Guid(pk),
+                Email = value,
             });
             return RedirectToAction("Users");
         }

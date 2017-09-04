@@ -73,7 +73,6 @@ namespace Fakturiska.Business.Logic
                 if (u != null)
                 {
                     u.Email = user.Email;
-                    u.Password = user.Password;
                 }
                 try
                 {
