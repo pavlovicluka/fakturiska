@@ -43,7 +43,16 @@
 </table>
 
 <h2>Archived Invoices</h2>
-<table id="table1" class="table">
+<input id="searchArchive" type="text" />
+<select id="categorySelect">
+    <option value="0">Broj fakture</option>
+    <option value="1">Datum kreiranja</option>
+    <option value="7">Suma</option>
+    <option value="8">Prioritet</option>
+    <option value="9">Primalac</option>
+    <option value="10">Uplatilac</option>
+</select>
+<table id="tableArchive" class="table">
     <thead>
         <tr>
             <th>
@@ -141,8 +150,31 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/dt-1.10.15/r-2.1.1/datatables.min.css" />
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/dt-1.10.15/r-2.1.1/datatables.min.js"></script>
     <script>
+        var tableArchive;
         $(document).ready(function () {
-            $('#table1').DataTable();
+            tableArchive = $('#tableArchive').DataTable({
+                ordering: false,
+                bFilter: true,
+                dom: 't',
+            });
+
+            $('#searchArchive').on('keyup change', function () {
+                console.log("src");
+                if (tableArchive.search() !== this.value || this.value == "") {
+                    tableArchive
+                        .columns($('#categorySelect').val())
+                        .search(this.value)
+                        .draw();
+                }
+            });
+
+            $('#categorySelect').change(function () {
+                $('#searchArchive').val("");
+                tableArchive
+                    .columns()
+                    .search("")
+                    .draw();
+            });
         });
 
       /*new Dropzone(document.body, {
