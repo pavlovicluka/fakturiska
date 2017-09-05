@@ -38,6 +38,7 @@
           <Property Name="Paid" Type="int" />
           <Property Name="Risk" Type="int" />
           <Property Name="Sum" Type="int" />
+          <Property Name="PaidDate" Type="datetime" />
           <Property Name="PriorityId" Type="int" />
           <Property Name="ReceiverId" Type="int" />
           <Property Name="PayerId" Type="int" />
@@ -196,6 +197,7 @@
           <Property Name="Paid" Type="Int32" />
           <Property Name="Risk" Type="Int32" />
           <Property Name="Sum" Type="Int32" />
+          <Property Name="PaidDate" Type="DateTime" Precision="3" />
           <Property Name="PriorityId" Type="Int32" />
           <Property Name="ReceiverId" Type="Int32" />
           <Property Name="PayerId" Type="Int32" />
@@ -352,6 +354,7 @@
           <EntitySetMapping Name="Invoices">
             <EntityTypeMapping TypeName="FakturiskaDBModel.Invoice">
               <MappingFragment StoreEntitySet="Invoices">
+                <ScalarProperty Name="PaidDate" ColumnName="PaidDate" />
                 <ScalarProperty Name="InvoiceId" ColumnName="InvoiceId" />
                 <ScalarProperty Name="InvoiceUId" ColumnName="InvoiceUId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />

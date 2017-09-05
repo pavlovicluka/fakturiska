@@ -24,6 +24,7 @@ namespace Fakturiska.Database
         public Nullable<int> Paid { get; set; }
         public Nullable<int> Risk { get; set; }
         public Nullable<int> Sum { get; set; }
+        public Nullable<System.DateTime> PaidDate { get; set; }
         public Nullable<int> PriorityId { get; set; }
         public Nullable<int> ReceiverId { get; set; }
         public Nullable<int> PayerId { get; set; }

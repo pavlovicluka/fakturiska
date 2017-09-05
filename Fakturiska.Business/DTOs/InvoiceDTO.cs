@@ -12,12 +12,13 @@ namespace Fakturiska.Business.DTOs
         public Guid InvoiceGuid { get; set; }
         public int UserId { get; set; }
         public DateTime? Date { get; set; }
-        public int? Sum { get; set; }
         public int? InvoiceEstimate { get; set; }
         public int? InvoiceTotal { get; set; }
         public int? Incoming { get; set; }
         public int? Paid { get; set; }
         public int? Risk { get; set; }
+        public int? Sum { get; set; }
+        public DateTime? PaidDate { get; set; }
         public int? PriorityId { get; set; }
         public string PriorityName { get; set; }
         public int? ReceiverId { get; set; }
