@@ -54,17 +54,50 @@ namespace Fakturiska.Business.Logic
             }
         }
 
-        public static UserDTO GetUserById(Guid userGuid)
+        public static void CreateUserWithoutPassword(UserDTO user)
+        {
+            User u = new User()
+            {
+                UserUId = user.UserGuid,
+                Email = user.Email,
+                RoleId = user.RoleId
+            };
+
+            using (var dc = new FakturiskaDBEntities())
+            {
+                dc.Users.Add(u);
+
+                try
+                {
+                    dc.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+
+                string body = "<a href='http://localhost:54276/Account/SetPassword/?id='" + user.UserGuid + ">Set Password</a>";
+                SendMail(body, user.Email);
+            }
+        }
+
+        public static void SetPassword(UserDTO user)
         {
             using (var dc = new FakturiskaDBEntities())
             {
-                var user = dc.Users.Where(u => u.UserUId == userGuid).FirstOrDefault();
-                return new UserDTO
+                var u = GetUserById(user.UserGuid, dc);
+                if (u != null && u.Password == null)
                 {
-                    UserGuid = user.UserUId,
-                    Email = user.Email,
-                    Password = user.Password
-                };
+                    u.Password = user.Password;
+                }
+                try
+                {
+                    dc.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
             }
         }
 
@@ -108,6 +141,20 @@ namespace Fakturiska.Business.Logic
             }
         }
 
+        public static UserDTO GetUserById(Guid userGuid)
+        {
+            using (var dc = new FakturiskaDBEntities())
+            {
+                var user = dc.Users.Where(u => u.UserUId == userGuid).FirstOrDefault();
+                return new UserDTO
+                {
+                    UserGuid = user.UserUId,
+                    Email = user.Email,
+                    Password = user.Password
+                };
+            }
+        }
+
         public static IEnumerable<UserDTO> GetAllUsers()
         {
             List<UserDTO> usersDTO = new List<UserDTO>();
@@ -129,16 +176,18 @@ namespace Fakturiska.Business.Logic
 
         public static void SendMail(string body, string to)
         {
-            SmtpClient smtpClient = new SmtpClient("smtp.mail.com", 587);
-
-            smtpClient.UseDefaultCredentials = false;
-            smtpClient.Credentials = new System.Net.NetworkCredential("pavlovicluka.99@mail.com", "proba123");
-            smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-            smtpClient.EnableSsl = true;
-            MailMessage mail = new MailMessage();
-
-            mail.From = new MailAddress("pavlovicluka.99@mail.com", "Fakturiska");
-            mail.Body = body;
+            SmtpClient smtpClient = new SmtpClient("smtp.mail.com", 587)
+            {
+                UseDefaultCredentials = false,
+                Credentials = new System.Net.NetworkCredential("pavlovicluka.99@mail.com", "proba123"),
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                EnableSsl = true
+            };
+            MailMessage mail = new MailMessage
+            {
+                From = new MailAddress("pavlovicluka.99@mail.com", "Fakturiska"),
+                Body = body
+            };
             mail.To.Add(new MailAddress(to));
 
             smtpClient.Send(mail);

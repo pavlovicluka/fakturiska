@@ -9,6 +9,11 @@ namespace Fakturiska.Controllers
     [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
+        public ActionResult Users()
+        {
+            return View(UserModel.GetAllUsers());
+        }
+
         [HttpPost]
         public ActionResult EditUser(string value, string pk)
         {
@@ -26,9 +31,16 @@ namespace Fakturiska.Controllers
             return RedirectToAction("Users");
         }
 
-        public ActionResult Users()
+        [HttpPost]
+        public ActionResult CreateUserWithoutPassword(string email, string role)
         {
-            return View(UserModel.GetAllUsers());
+            UserLogic.CreateUserWithoutPassword(new UserDTO
+            {
+                UserGuid = Guid.NewGuid(),
+                Email = email,
+                RoleId = int.Parse(role),
+            });
+            return RedirectToAction("Users");
         }
     }
 }

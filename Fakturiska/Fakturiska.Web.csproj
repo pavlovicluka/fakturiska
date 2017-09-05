@@ -318,6 +318,7 @@
     <Content Include="Views\Invoice\Invoices.cshtml" />
     <Content Include="Views\Invoice\CreateInvoice.cshtml" />
     <Content Include="Views\Company\EditCompany.cshtml" />
+    <Content Include="Views\Account\SetPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -28,6 +28,21 @@ namespace Fakturiska.Models
             this.Password = user.Password;
         }
 
+        public UserModel(string id)
+        {
+            try
+            {
+                Guid userGuid = new Guid(id);
+                var user = UserLogic.GetUserById(userGuid);
+                this.UserGuid = userGuid;
+                this.RoleName = user.Role;
+                this.Email = user.Email;
+            } catch (Exception e)
+            {
+                throw e;
+            }
+        }
+             
         public static IEnumerable<UserModel> GetAllUsers()
         {
             return UserLogic.GetAllUsers().Select(user => new UserModel

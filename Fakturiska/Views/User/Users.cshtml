@@ -6,9 +6,29 @@
 
 <h2>Users</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+<div id="popover-head" class="hide">
+    some title
+</div>
+
+<div id="popover-content" class="hide">
+    
+</div> 
+
+<div id="createUserForm">
+    Role:<br>
+    <select id="roleSelect">
+        <option value="1">Admin</option>
+        <option value="2">User</option>
+    </select>
+    <br>
+    Email:<br>
+    <input id="userEmail" type="email">
+    <br><br>
+    <button onclick="createUser()">Submit</button>
+</div>
+
+<a href="#" id="addUser" title="Add User" class="btn btn-default" data-toggle="popover">Add User</a><br>
+
 <table class="table">
     <tr>
         <th>
@@ -43,7 +63,25 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('.editEmail').editable();
+        $('#addUser').popover({
+            html: true,
+            title: function () {
+                return $("#popover-head").html();
+            },
+            content: function () {
+                return $("#popover-content").html();
+            }
+        });
     });
+
+    function createUser() {
+        console.log($("#roleSelect").val());
+        console.log($("#userEmail").val());
+
+        $.post("CreateUserWithoutPassword", { email: $("#userEmail").val(), role: $("#roleSelect").val() }, function (result) {
+            console.log(result);
+        });
+    }
 </script>
 }
 

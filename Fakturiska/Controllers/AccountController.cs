@@ -62,5 +62,26 @@ namespace Fakturiska.Controllers
             });
             return RedirectToAction("Login");
         }
+
+        public ActionResult SetPassword()
+        {
+            string userGuid = Request.QueryString["id"];
+            if(userGuid != null)
+            {
+                return View(new UserModel(userGuid));
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        public ActionResult SetPassword(UserModel model)
+        {
+            UserLogic.SetPassword(new UserDTO
+            {
+                UserGuid = model.UserGuid,
+                Password = model.Password,
+            });
+            return RedirectToAction("Login");
+        }
     }
 }
