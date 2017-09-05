@@ -6,7 +6,7 @@
 
 <h2>CreateInvoice</h2>
 
-@using (Html.BeginForm("CreateInvoice", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("CreateInvoice", "Invoice", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     
@@ -286,7 +286,6 @@
 
 @section Scripts {
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
     @Scripts.Render("~/bundles/jqueryval")
@@ -316,7 +315,7 @@
                 },
                 source: function (request, response) {
                     $.ajax({
-                        url: "/Home/Autocomplete",
+                        url: "/Invoice/Autocomplete",
                         type: "POST",
                         dataType: "json",
                         data: { prefix: request.term },
@@ -363,7 +362,7 @@
                 },
                 source: function (request, response) {
                     $.ajax({
-                        url: "/Home/Autocomplete",
+                        url: "/Invoice/Autocomplete",
                         type: "POST",
                         dataType: "json",
                         data: { prefix: request.term },

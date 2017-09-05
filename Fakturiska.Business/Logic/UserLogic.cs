@@ -3,6 +3,7 @@ using Fakturiska.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,20 +12,21 @@ namespace Fakturiska.Business.Logic
     public class UserLogic
     {
 
-        public static string AuthorizeUser(string email, string password)
+        public static UserDTO AuthorizeUser(string email, string password)
         {
             using (var dc = new FakturiskaDBEntities())
             {
                 var user = dc.Users.Where(u => u.Email == email && u.Password == password && u.DeleteDate == null).ToList();
-                if (user.Any()) return user.First().Role.Description;
-                return "";
+                if (user.Any()) {
+                    return new UserDTO
+                    {
+                        Email = user.First().Email,
+                        Role = user.First().Role.Description,
+                        UserId = user.First().UserId
+                    };
+                } 
+                return null;
             }
-        }
-
-        public static string[] GetUserRights(string v)
-        {
-            string[] a = new string[] { "Admin", "User"};
-            return a;
         }
 
         public static void CreateUser(UserDTO user)
@@ -123,6 +125,23 @@ namespace Fakturiska.Business.Logic
                 }
             }
             return usersDTO;
+        }
+
+        public static void SendMail(string body, string to)
+        {
+            SmtpClient smtpClient = new SmtpClient("smtp.mail.com", 587);
+
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new System.Net.NetworkCredential("pavlovicluka.99@mail.com", "proba123");
+            smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+            smtpClient.EnableSsl = true;
+            MailMessage mail = new MailMessage();
+
+            mail.From = new MailAddress("pavlovicluka.99@mail.com", "Fakturiska");
+            mail.Body = body;
+            mail.To.Add(new MailAddress(to));
+
+            smtpClient.Send(mail);
         }
 
         private static User GetUserById(Guid userGuid, FakturiskaDBEntities dc)

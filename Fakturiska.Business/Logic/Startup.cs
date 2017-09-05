@@ -4,7 +4,6 @@ using Microsoft.Owin;
 using Owin;
 
 [assembly: OwinStartup(typeof(Fakturiska.Business.Logic.Startup))]
-
 namespace Fakturiska.Business.Logic
 {
     public class Startup

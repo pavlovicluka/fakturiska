@@ -1,5 +1,6 @@
 ﻿using Fakturiska.Business.DTOs;
 using Fakturiska.Database;
+using OpenPop.Mime;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -148,7 +149,9 @@ namespace Fakturiska.Business.Logic
             return dc.Invoices.Where(i => i.InvoiceUId == invoiceGuid && i.DeleteDate == null).FirstOrDefault();
         }
 
-        /*OpenPop.Pop3.Pop3Client PopClient = new OpenPop.Pop3.Pop3Client();
+        private static void ReceiveMail()
+        {
+            OpenPop.Pop3.Pop3Client PopClient = new OpenPop.Pop3.Pop3Client();
             PopClient.Connect("pop.mail.com", 995, true);
             PopClient.Authenticate("pavlovicluka.99@mail.com", "proba123", OpenPop.Pop3.AuthenticationMethod.UsernameAndPassword);
 
@@ -166,7 +169,7 @@ namespace Fakturiska.Business.Logic
                 foreach (var attachment in msg.FindAllAttachments())
                 {
                     var fileName = Guid.NewGuid().ToString() + Path.GetExtension(attachment.FileName);
-                    string filePath = Path.Combine(Server.MapPath("~/Files/"), fileName);
+                    string filePath = Path.Combine(HttpContext.Current.Server.MapPath("~/Files/"), fileName);
                     FileStream Stream = new FileStream(filePath, FileMode.Create);
                     BinaryWriter BinaryStream = new BinaryWriter(Stream);
                     BinaryStream.Write(attachment.Body);
@@ -174,20 +177,7 @@ namespace Fakturiska.Business.Logic
                 }
             }
             PopClient.DeleteAllMessages();
-            PopClient.Disconnect();*/
-
-
-        /*SmtpClient smtpClient = new SmtpClient("smtp.mail.com", 587);
-
-        smtpClient.UseDefaultCredentials = false;
-        smtpClient.Credentials = new System.Net.NetworkCredential("pavlovicluka.99@mail.com", "proba123");
-        smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-        smtpClient.EnableSsl = true;
-        MailMessage mail = new MailMessage();
-
-        mail.From = new MailAddress("pavlovicluka.99@mail.com", "Fakturiska");
-        mail.To.Add(new MailAddress("pavlovicluka.99@mail.com"));
-
-        smtpClient.Send(mail);*/
+            PopClient.Disconnect();
+        }
     }
 }
