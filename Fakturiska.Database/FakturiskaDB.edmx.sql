@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 09/03/2017 17:04:44
+-- Date Created: 09/05/2017 21:43:06
 -- Generated from EDMX file: D:\Mega\Documents\Svastara\Programiranje\ASP.NET\fakturiska\Fakturiska.Database\FakturiskaDB.edmx
 -- --------------------------------------------------
 
@@ -88,6 +88,7 @@ CREATE TABLE [dbo].[Invoices] (
     [Paid] int  NULL,
     [Risk] int  NULL,
     [Sum] int  NULL,
+    [PaidDate] datetime  NULL,
     [PriorityId] int  NULL,
     [ReceiverId] int  NULL,
     [PayerId] int  NULL,
@@ -116,7 +117,7 @@ CREATE TABLE [dbo].[Users] (
     [UserId] int IDENTITY(1,1) NOT NULL,
     [UserUId] uniqueidentifier  NOT NULL,
     [Email] nvarchar(50)  NOT NULL,
-    [Password] nvarchar(50)  NOT NULL,
+    [Password] nvarchar(50)  NULL,
     [RoleId] int  NOT NULL,
     [DeleteDate] datetime  NULL
 );
