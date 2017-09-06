@@ -64,9 +64,9 @@ namespace Fakturiska.Controllers
                 BankCode = companyPayer.BankCode
             });
 
-            if (invoice.InvoiceGuid == null)
+            if (invoice.InvoiceGuid == Guid.Empty)
             {
-                string filePath = InvoiceLogic.SaveFile(invoice.File);
+                string filePath = InvoiceLogic.ConvertAndSaveFile(invoice.File);
 
                 InvoiceLogic.CreateInvoice(new InvoiceDTO
                 {
@@ -139,7 +139,7 @@ namespace Fakturiska.Controllers
         public ActionResult Upload(HttpPostedFileBase file)
         {
             var identity = (ClaimsIdentity)User.Identity;
-            string filePath = InvoiceLogic.SaveFile(file);
+            string filePath = InvoiceLogic.ConvertAndSaveFile(file);
             InvoiceLogic.CreateInvoice(new InvoiceDTO
             {
                 InvoiceGuid = Guid.NewGuid(),

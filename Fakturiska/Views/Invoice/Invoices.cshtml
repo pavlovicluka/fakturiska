@@ -245,23 +245,19 @@
                     .search("")
                     .draw();
             });*/
+
+            new Dropzone(document.body, {
+                url: "/Invoice/Upload",
+                dragenter: function () {
+                    //$(document.body).fadeOut();
+                    //$('.dropzone').show();
+                },
+                dragleave: function () {
+                    //$(document.body).show();
+                    //$('.dropzone').hide();
+                },
+            });
         });
-
-        function openFile(path) {
-            window.open(path);
-        }
-
-          /*new Dropzone(document.body, {
-              url: "/Invoice/Upload",
-              dragenter: function () {
-                  //$(document.body).fadeOut();
-                  $('.dropzone').show();
-              },
-              dragleave: function () {
-                  //$(document.body).show();
-                  $('.dropzone').hide();
-              },
-           });*/
     </script>
 }
 

@@ -1,13 +1,13 @@
 ﻿using Fakturiska.Business.DTOs;
 using Fakturiska.Database;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using OpenPop.Mime;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web;
-using static System.Web.HttpContext;
 
 namespace Fakturiska.Business.Logic
 {
@@ -184,17 +184,37 @@ namespace Fakturiska.Business.Logic
             return invoiceDTOs;
         }
 
-        public static string SaveFile(HttpPostedFileBase invoiceFile)
+        public static string ConvertAndSaveFile(HttpPostedFileBase invoiceFile)
         {
             string path = "";
             if (invoiceFile != null && invoiceFile.ContentLength > 0)
             {
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(invoiceFile.FileName);
-                path = Path.Combine(HttpContext.Current.Server.MapPath("~/Files/"), fileName);
-                invoiceFile.SaveAs(path);
+                string name = Guid.NewGuid().ToString();
+                string extension = Path.GetExtension(invoiceFile.FileName);
+                path = Path.Combine(HttpContext.Current.Server.MapPath("~/Files/"), name + ".pdf");
+
+                if (extension.Equals(".jpg") || extension.Equals(".png"))
+                {
+                    Document document = new Document();
+                    using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        PdfWriter.GetInstance(document, stream);
+                        document.Open();
+                        using (var imageStream = invoiceFile.InputStream)
+                        {
+                            var image = Image.GetInstance(imageStream);
+                            document.Add(image);
+                        }
+                        document.Close();
+                    }
+                }
+                else if (extension.Equals(".pdf"))
+                {
+                    invoiceFile.SaveAs(path);
+                }
             }
             return path;
-        } 
+        }
 
         private static Invoice GetInvoiceByGuid(Guid invoiceGuid, FakturiskaDBEntities dc)
         {
