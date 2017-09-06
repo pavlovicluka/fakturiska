@@ -35,7 +35,7 @@ namespace Fakturiska.Models
                 Guid userGuid = new Guid(id);
                 var user = UserLogic.GetUserById(userGuid);
                 this.UserGuid = userGuid;
-                this.RoleName = user.Role;
+                this.RoleName = user.RoleName;
                 this.Email = user.Email;
             } catch (Exception e)
             {

@@ -21,7 +21,7 @@ namespace Fakturiska.Business.Logic
                     return new UserDTO
                     {
                         Email = user.First().Email,
-                        Role = user.First().Role.Description,
+                        RoleName = user.First().Role.Description,
                         UserId = user.First().UserId
                     };
                 } 
@@ -76,7 +76,7 @@ namespace Fakturiska.Business.Logic
                     throw e;
                 }
 
-                string body = "<a href='http://localhost:54276/Account/SetPassword/?id='" + user.UserGuid + ">Set Password</a>";
+                string body = "<a href='http://localhost:54276/Account/SetPassword/?id=" + user.UserGuid + "'>Set Password</a>";
                 SendMail(body, user.Email);
             }
         }
@@ -149,6 +149,7 @@ namespace Fakturiska.Business.Logic
                 return new UserDTO
                 {
                     UserGuid = user.UserUId,
+                    RoleName = user.Role.Description,
                     Email = user.Email,
                     Password = user.Password
                 };
