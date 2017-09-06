@@ -47,6 +47,11 @@
 <select id="categorySelect">
     <option value="0">Broj fakture</option>
     <option value="1">Datum kreiranja</option>
+    <option value="2">Predracun</option>
+    <option value="3">Racun</option>
+    <option value="4">Ulazna</option>
+    <option value="5">Placena</option>
+    <option value="6">Problematicna</option>
     <option value="7">Suma</option>
     <option value="8">Prioritet</option>
     <option value="9">Primalac</option>
@@ -80,6 +85,9 @@
                 @Html.DisplayNameFor(model => model.Sum)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.PaidDate)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.PriorityName)
             </th>
             <th>
@@ -107,22 +115,60 @@
                         @Html.DisplayFor(modelItem => item.Date)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.InvoiceEstimate)
+                        @if(item.InvoiceEstimate)
+                        {
+                           @: DA
+                        }
+                        else if (!item.InvoiceEstimate)
+                        {
+                           @: NE
+                        }
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.InvoiceTotal)
+                        @if (item.InvoiceTotal)
+                        {
+                            @: DA
+                        }
+                        else if (!item.InvoiceTotal)
+                        {
+                            @: NE
+                        }
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Incoming)
+                        @if (item.Incoming)
+                        {
+                            @: DA
+                        }
+                        else if (!item.Incoming)
+                        {
+                            @: NE
+                        }
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Paid)
+                        @if (item.Paid)
+                        {
+                            @: DA
+                        }
+                        else if (!item.Paid)
+                        {
+                            @: NE
+                        }
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Risk)
+                        @if (item.Risk)
+                        {
+                            @: DA
+                        }
+                        else if (!item.Risk)
+                        {
+                            @: NE
+                        }
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Sum)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PaidDate)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.PriorityName)

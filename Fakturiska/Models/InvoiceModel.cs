@@ -18,6 +18,7 @@ namespace Fakturiska.Models
         public bool Paid { get; set; }
         public bool Risk { get; set; }
         public int? Sum { get; set; }
+        public DateTime? PaidDate { get; set; }
         public PriorityEnum Priority { get; set; }
         public string PriorityName { get; set; }
         public int? ReceiverId { get; set; }
@@ -35,12 +36,13 @@ namespace Fakturiska.Models
                 InvoiceId = invoice.InvoiceId,
                 InvoiceGuid = invoice.InvoiceGuid,
                 Date = invoice.Date,
-                Sum = invoice.Sum,
                 InvoiceEstimate = Convert.ToBoolean(invoice.InvoiceEstimate),
                 InvoiceTotal = Convert.ToBoolean(invoice.InvoiceTotal),
                 Incoming = Convert.ToBoolean(invoice.Incoming),
                 Paid = Convert.ToBoolean(invoice.Paid),
                 Risk = Convert.ToBoolean(invoice.Risk),
+                Sum = invoice.Sum,
+                PaidDate = invoice.PaidDate,
                 PriorityName = invoice.PriorityName,
                 ReceiverName = invoice.ReceiverName,
                 PayerName = invoice.PayerName,

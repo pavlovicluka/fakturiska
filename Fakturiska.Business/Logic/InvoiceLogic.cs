@@ -14,17 +14,63 @@ namespace Fakturiska.Business.Logic
     {
         public static void CreateInvoice(InvoiceDTO invoice)
         {
+            if(invoice.Paid == 1)
+            {
+                invoice.PaidDate = DateTime.Now.Date;
+            }
+
             Invoice i = new Invoice()
             {
                 InvoiceUId = invoice.InvoiceGuid,
                 UserId = invoice.UserId,
                 Date = invoice.Date,
-                Sum = invoice.Sum,
                 InvoiceEstimate = invoice.InvoiceEstimate,
                 InvoiceTotal = invoice.InvoiceTotal,
                 Incoming = invoice.Incoming,
                 Paid = invoice.Paid,
                 Risk = invoice.Risk,
+                Sum = invoice.Sum,
+                PaidDate = invoice.PaidDate,
+                PriorityId = invoice.PriorityId,
+                ReceiverId = invoice.ReceiverId,
+                PayerId = invoice.PayerId,
+                FilePath = invoice.FilePath
+            };
+
+            using (var dc = new FakturiskaDBEntities())
+            {
+                dc.Invoices.Add(i);
+
+                try
+                {
+                    dc.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+            }
+        }
+
+        public static void EditInvoice(InvoiceDTO invoice)
+        {
+            if (invoice.Paid == 1)
+            {
+                invoice.PaidDate = DateTime.Now.Date;
+            }
+
+            Invoice i = new Invoice()
+            {
+                InvoiceUId = invoice.InvoiceGuid,
+                UserId = invoice.UserId,
+                Date = invoice.Date,
+                InvoiceEstimate = invoice.InvoiceEstimate,
+                InvoiceTotal = invoice.InvoiceTotal,
+                Incoming = invoice.Incoming,
+                Paid = invoice.Paid,
+                Risk = invoice.Risk,
+                Sum = invoice.Sum,
+                PaidDate = invoice.PaidDate,
                 PriorityId = invoice.PriorityId,
                 ReceiverId = invoice.ReceiverId,
                 PayerId = invoice.PayerId,
@@ -111,13 +157,14 @@ namespace Fakturiska.Business.Logic
                     invoiceDTO.InvoiceId = invoice.InvoiceId;
                     invoiceDTO.InvoiceGuid = invoice.InvoiceUId;
                     invoiceDTO.Date = invoice.Date;
-                    invoiceDTO.Sum = invoice.Sum;
                     invoiceDTO.InvoiceEstimate = invoice.InvoiceEstimate;
                     invoiceDTO.InvoiceTotal = invoice.InvoiceTotal;
                     invoiceDTO.Incoming = invoice.Incoming;
                     invoiceDTO.Paid = invoice.Paid;
                     invoiceDTO.Risk = invoice.Risk;
-                    if(invoice.Priority != null)
+                    invoiceDTO.Sum = invoice.Sum;
+                    invoiceDTO.PaidDate = invoice.PaidDate;
+                    if (invoice.Priority != null)
                         invoiceDTO.PriorityName = invoice.Priority.Description;
                     if (invoice.CompanyReceiver != null)
                         invoiceDTO.ReceiverName = invoice.CompanyReceiver.Name;
