@@ -28,7 +28,7 @@ namespace Fakturiska.Models
 
         public CompanyModel(Guid id)
         {
-            var company = CompanyLogic.GetCompanyById(id);
+            var company = CompanyLogic.GetCompanyByGuid(id);
             this.CompanyGuid = id;
             this.Name = company.Name;
             this.PhoneNumber = company.PhoneNumber;

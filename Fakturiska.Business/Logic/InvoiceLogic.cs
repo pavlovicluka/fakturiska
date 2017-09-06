@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web;
+using static System.Web.HttpContext;
 
 namespace Fakturiska.Business.Logic
 {
@@ -52,6 +53,28 @@ namespace Fakturiska.Business.Logic
             }
         }
 
+        public static InvoiceDTO GetInvoiceByGuid(Guid invoiceGuid)
+        {
+            using (var dc = new FakturiskaDBEntities())
+            {
+                var invoice = dc.Invoices.Where(i => i.InvoiceUId == invoiceGuid).FirstOrDefault();
+                return new InvoiceDTO
+                {
+                    Date = invoice.Date,
+                    InvoiceEstimate = invoice.InvoiceEstimate,
+                    InvoiceTotal = invoice.InvoiceTotal,
+                    Incoming = invoice.Incoming,
+                    Paid = invoice.Paid,
+                    Risk = invoice.Risk,
+                    Sum = invoice.Sum,
+                    PaidDate = invoice.PaidDate,
+                    PriorityId = invoice.PriorityId,
+                    ReceiverId = invoice.ReceiverId,
+                    PayerId = invoice.PayerId,
+                };
+            }
+        }
+
         public static void EditInvoice(InvoiceDTO invoice)
         {
             if (invoice.Paid == 1)
@@ -59,28 +82,23 @@ namespace Fakturiska.Business.Logic
                 invoice.PaidDate = DateTime.Now.Date;
             }
 
-            Invoice i = new Invoice()
-            {
-                InvoiceUId = invoice.InvoiceGuid,
-                UserId = invoice.UserId,
-                Date = invoice.Date,
-                InvoiceEstimate = invoice.InvoiceEstimate,
-                InvoiceTotal = invoice.InvoiceTotal,
-                Incoming = invoice.Incoming,
-                Paid = invoice.Paid,
-                Risk = invoice.Risk,
-                Sum = invoice.Sum,
-                PaidDate = invoice.PaidDate,
-                PriorityId = invoice.PriorityId,
-                ReceiverId = invoice.ReceiverId,
-                PayerId = invoice.PayerId,
-                FilePath = invoice.FilePath
-            };
-
             using (var dc = new FakturiskaDBEntities())
             {
-                dc.Invoices.Add(i);
-
+                var i = GetInvoiceByGuid(invoice.InvoiceGuid, dc);
+                if (i != null)
+                {
+                   i.Date = invoice.Date;
+                   i.InvoiceEstimate = invoice.InvoiceEstimate;
+                   i.InvoiceTotal = invoice.InvoiceTotal;
+                   i.Incoming = invoice.Incoming;
+                   i.Paid = invoice.Paid;
+                   i.Risk = invoice.Risk;
+                   i.Sum = invoice.Sum;
+                   i.PaidDate = invoice.PaidDate;
+                   i.PriorityId = invoice.PriorityId;
+                   i.ReceiverId = invoice.ReceiverId;
+                   i.PayerId = invoice.PayerId;
+                }
                 try
                 {
                     dc.SaveChanges();
@@ -96,7 +114,7 @@ namespace Fakturiska.Business.Logic
         {
             using (var dc = new FakturiskaDBEntities())
             {
-                var invoice = GetInvoiceById(invoiceGuid, dc);
+                var invoice = GetInvoiceByGuid(invoiceGuid, dc);
                 if (invoice != null)
                 {
                     invoice.Archive = 1;
@@ -116,7 +134,7 @@ namespace Fakturiska.Business.Logic
         {
             using (var dc = new FakturiskaDBEntities())
             {
-                var invoice = GetInvoiceById(invoiceGuid, dc);
+                var invoice = GetInvoiceByGuid(invoiceGuid, dc);
                 if (invoice != null)
                 {
                     invoice.DeleteDate = DateTime.Now;
@@ -132,20 +150,7 @@ namespace Fakturiska.Business.Logic
             }
         }
 
-        public static void PrintInvoice(String filePath)
-        {
-            ProcessStartInfo info = new ProcessStartInfo();
-            info.Verb = "print";
-            info.FileName = filePath;
-            info.CreateNoWindow = true;
-            info.WindowStyle = ProcessWindowStyle.Hidden;
-
-            Process p = new Process();
-            p.StartInfo = info;
-            p.Start();
-        }
-
-            public static IEnumerable<InvoiceDTO> GetAllInvoices()
+        public static IEnumerable<InvoiceDTO> GetAllInvoices()
         {
             List<InvoiceDTO> invoiceDTOs = new List<InvoiceDTO>();
             using (var dc = new FakturiskaDBEntities())
@@ -191,7 +196,7 @@ namespace Fakturiska.Business.Logic
             return path;
         } 
 
-        private static Invoice GetInvoiceById(Guid invoiceGuid, FakturiskaDBEntities dc)
+        private static Invoice GetInvoiceByGuid(Guid invoiceGuid, FakturiskaDBEntities dc)
         {
             return dc.Invoices.Where(i => i.InvoiceUId == invoiceGuid && i.DeleteDate == null).FirstOrDefault();
         }

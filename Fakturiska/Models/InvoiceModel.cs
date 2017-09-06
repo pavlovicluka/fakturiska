@@ -19,7 +19,7 @@ namespace Fakturiska.Models
         public bool Risk { get; set; }
         public int? Sum { get; set; }
         public DateTime? PaidDate { get; set; }
-        public PriorityEnum Priority { get; set; }
+        public PriorityEnum? Priority { get; set; }
         public string PriorityName { get; set; }
         public int? ReceiverId { get; set; }
         public string ReceiverName { get; set; }
@@ -28,6 +28,11 @@ namespace Fakturiska.Models
         public HttpPostedFileBase File { get; set; }
         public string FilePath { get; set; }
         public int? Archive { get; set; }
+
+        public InvoiceModel()
+        {
+
+        }
 
         public static IEnumerable<InvoiceModel> GetAllInvoices()
         {

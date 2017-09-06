@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using System.Security.Claims;
 using System.Web;
 using System.Collections.Generic;
+using System.Net;
 
 namespace Fakturiska.Controllers
 {
@@ -27,13 +28,11 @@ namespace Fakturiska.Controllers
         public ActionResult CreateInvoice(InvoiceCompaniesModel model)
         {
             var identity = (ClaimsIdentity)User.Identity;
-
             InvoiceModel invoice = model.Invoice;
             CompanyModel companyReceiver = model.CompanyReceiver;
             CompanyModel companyPayer = model.CompanyPayer;
 
-            string filePath = InvoiceLogic.SaveFile(invoice.File);
-            int receiverId = CompanyLogic.CreateCompany(new CompanyDTO
+            int? receiverId = CompanyLogic.CreateCompany(new CompanyDTO
             {
                 CompanyGuid = Guid.NewGuid(),
                 Name = companyReceiver.Name,
@@ -48,7 +47,8 @@ namespace Fakturiska.Controllers
                 AccountNumber = companyReceiver.AccountNumber,
                 BankCode = companyReceiver.BankCode
             });
-            int payerId = CompanyLogic.CreateCompany(new CompanyDTO
+
+            int? payerId = CompanyLogic.CreateCompany(new CompanyDTO
             {
                 CompanyGuid = Guid.NewGuid(),
                 Name = companyPayer.Name,
@@ -64,23 +64,51 @@ namespace Fakturiska.Controllers
                 BankCode = companyPayer.BankCode
             });
 
-            InvoiceLogic.CreateInvoice(new InvoiceDTO
+            if (invoice.InvoiceGuid == null)
             {
-                InvoiceGuid = Guid.NewGuid(),
-                UserId = int.Parse(identity.GetUserId()),
-                Date = invoice.Date,
-                Sum = invoice.Sum,
-                InvoiceEstimate = Convert.ToInt32(invoice.InvoiceEstimate),
-                InvoiceTotal = Convert.ToInt32(invoice.InvoiceTotal),
-                Incoming = Convert.ToInt32(invoice.Incoming),
-                Paid = Convert.ToInt32(invoice.Paid),
-                Risk = Convert.ToInt32(invoice.Risk),
-                PriorityId = (int)invoice.Priority,
-                ReceiverId = receiverId,
-                PayerId = payerId,
-                FilePath = filePath,
-            });
+                string filePath = InvoiceLogic.SaveFile(invoice.File);
+
+                InvoiceLogic.CreateInvoice(new InvoiceDTO
+                {
+                    InvoiceGuid = Guid.NewGuid(),
+                    UserId = int.Parse(identity.GetUserId()),
+                    Date = invoice.Date,
+                    InvoiceEstimate = Convert.ToInt32(invoice.InvoiceEstimate),
+                    InvoiceTotal = Convert.ToInt32(invoice.InvoiceTotal),
+                    Incoming = Convert.ToInt32(invoice.Incoming),
+                    Paid = Convert.ToInt32(invoice.Paid),
+                    Risk = Convert.ToInt32(invoice.Risk),
+                    PriorityId = (int)invoice.Priority,
+                    Sum = invoice.Sum,
+                    ReceiverId = receiverId,
+                    PayerId = payerId,
+                    FilePath = filePath,
+                });
+            }
+            else
+            {
+                InvoiceLogic.EditInvoice(new InvoiceDTO
+                {
+                    InvoiceGuid = invoice.InvoiceGuid,
+                    Date = invoice.Date,
+                    InvoiceEstimate = Convert.ToInt32(invoice.InvoiceEstimate),
+                    InvoiceTotal = Convert.ToInt32(invoice.InvoiceTotal),
+                    Incoming = Convert.ToInt32(invoice.Incoming),
+                    Paid = Convert.ToInt32(invoice.Paid),
+                    Risk = Convert.ToInt32(invoice.Risk),
+                    Sum = invoice.Sum,
+                    PriorityId = (int)invoice.Priority,
+                    ReceiverId = receiverId,
+                    PayerId = payerId,
+                });
+            }
+         
             return RedirectToAction("Invoices");
+        }
+
+        public ActionResult EditInvoice(Guid id)
+        {
+            return PartialView("CreateInvoice", new InvoiceCompaniesModel(id));
         }
 
         public ActionResult DeleteInvoice(Guid id)
@@ -95,11 +123,16 @@ namespace Fakturiska.Controllers
             return RedirectToAction("Invoices");
         }
 
-        [HttpGet]
-        public ActionResult PrintInvoice(String filePath)
+        public void PrintInvoice(String filePath)
         {
-            InvoiceLogic.PrintInvoice(filePath);
-            return RedirectToAction("Invoices");
+            WebClient User = new WebClient();
+            Byte[] FileBuffer = User.DownloadData(filePath);
+            if (FileBuffer != null)
+            {
+                Response.ContentType = "application/pdf";
+                Response.AddHeader("content-length", FileBuffer.Length.ToString());
+                Response.BinaryWrite(FileBuffer);
+            }
         }
 
         [HttpPost]

@@ -63,11 +63,33 @@ namespace Fakturiska.Business.Logic
             }
         }
 
-        public static CompanyDTO GetCompanyById(Guid companyGuid)
+        public static CompanyDTO GetCompanyByGuid(Guid companyGuid)
         {
             using (var dc = new FakturiskaDBEntities())
             {
                 var company = dc.Companies.Where(c => c.CompanyUId == companyGuid).FirstOrDefault();
+                return new CompanyDTO
+                {
+                    Name = company.Name,
+                    PhoneNumber = company.PhoneNumber,
+                    FaxNumber = company.FaxNumber,
+                    Address = company.Address,
+                    Website = company.Website,
+                    Email = company.Email,
+                    PersonalNumber = company.PersonalNumber,
+                    PIB = company.PIB,
+                    MIB = company.MIB,
+                    AccountNumber = company.AccountNumber,
+                    BankCode = company.BankCode
+                };
+            }
+        }
+
+        public static CompanyDTO GetCompanyById(int companyId)
+        {
+            using (var dc = new FakturiskaDBEntities())
+            {
+                var company = dc.Companies.Where(c => c.CompanyId == companyId).FirstOrDefault();
                 return new CompanyDTO
                 {
                     Name = company.Name,
@@ -104,14 +126,7 @@ namespace Fakturiska.Business.Logic
                     c.AccountNumber = company.AccountNumber;
                     c.BankCode = company.BankCode;
                 }
-                try
-                {
-                    dc.SaveChanges();
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
+                dc.SaveChanges();
             }
         }
 
@@ -124,41 +139,30 @@ namespace Fakturiska.Business.Logic
                 {
                     company.DeleteDate = DateTime.Now;
                 }
-                try
-                {
-                    dc.SaveChanges();
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
+                dc.SaveChanges();
             }
         }
 
         public static IEnumerable<CompanyDTO> GetAllCompanies()
         {
-            List<CompanyDTO> companyDTO = new List<CompanyDTO>();
+            List<CompanyDTO> companyDTO = null;
             using (var dc = new FakturiskaDBEntities())
             {
-                List<Company> companies = dc.Companies.Where(company => company.DeleteDate == null).ToList();
-                foreach (var company in companies)
+                companyDTO = dc.Companies.Where(company => company.DeleteDate == null).Select(company => new CompanyDTO
                 {
-                    companyDTO.Add(new CompanyDTO
-                    {
-                        CompanyGuid = company.CompanyUId,
-                        Name = company.Name,
-                        PhoneNumber = company.PhoneNumber,
-                        FaxNumber = company.FaxNumber,
-                        Address = company.Address,
-                        Website = company.Website,
-                        Email = company.Email,
-                        PersonalNumber = company.PersonalNumber,
-                        PIB = company.PIB,
-                        MIB = company.MIB,
-                        AccountNumber = company.AccountNumber,
-                        BankCode = company.BankCode
-                    });
-                }
+                    CompanyGuid = company.CompanyUId,
+                    Name = company.Name,
+                    PhoneNumber = company.PhoneNumber,
+                    FaxNumber = company.FaxNumber,
+                    Address = company.Address,
+                    Website = company.Website,
+                    Email = company.Email,
+                    PersonalNumber = company.PersonalNumber,
+                    PIB = company.PIB,
+                    MIB = company.MIB,
+                    AccountNumber = company.AccountNumber,
+                    BankCode = company.BankCode
+                }).ToList();
             }
             return companyDTO;
         }
@@ -169,7 +173,7 @@ namespace Fakturiska.Business.Logic
             List<CompanyDTO> companyDTOs = new List<CompanyDTO>();
             using (var dc = new FakturiskaDBEntities())
             {
-                List<Company> companies = dc.Companies.Where(company => company.Name.ToLower().StartsWith(prefix) && company.DeleteDate == null).ToList();
+                List<Company> companies = dc.Companies.Where(company => company.Name.ToLower().Trim().StartsWith(prefix) && company.DeleteDate == null).ToList();
                 foreach (var company in companies)
                 {
                     companyDTOs.Add(new CompanyDTO
@@ -195,7 +199,7 @@ namespace Fakturiska.Business.Logic
 
         private static Company GetCompanyById(Guid companyGuid, FakturiskaDBEntities dc)
         {
-            return dc.Companies.Where(c => c.CompanyUId == companyGuid && c.DeleteDate == null).FirstOrDefault();
+            return dc.Companies.FirstOrDefault(c => c.CompanyUId == companyGuid && c.DeleteDate == null);
         }
     }
 }

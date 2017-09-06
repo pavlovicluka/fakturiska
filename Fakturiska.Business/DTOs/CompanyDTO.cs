@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fakturiska.Database;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,6 @@ namespace Fakturiska.Business.DTOs
         public String MIB { get; set; }
         public String AccountNumber { get; set; }
         public String BankCode { get; set; }
-        public DateTime DeleteDate { get; set; }
+        public DateTime? DeleteDate { get; set; }
     }
 }

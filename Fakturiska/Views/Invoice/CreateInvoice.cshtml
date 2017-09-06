@@ -4,15 +4,11 @@
     ViewBag.Title = "CreateInvoice";
 }
 
-<h2>CreateInvoice</h2>
-
 @using (Html.BeginForm("CreateInvoice", "Invoice", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
-    
+    @Html.HiddenFor(model => model.Invoice.InvoiceGuid)
     <div class="form-horizontal">
-        <h4>InvoiceModel</h4>
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
             @Html.LabelFor(model => model.Invoice.Date, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -78,13 +74,16 @@
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Invoice.File, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(model => model.Invoice.File, new { type = "file" })
-                @Html.ValidationMessageFor(model => model.Invoice.File, "", new { @class = "text-danger" })
+        @if (Model == null)
+        {
+            <div class="form-group">
+                @Html.LabelFor(model => model.Invoice.File, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Invoice.File, new { type = "file" })
+                    @Html.ValidationMessageFor(model => model.Invoice.File, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
+        }
 
         <div class="form-horizontal">
             <h4>Primalac</h4>
@@ -274,7 +273,14 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                @if (Model == null)
+                {
+                    <input type="submit" value="Create" class="btn btn-default" />
+                }
+                else
+                {
+                    <input type="submit" value="Edit" class="btn btn-default" />
+                }
             </div>
         </div>
     </div>

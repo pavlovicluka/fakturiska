@@ -13,9 +13,10 @@ namespace Fakturiska.Controllers
 {
     public class AccountController : Controller
     {
-
         public ActionResult Login()
         {
+            if(User.Identity.IsAuthenticated)
+                return RedirectToAction("Invoices", "Invoice");
             return View();
         }
 
@@ -53,7 +54,6 @@ namespace Fakturiska.Controllers
         [HttpPost]
         public ActionResult SignUp(UserModel model)
         {
-
             UserLogic.CreateUser(new UserDTO
             {
                 UserGuid = Guid.NewGuid(),

@@ -4,61 +4,13 @@
     ViewBag.Title = "Invoices";
 }
 
-<p>
-    @Html.ActionLink("Create New", "CreateInvoice")
-</p>
+<div class="container">
+    <p>
+        @Html.ActionLink("Create New", "CreateInvoice")
+    </p>
 
-<h2>New Invoices</h2>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.InvoiceId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Date)
-        </th>
-    </tr>
-
-@foreach (var item in Model)
-{
-    if (item.Archive == null)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.InvoiceId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.ActionLink("Izmeni", "EditInvoice", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Arhiviraj", "ArchiveInvoice", new { id = item.InvoiceGuid }) |
-                @Ajax.ActionLink("Stampaj", "PrintInvoice", new { filePath = item.FilePath },  new AjaxOptions{}) |
-                @Html.ActionLink("Obrisi", "DeleteInvoice", new { id = item.InvoiceGuid })
-            </td>
-        </tr>
-    }
-}
-
-</table>
-
-<h2>Archived Invoices</h2>
-<input id="searchArchive" type="text" />
-<select id="categorySelect">
-    <option value="0">Broj fakture</option>
-    <option value="1">Datum kreiranja</option>
-    <option value="2">Predracun</option>
-    <option value="3">Racun</option>
-    <option value="4">Ulazna</option>
-    <option value="5">Placena</option>
-    <option value="6">Problematicna</option>
-    <option value="7">Suma</option>
-    <option value="8">Prioritet</option>
-    <option value="9">Primalac</option>
-    <option value="10">Uplatilac</option>
-</select>
-<table id="tableArchive" class="table">
-    <thead>
+    <h2>New Invoices</h2>
+    <table class="table">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.InvoiceId)
@@ -66,46 +18,11 @@
             <th>
                 @Html.DisplayNameFor(model => model.Date)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.InvoiceEstimate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.InvoiceTotal)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Incoming)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Paid)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Risk)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Sum)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PaidDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PriorityName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ReceiverName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PayerName)
-            </th>
-            <th>
-
-            </th>
         </tr>
-    </thead>
-    <tbody>
 
         @foreach (var item in Model)
         {
-            if (item.Archive == 1)
+            if (item.Archive == null)
             {
                 <tr>
                     <td>
@@ -115,90 +32,198 @@
                         @Html.DisplayFor(modelItem => item.Date)
                     </td>
                     <td>
-                        @if(item.InvoiceEstimate)
-                        {
-                           @: DA
-                        }
-                        else if (!item.InvoiceEstimate)
-                        {
-                           @: NE
-                        }
-                    </td>
-                    <td>
-                        @if (item.InvoiceTotal)
-                        {
-                            @: DA
-                        }
-                        else if (!item.InvoiceTotal)
-                        {
-                            @: NE
-                        }
-                    </td>
-                    <td>
-                        @if (item.Incoming)
-                        {
-                            @: DA
-                        }
-                        else if (!item.Incoming)
-                        {
-                            @: NE
-                        }
-                    </td>
-                    <td>
-                        @if (item.Paid)
-                        {
-                            @: DA
-                        }
-                        else if (!item.Paid)
-                        {
-                            @: NE
-                        }
-                    </td>
-                    <td>
-                        @if (item.Risk)
-                        {
-                            @: DA
-                        }
-                        else if (!item.Risk)
-                        {
-                            @: NE
-                        }
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Sum)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PaidDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PriorityName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ReceiverName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PayerName)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Izmeni", "EditInvoice", new { /* id=item.PrimaryKey */ }) |
-                        @Html.ActionLink("Obrisi", "DeleteInvoice", new { id = item.InvoiceGuid }) |
-                        @Ajax.ActionLink("Stampaj", "PrintInvoice", new { filePath = item.FilePath }, new AjaxOptions { })
+                        @Html.ActionLink("Izmeni", "EditInvoice", new { id = item.InvoiceGuid }) |
+                        @Html.ActionLink("Arhiviraj", "ArchiveInvoice", new { id = item.InvoiceGuid }) |
+                        @Ajax.ActionLink("Stampaj", "PrintInvoice", new { filePath = item.FilePath }, new AjaxOptions { }) |
+                        @Html.ActionLink("Obrisi", "DeleteInvoice", new { id = item.InvoiceGuid })
                     </td>
                 </tr>
             }
         }
-    </tbody>
-</table>
+
+    </table>
+
+    <h2>Archived Invoices</h2>
+    <input id="searchArchive" type="text" />
+    <select id="categorySelect">
+        <option value="0">Broj fakture</option>
+        <option value="1">Datum kreiranja</option>
+        <option value="2">Predracun</option>
+        <option value="3">Racun</option>
+        <option value="4">Ulazna</option>
+        <option value="5">Placena</option>
+        <option value="6">Problematicna</option>
+        <option value="7">Suma</option>
+        <option value="8">Prioritet</option>
+        <option value="9">Primalac</option>
+        <option value="10">Uplatilac</option>
+    </select>
+    <table id="tableArchive" class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.InvoiceId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Date)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.InvoiceEstimate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.InvoiceTotal)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Incoming)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Paid)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Risk)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Sum)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PaidDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PriorityName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ReceiverName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PayerName)
+                </th>
+                <th>
+
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @{int count = 0;}
+
+            @foreach (var item in Model)
+            {
+                if (item.Archive == 1)
+                {
+                    count++;
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.InvoiceId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Date)
+                        </td>
+                        <td>
+                            @if (item.InvoiceEstimate)
+                            {
+                                @: DA
+                        }
+                            else if (!item.InvoiceEstimate)
+                            {
+                                @: NE
+                        }
+                        </td>
+                        <td>
+                            @if (item.InvoiceTotal)
+                            {
+                                @: DA
+                        }
+                            else if (!item.InvoiceTotal)
+                            {
+                                @: NE
+                        }
+                        </td>
+                        <td>
+                            @if (item.Incoming)
+                            {
+                                @: DA
+                        }
+                            else if (!item.Incoming)
+                            {
+                                @: NE
+                        }
+                        </td>
+                        <td>
+                            @if (item.Paid)
+                            {
+                                @: DA
+                        }
+                            else if (!item.Paid)
+                            {
+                                @: NE
+                        }
+                        </td>
+                        <td>
+                            @if (item.Risk)
+                            {
+                                @: DA
+                        }
+                            else if (!item.Risk)
+                            {
+                                @: NE
+                        }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Sum)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PaidDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PriorityName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReceiverName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PayerName)
+                        </td>
+                        <td>
+                            <div class="modal fade" id="@string.Concat("editArchivedInvoiceModal", count)" role="dialog">
+                                <div class="modal-dialog">
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title">Edit Invoice</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            @Html.Action("EditInvoice", "Invoice", new { id = item.InvoiceGuid })
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="@string.Concat("#editArchivedInvoiceModal", count)">Open Modal</button>
+                            @Html.ActionLink("Izmeni", "EditInvoice", new { id = item.InvoiceGuid }) |
+                            @Html.ActionLink("Obrisi", "DeleteInvoice", new { id = item.InvoiceGuid }) |
+                            @Ajax.ActionLink("Stampaj", "PrintInvoice", new { filePath = item.FilePath }, new AjaxOptions { })
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
 
 @section Scripts {
     @Scripts.Render("~/Scripts/dropzone.js")
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/dt-1.10.15/r-2.1.1/datatables.min.css" />
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/dt-1.10.15/r-2.1.1/datatables.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
     <script>
         var tableArchive;
         $(document).ready(function () {
-            tableArchive = $('#tableArchive').DataTable({
+            /*tableArchive = $('#tableArchive').DataTable({
                 ordering: false,
                 bFilter: true,
                 dom: 't',
@@ -219,20 +244,24 @@
                     .columns()
                     .search("")
                     .draw();
-            });
+            });*/
         });
 
-      /*new Dropzone(document.body, {
-          url: "/Invoice/Upload",
-          dragenter: function () {
-              //$(document.body).fadeOut();
-              $('.dropzone').show();
-          },
-          dragleave: function () {
-              //$(document.body).show();
-              $('.dropzone').hide();
-          },
-       });*/
+        function openFile(path) {
+            window.open(path);
+        }
+
+          /*new Dropzone(document.body, {
+              url: "/Invoice/Upload",
+              dragenter: function () {
+                  //$(document.body).fadeOut();
+                  $('.dropzone').show();
+              },
+              dragleave: function () {
+                  //$(document.body).show();
+                  $('.dropzone').hide();
+              },
+           });*/
     </script>
 }
 
