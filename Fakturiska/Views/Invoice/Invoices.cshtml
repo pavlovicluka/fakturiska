@@ -5,45 +5,83 @@
 }
 
 <div class="container">
-    <p>
-        @Html.ActionLink("Create New", "CreateInvoice")
-    </p>
+    <div class="modal fade" id="createInvoiceModal" role="dialog">
+        <div class="modal-dialog" style="width: 1000px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Edit Invoice</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.Action("CreateInvoice", "Invoice")
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-success" value="Create" form="invoiceForm" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#createInvoiceModal">Dodaj novu</button>
 
-    <h2>New Invoices</h2>
-    <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.InvoiceId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Date)
-            </th>
-        </tr>
+    <h2>Nove fakture</h2>
+    <table id="tableInvoices" class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.InvoiceId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Date)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
 
-        @foreach (var item in Model)
-        {
-            if (item.Archive == null)
+        <tbody>
+            @{int count = 0;}
+            @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.InvoiceId)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Date)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Izmeni", "EditInvoice", new { id = item.InvoiceGuid }) |
-                        @Html.ActionLink("Arhiviraj", "ArchiveInvoice", new { id = item.InvoiceGuid }) |
-                        @Ajax.ActionLink("Stampaj", "PrintInvoice", new { filePath = item.FilePath }, new AjaxOptions { }) |
-                        @Html.ActionLink("Obrisi", "DeleteInvoice", new { id = item.InvoiceGuid })
-                    </td>
-                </tr>
+                count++;
+                if (item.Archive == null)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.InvoiceId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Date)
+                        </td>
+                        <td>
+                            <div class="modal fade" id="@string.Concat("editInvoiceModal", count)" role="dialog">
+                                <div class="modal-dialog" style="width: 1000px;">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title">Edit Invoice</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            @Html.Action("EditInvoice", "Invoice", new { id = item.InvoiceGuid })
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                            <input type="submit" class="btn btn-success" value="Edit" form="invoiceForm" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="@string.Concat("#editInvoiceModal", count)">Izmeni</button>
+                            @Html.ActionLink("Arhiviraj", "ArchiveInvoice", new { id = item.InvoiceGuid }) |
+                            @Ajax.ActionLink("Stampaj", "PrintInvoice", new { filePath = item.FilePath }, new AjaxOptions { }) |
+                            @Html.ActionLink("Obrisi", "DeleteInvoice", new { id = item.InvoiceGuid })
+                        </td>
+                    </tr>
+                }
             }
-        }
-
+        </tbody>
     </table>
 
-    <h2>Archived Invoices</h2>
+    <h2>Pretrazi arhivu faktura</h2>
     <input id="searchArchive" type="text" />
     <select id="categorySelect">
         <option value="0">Broj fakture</option>
@@ -54,9 +92,10 @@
         <option value="5">Placena</option>
         <option value="6">Problematicna</option>
         <option value="7">Suma</option>
-        <option value="8">Prioritet</option>
-        <option value="9">Primalac</option>
-        <option value="10">Uplatilac</option>
+        <option value="8">Datum placanja</option>
+        <option value="9">Prioritet</option>
+        <option value="10">Primalac</option>
+        <option value="11">Uplatilac</option>
     </select>
     <table id="tableArchive" class="table">
         <thead>
@@ -104,7 +143,26 @@
         </thead>
         <tbody>
 
-            @{int count = 0;}
+            @{count = 0; }
+            @{int isChecked(int? a)
+                {
+                    if (a.HasValue)
+                    {
+                        if ((int)a == 1)
+                        {
+                            return 1;
+                        }
+                        else
+                        {
+                            return 0;
+                        }
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+            }
 
             @foreach (var item in Model)
             {
@@ -119,54 +177,54 @@
                             @Html.DisplayFor(modelItem => item.Date)
                         </td>
                         <td>
-                            @if (item.InvoiceEstimate)
+                            @if (isChecked(item.InvoiceEstimate) == 1)
                             {
                                 @: DA
-                        }
-                            else if (!item.InvoiceEstimate)
+                            }
+                            else if (isChecked(item.InvoiceEstimate) == 0)
                             {
                                 @: NE
-                        }
+                            }
                         </td>
                         <td>
-                            @if (item.InvoiceTotal)
+                            @if (isChecked(item.InvoiceTotal) == 1)
                             {
                                 @: DA
-                        }
-                            else if (!item.InvoiceTotal)
+                             }
+                            else if (isChecked(item.InvoiceTotal) == 0)
                             {
                                 @: NE
-                        }
+                             }
                         </td>
                         <td>
-                            @if (item.Incoming)
+                            @if (isChecked(item.Incoming) == 1)
                             {
                                 @: DA
-                        }
-                            else if (!item.Incoming)
+                             }
+                            else if (isChecked(item.Incoming) == 0)
                             {
                                 @: NE
-                        }
+                            }
                         </td>
                         <td>
-                            @if (item.Paid)
+                            @if (isChecked(item.Paid) == 1)
                             {
                                 @: DA
-                        }
-                            else if (!item.Paid)
+                            }
+                            else if (isChecked(item.Paid) == 0)
                             {
                                 @: NE
-                        }
+                             }
                         </td>
                         <td>
-                            @if (item.Risk)
+                            @if (isChecked(item.Risk) == 1)
                             {
                                 @: DA
-                        }
-                            else if (!item.Risk)
+                             }
+                            else if (isChecked(item.Risk) == 0)
                             {
                                 @: NE
-                        }
+                            }
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Sum)
@@ -185,8 +243,7 @@
                         </td>
                         <td>
                             <div class="modal fade" id="@string.Concat("editArchivedInvoiceModal", count)" role="dialog">
-                                <div class="modal-dialog">
-                                    <!-- Modal content-->
+                                <div class="modal-dialog" style="width: 1000px;">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -196,13 +253,13 @@
                                             @Html.Action("EditInvoice", "Invoice", new { id = item.InvoiceGuid })
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                            <input type="submit" class="btn btn-success" value="Edit" form="invoiceForm" />
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="@string.Concat("#editArchivedInvoiceModal", count)">Open Modal</button>
-                            @Html.ActionLink("Izmeni", "EditInvoice", new { id = item.InvoiceGuid }) |
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="@string.Concat("#editArchivedInvoiceModal", count)">Izmeni</button>
                             @Html.ActionLink("Obrisi", "DeleteInvoice", new { id = item.InvoiceGuid }) |
                             @Ajax.ActionLink("Stampaj", "PrintInvoice", new { filePath = item.FilePath }, new AjaxOptions { })
                         </td>
@@ -215,18 +272,17 @@
 
 @section Scripts {
     @Scripts.Render("~/Scripts/dropzone.js")
-
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/dt-1.10.15/r-2.1.1/datatables.min.css" />
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/dt-1.10.15/r-2.1.1/datatables.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    @Scripts.Render("~/Scripts/moment.js")
+    @Scripts.Render("~/Scripts/bootstrap-datetimepicker.js")
 
     <script>
         var tableArchive;
         $(document).ready(function () {
-            /*tableArchive = $('#tableArchive').DataTable({
+            tableArchive = $('#tableArchive').DataTable({
                 ordering: false,
                 bFilter: true,
-                dom: 't',
+                dom: 'ltip',
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
             });
 
             $('#searchArchive').on('keyup change', function () {
@@ -244,17 +300,22 @@
                     .columns()
                     .search("")
                     .draw();
-            });*/
+            });
+
+            tableInvoices = $('#tableInvoices').DataTable({
+                "columnDefs": [{
+                    "targets": 2,
+                    "searchable": false,
+                    "orderable": false,
+                }],
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            });
 
             new Dropzone(document.body, {
                 url: "/Invoice/Upload",
                 dragenter: function () {
-                    //$(document.body).fadeOut();
-                    //$('.dropzone').show();
                 },
                 dragleave: function () {
-                    //$(document.body).show();
-                    //$('.dropzone').hide();
                 },
             });
         });

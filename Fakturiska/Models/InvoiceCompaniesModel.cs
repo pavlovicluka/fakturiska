@@ -17,7 +17,6 @@ namespace Fakturiska.Models
 
         public InvoiceCompaniesModel()
         {
-
         }
 
         public InvoiceCompaniesModel(Guid id)
@@ -26,13 +25,13 @@ namespace Fakturiska.Models
             InvoiceModel i = new InvoiceModel();
             i.InvoiceGuid = id;
             i.Date = invoice.Date;
-            i.InvoiceEstimate = Convert.ToBoolean(invoice.InvoiceEstimate);
-            i.InvoiceTotal = Convert.ToBoolean(invoice.InvoiceTotal);
-            i.Incoming = Convert.ToBoolean(invoice.Incoming);
-            i.Paid = Convert.ToBoolean(invoice.Paid);
-            i.Risk = Convert.ToBoolean(invoice.Risk);
+            i.InvoiceEstimateChecked = Convert.ToBoolean(invoice.InvoiceEstimate);
+            i.InvoiceTotalChecked = Convert.ToBoolean(invoice.InvoiceTotal);
+            i.IncomingChecked = Convert.ToBoolean(invoice.Incoming);
+            i.PaidChecked = Convert.ToBoolean(invoice.Paid);
+            i.RiskChecked = Convert.ToBoolean(invoice.Risk);
             i.Sum = invoice.Sum;
-            if(invoice.PriorityId != null)
+            if (invoice.PriorityId != null)
                 i.Priority = (PriorityEnum)invoice.PriorityId;
 
             int? receiverId = invoice.ReceiverId;

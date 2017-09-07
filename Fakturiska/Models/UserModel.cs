@@ -22,10 +22,18 @@ namespace Fakturiska.Models
 
         public UserModel(Guid id)
         {
-            var user = UserLogic.GetUserById(id);
+            var user = UserLogic.GetUserByGuid(id);
             this.UserGuid = id;
             this.Email = user.Email;
             this.Password = user.Password;
+        }
+
+        public UserModel(int id)
+        {
+            var user = UserLogic.GetUserById(id);
+            this.UserGuid = user.UserGuid;
+            this.RoleName = user.RoleName;
+            this.Email = user.Email;
         }
 
         public UserModel(string id)
@@ -33,7 +41,7 @@ namespace Fakturiska.Models
             try
             {
                 Guid userGuid = new Guid(id);
-                var user = UserLogic.GetUserById(userGuid);
+                var user = UserLogic.GetUserByGuid(userGuid);
                 this.UserGuid = userGuid;
                 this.RoleName = user.RoleName;
                 this.Email = user.Email;

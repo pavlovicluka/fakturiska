@@ -10,8 +10,13 @@ namespace Fakturiska.Business.Logic
 {
     public class CompanyLogic
     {
-        public static int CreateCompany(CompanyDTO company)
+        public static int? CreateCompany(CompanyDTO company)
         {
+            if(company.Name == null)
+            {
+                return null;
+            }
+
             int companyId = CompanyExists(company);
             if (companyId == 0)
             {

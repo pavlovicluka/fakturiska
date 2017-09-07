@@ -1,7 +1,46 @@
-﻿@{
+﻿@model Fakturiska.Models.UserModel
+
+@{
     ViewBag.Title = "Home Page";
 }
 
-<div>
-    Index
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            @Html.ActionLink("Fakturiska", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav nav-pills nav-justified">
+                @if (Model.RoleName == "Admin")
+                {
+                    <li><a data-toggle="pill" href="#menuUsers">Korisnici</a></li>
+                }
+                <li class="active"><a data-toggle="pill" href="#menuInvoices">Upravljanje fakturama</a></li>
+                <li><a data-toggle="pill" href="#menuCompanies">Pravna lica</a></li>
+                <li><a href="Account/Logout">Odjavite se @Model.Email</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="tab-content">
+        <div id="menuUsers" class="tab-pane fade">
+            @if (Model.RoleName == "Admin")
+            {
+                @Html.Action("Users", "User")
+            }
+        </div>
+        <div id="menuInvoices" class="tab-pane fade in active">
+            @Html.Action("Invoices", "Invoice")
+        </div>
+        <div id="menuCompanies" class="tab-pane fade">
+            @Html.Action("Companies", "Company")
+        </div>
+    </div>
 </div>

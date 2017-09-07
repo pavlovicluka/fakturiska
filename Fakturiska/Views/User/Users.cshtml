@@ -25,45 +25,53 @@
     </div>
 </div> 
 
-
-
 <a href="#" id="addUser" title="Add User" class="btn btn-default" data-toggle="popover">Add User</a><br>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.RoleName)
-        </th>
-    </tr>
+<table id="tableUsers" class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RoleName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            <a href="#" id="userEmail" class="editEmail" data-type="text" data-pk="@item.UserGuid" data-url="EditUser" data-title="Edit email">@item.Email</a> 
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RoleName)
-        </td>
-        <td>
-            @Html.ActionLink("Obrisi", "DeleteUser", new {  id=item.UserGuid  })
-        </td>
-    </tr>
-}
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    <a href="#" id="userEmail" class="editEmail" data-type="text" data-pk="@item.UserGuid" data-url="EditUser" data-title="Edit email">@item.Email</a> 
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RoleName)
+                </td>
+                <td>
+                    @Html.ActionLink("Obrisi", "DeleteUser", new {  id=item.UserGuid  })
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
 
 @section Scripts {
-
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
 <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />
-<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $('#tableUsers').DataTable({
+            "columnDefs": [{
+                "targets": 2,
+                "searchable": false,
+                "orderable": false,
+            }]
+        });
+
         $('.editEmail').editable();
-        $('#addUser').popover({
+        var popover = $('#addUser').popover({
             html: true,
             title: function () {
                 return $("#popover-head").html();
@@ -72,13 +80,16 @@
                 return $("#popover-content").html();
             }
         });
-    });
 
-    $(document).on('click', '#createUser', function () {
-        console.log($('.popover-content').find('#roleSelect').val());
-        console.log($('.popover-content').find('#userEmail').val());
-        $.post("CreateUserWithoutPassword", { email: $('.popover-content').find('#userEmail').val(), role: $('.popover-content').find('#roleSelect').val() }, function (result) {
-            console.log(result);
+        $(document).on('click', '#createUser', function () {
+            console.log($('.popover-content').find('#roleSelect').val());
+            console.log($('.popover-content').find('#userEmail').val());
+
+            $.post("CreateUserWithoutPassword", { email: $('.popover-content').find('#userEmail').val(), role: $('.popover-content').find('#roleSelect').val() }, function (result) {
+                $('.popover-content').find('#roleSelect').val("1");
+                $('.popover-content').find('#userEmail').val("");
+                $('#addUser').popover('hide');
+            });
         });
     });
 </script>

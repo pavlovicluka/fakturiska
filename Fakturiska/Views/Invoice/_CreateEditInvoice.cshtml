@@ -1,0 +1,404 @@
+﻿@model Fakturiska.Models.InvoiceCompaniesModel
+
+@using (Html.BeginForm("CreateInvoice", "Invoice", new { enctype = "multipart/form-data" }, FormMethod.Post, htmlAttributes: new { @id = "invoiceForm" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Invoice.InvoiceGuid)
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Invoice.Date, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Invoice.Date, new { @class = "form-control datepicker", placeholder = "Enter date here..." })
+                    @Html.ValidationMessageFor(model => model.Invoice.Date, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Invoice.InvoiceEstimateChecked, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.CheckBoxFor(model => model.Invoice.InvoiceEstimateChecked, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Invoice.InvoiceEstimateChecked, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Invoice.InvoiceTotalChecked, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.CheckBoxFor(model => model.Invoice.InvoiceTotalChecked, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Invoice.InvoiceTotalChecked, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Invoice.IncomingChecked, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.CheckBoxFor(model => model.Invoice.IncomingChecked, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Invoice.IncomingChecked, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Invoice.PaidChecked, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.CheckBoxFor(model => model.Invoice.PaidChecked, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Invoice.PaidChecked, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Invoice.RiskChecked, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.CheckBoxFor(model => model.Invoice.RiskChecked, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Invoice.RiskChecked, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Invoice.Sum, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Invoice.Sum, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Invoice.Sum, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Invoice.Priority, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EnumDropDownListFor(model => model.Invoice.Priority, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Invoice.Priority, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            @if (Model == null)
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Invoice.File, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.Invoice.File, new { type = "file" })
+                        @Html.ValidationMessageFor(model => model.Invoice.File, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-md-8">
+            <div class="form-horizontal">
+                <div class="col-md-12">
+                    <h4>Primalac</h4>
+                    <hr />
+                    <div class="col-md-6">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CompanyReceiver.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.CompanyReceiver.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.CompanyReceiver.Name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CompanyReceiver.PhoneNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.CompanyReceiver.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.CompanyReceiver.PhoneNumber, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CompanyReceiver.FaxNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.CompanyReceiver.FaxNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.CompanyReceiver.FaxNumber, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CompanyReceiver.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.CompanyReceiver.Address, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.CompanyReceiver.Address, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CompanyReceiver.Website, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.CompanyReceiver.Website, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.CompanyReceiver.Website, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CompanyReceiver.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.CompanyReceiver.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.CompanyReceiver.Email, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CompanyReceiver.PersonalNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.CompanyReceiver.PersonalNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.CompanyReceiver.PersonalNumber, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CompanyReceiver.PIB, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.CompanyReceiver.PIB, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.CompanyReceiver.PIB, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CompanyReceiver.MIB, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.CompanyReceiver.MIB, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.CompanyReceiver.MIB, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CompanyReceiver.AccountNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.CompanyReceiver.AccountNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.CompanyReceiver.AccountNumber, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CompanyReceiver.BankCode, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.CompanyReceiver.BankCode, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.CompanyReceiver.BankCode, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-horizontal">
+                <h4>Uplatilac</h4>
+                <hr />
+                <div class="col-md-6">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CompanyPayer.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.CompanyPayer.Name, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.CompanyPayer.Name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CompanyPayer.PhoneNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.CompanyPayer.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.CompanyPayer.PhoneNumber, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CompanyPayer.FaxNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.CompanyPayer.FaxNumber, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.CompanyPayer.FaxNumber, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CompanyPayer.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.CompanyPayer.Address, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.CompanyPayer.Address, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CompanyPayer.Website, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.CompanyPayer.Website, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.CompanyPayer.Website, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CompanyPayer.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.CompanyPayer.Email, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.CompanyPayer.Email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CompanyPayer.PersonalNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.CompanyPayer.PersonalNumber, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.CompanyPayer.PersonalNumber, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CompanyPayer.PIB, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.CompanyPayer.PIB, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.CompanyPayer.PIB, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CompanyPayer.MIB, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.CompanyPayer.MIB, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.CompanyPayer.MIB, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CompanyPayer.AccountNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.CompanyPayer.AccountNumber, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.CompanyPayer.AccountNumber, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CompanyPayer.BankCode, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.CompanyPayer.BankCode, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.CompanyPayer.BankCode, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-10">
+                @if (Model == null)
+                {
+                    <input type="submit" value="Create" class="btn btn-default" />
+                }
+                else
+                {
+                    <input type="submit" value="Edit" class="btn btn-default" />
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.datepicker').datetimepicker({
+                format: 'MM/DD/YYYY'
+            });
+
+            $("#CompanyReceiver_Name").autocomplete({
+                select: function (a, b) {
+                    $(this).val(b.item.Name);
+
+                    $("#CompanyReceiver_" + "PhoneNumber").val(b.item.PhoneNumber);
+                    $("#CompanyReceiver_" + "FaxNumber").val(b.item.FaxNumber);
+                    $("#CompanyReceiver_" + "Address").val(b.item.Address);
+                    $("#CompanyReceiver_" + "Website").val(b.item.Website);
+                    $("#CompanyReceiver_" + "Email").val(b.item.Email);
+                    $("#CompanyReceiver_" + "PersonalNumber").val(b.item.PersonalNumber);
+                    $("#CompanyReceiver_" + "PIB").val(b.item.PIB);
+                    $("#CompanyReceiver_" + "MIB").val(b.item.MIB);
+                    $("#CompanyReceiver_" + "AccountNumber").val(b.item.AccountNumber);
+                    $("#CompanyReceiver_" + "BankCode").val(b.item.BankCode);
+                },
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Invoice/Autocomplete",
+                        type: "POST",
+                        dataType: "json",
+                        data: { prefix: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return {
+                                    label: item.Name, value: item.Name,
+                                    CompanyId: item.CompanyId,
+                                    PhoneNumber: item.PhoneNumber,
+                                    FaxNumber: item.FaxNumber,
+                                    Address: item.Address,
+                                    Website: item.Website,
+                                    Email: item.Email,
+                                    PersonalNumber: item.PersonalNumber,
+                                    PIB: item.PIB,
+                                    MIB: item.MIB,
+                                    AccountNumber: item.AccountNumber,
+                                    BankCode: item.BankCode
+                                };
+                            }))
+
+                        }
+                    })
+                },
+                messages: {
+                    noResults: "", results: function (resultsCount) { }
+                }
+            });
+
+            $("#CompanyPayer_Name").autocomplete({
+                select: function (a, b) {
+                    $(this).val(b.item.Name);
+
+                    $("#CompanyPayer_" + "PhoneNumber").val(b.item.PhoneNumber);
+                    $("#CompanyPayer_" + "FaxNumber").val(b.item.FaxNumber);
+                    $("#CompanyPayer_" + "Address").val(b.item.Address);
+                    $("#CompanyPayer_" + "Website").val(b.item.Website);
+                    $("#CompanyPayer_" + "Email").val(b.item.Email);
+                    $("#CompanyPayer_" + "PersonalNumber").val(b.item.PersonalNumber);
+                    $("#CompanyPayer_" + "PIB").val(b.item.PIB);
+                    $("#CompanyPayer_" + "MIB").val(b.item.MIB);
+                    $("#CompanyPayer_" + "AccountNumber").val(b.item.AccountNumber);
+                    $("#CompanyPayer_" + "BankCode").val(b.item.BankCode);
+                },
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Invoice/Autocomplete",
+                        type: "POST",
+                        dataType: "json",
+                        data: { prefix: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return {
+                                    label: item.Name, value: item.Name,
+                                    CompanyId: item.CompanyId,
+                                    PhoneNumber: item.PhoneNumber,
+                                    FaxNumber: item.FaxNumber,
+                                    Address: item.Address,
+                                    Website: item.Website,
+                                    Email: item.Email,
+                                    PersonalNumber: item.PersonalNumber,
+                                    PIB: item.PIB,
+                                    MIB: item.MIB,
+                                    AccountNumber: item.AccountNumber,
+                                    BankCode: item.BankCode
+                                };
+                            }))
+
+                        }
+                    })
+                },
+                messages: {
+                    noResults: "", results: function (resultsCount) { }
+                }
+            });
+        })
+    </script>
+}
+
+

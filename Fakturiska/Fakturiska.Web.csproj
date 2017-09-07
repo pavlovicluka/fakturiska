@@ -327,10 +327,9 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\User\Users.cshtml" />
     <Content Include="Views\Company\Companies.cshtml" />
-    <Content Include="Views\Company\CreateCompany.cshtml" />
+    <Content Include="Views\Company\_CreateEditCompany.cshtml" />
     <Content Include="Views\Invoice\Invoices.cshtml" />
-    <Content Include="Views\Invoice\CreateInvoice.cshtml" />
-    <Content Include="Views\Company\EditCompany.cshtml" />
+    <Content Include="Views\Invoice\_CreateEditInvoice.cshtml" />
     <Content Include="Views\Account\SetPassword.cshtml" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />

@@ -16,12 +16,12 @@ namespace Fakturiska.Controllers
     {
         public ActionResult Invoices()
         {
-            return View(InvoiceModel.GetAllInvoices());
+            return PartialView(InvoiceModel.GetAllInvoices());
         }
 
         public ActionResult CreateInvoice()
         {
-            return View();
+            return PartialView("_CreateEditInvoice");
         }
 
         [HttpPost]
@@ -73,12 +73,12 @@ namespace Fakturiska.Controllers
                     InvoiceGuid = Guid.NewGuid(),
                     UserId = int.Parse(identity.GetUserId()),
                     Date = invoice.Date,
-                    InvoiceEstimate = Convert.ToInt32(invoice.InvoiceEstimate),
-                    InvoiceTotal = Convert.ToInt32(invoice.InvoiceTotal),
-                    Incoming = Convert.ToInt32(invoice.Incoming),
-                    Paid = Convert.ToInt32(invoice.Paid),
-                    Risk = Convert.ToInt32(invoice.Risk),
-                    PriorityId = (int)invoice.Priority,
+                    InvoiceEstimate = Convert.ToInt32(invoice.InvoiceEstimateChecked),
+                    InvoiceTotal = Convert.ToInt32(invoice.InvoiceTotalChecked),
+                    Incoming = Convert.ToInt32(invoice.IncomingChecked),
+                    Paid = Convert.ToInt32(invoice.PaidChecked),
+                    Risk = Convert.ToInt32(invoice.RiskChecked),
+                    PriorityId = (int)invoice.Priority + 1,
                     Sum = invoice.Sum,
                     ReceiverId = receiverId,
                     PayerId = payerId,
@@ -91,13 +91,13 @@ namespace Fakturiska.Controllers
                 {
                     InvoiceGuid = invoice.InvoiceGuid,
                     Date = invoice.Date,
-                    InvoiceEstimate = Convert.ToInt32(invoice.InvoiceEstimate),
-                    InvoiceTotal = Convert.ToInt32(invoice.InvoiceTotal),
-                    Incoming = Convert.ToInt32(invoice.Incoming),
-                    Paid = Convert.ToInt32(invoice.Paid),
-                    Risk = Convert.ToInt32(invoice.Risk),
+                    InvoiceEstimate = Convert.ToInt32(invoice.InvoiceEstimateChecked),
+                    InvoiceTotal = Convert.ToInt32(invoice.InvoiceTotalChecked),
+                    Incoming = Convert.ToInt32(invoice.IncomingChecked),
+                    Paid = Convert.ToInt32(invoice.PaidChecked),
+                    Risk = Convert.ToInt32(invoice.RiskChecked),
                     Sum = invoice.Sum,
-                    PriorityId = (int)invoice.Priority,
+                    PriorityId = (int)invoice.Priority + 1,
                     ReceiverId = receiverId,
                     PayerId = payerId,
                 });
@@ -108,7 +108,7 @@ namespace Fakturiska.Controllers
 
         public ActionResult EditInvoice(Guid id)
         {
-            return PartialView("CreateInvoice", new InvoiceCompaniesModel(id));
+            return PartialView("_CreateEditInvoice", new InvoiceCompaniesModel(id));
         }
 
         public ActionResult DeleteInvoice(Guid id)

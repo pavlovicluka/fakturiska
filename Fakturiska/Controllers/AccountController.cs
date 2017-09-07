@@ -16,7 +16,7 @@ namespace Fakturiska.Controllers
         public ActionResult Login()
         {
             if(User.Identity.IsAuthenticated)
-                return RedirectToAction("Invoices", "Invoice");
+                return RedirectToAction("Index", "Home");
             return View();
         }
 
@@ -34,8 +34,8 @@ namespace Fakturiska.Controllers
                     new Claim(ClaimTypes.Role, user.RoleName),
                 }, DefaultAuthenticationTypes.ApplicationCookie);
 
-                HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = false }, ident);
-                return View();
+                HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = true }, ident);
+                return RedirectToAction("Index", "Home");
             }
             return RedirectToAction("Login");
         }

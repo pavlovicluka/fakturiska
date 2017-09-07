@@ -1,22 +1,11 @@
 ﻿@model Fakturiska.Models.CompanyModel
 
-@{
-    ViewBag.Title = "EditCompany";
-}
-
-<h2>EditCompany</h2>
-
-
-@using (Html.BeginForm())
+@using (Html.BeginForm("CreateCompany", "Company")) 
 {
     @Html.AntiForgeryToken()
-
     @Html.HiddenFor(model => model.CompanyGuid)
     <div class="form-horizontal">
-        <h4>CompanyModel</h4>
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
         <div class="form-group">
             @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -107,16 +96,16 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                @if (Model == null)
+                {
+                    <input type="submit" value="Create" class="btn btn-default" />
+                }
+                else
+                {
+                    <input type="submit" value="Edit" class="btn btn-default" />
+                }
             </div>
         </div>
     </div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Companies")
-</div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}

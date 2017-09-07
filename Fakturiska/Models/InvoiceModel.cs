@@ -12,18 +12,21 @@ namespace Fakturiska.Models
         public int InvoiceId { get; set; }
         public Guid InvoiceGuid { get; set; }
         public DateTime? Date { get; set; }
-        public bool InvoiceEstimate { get; set; }
-        public bool InvoiceTotal { get; set; }
-        public bool Incoming { get; set; }
-        public bool Paid { get; set; }
-        public bool Risk { get; set; }
+        public int? InvoiceEstimate { get; set; }
+        public bool InvoiceEstimateChecked { get; set; }
+        public int? InvoiceTotal { get; set; }
+        public bool InvoiceTotalChecked { get; set; }
+        public int? Incoming { get; set; }
+        public bool IncomingChecked { get; set; }
+        public int? Paid { get; set; }
+        public bool PaidChecked { get; set; }
+        public int? Risk { get; set; }
+        public bool RiskChecked { get; set; }
         public int? Sum { get; set; }
         public DateTime? PaidDate { get; set; }
-        public PriorityEnum? Priority { get; set; }
+        public PriorityEnum Priority { get; set; }
         public string PriorityName { get; set; }
-        public int? ReceiverId { get; set; }
         public string ReceiverName { get; set; }
-        public int? PayerId { get; set; }
         public string PayerName { get; set; }
         public HttpPostedFileBase File { get; set; }
         public string FilePath { get; set; }
@@ -41,11 +44,11 @@ namespace Fakturiska.Models
                 InvoiceId = invoice.InvoiceId,
                 InvoiceGuid = invoice.InvoiceGuid,
                 Date = invoice.Date,
-                InvoiceEstimate = Convert.ToBoolean(invoice.InvoiceEstimate),
-                InvoiceTotal = Convert.ToBoolean(invoice.InvoiceTotal),
-                Incoming = Convert.ToBoolean(invoice.Incoming),
-                Paid = Convert.ToBoolean(invoice.Paid),
-                Risk = Convert.ToBoolean(invoice.Risk),
+                InvoiceEstimate = invoice.InvoiceEstimate,
+                InvoiceTotal = invoice.InvoiceTotal,
+                Incoming = invoice.Incoming,
+                Paid = invoice.Paid,
+                Risk = invoice.Risk,
                 Sum = invoice.Sum,
                 PaidDate = invoice.PaidDate,
                 PriorityName = invoice.PriorityName,

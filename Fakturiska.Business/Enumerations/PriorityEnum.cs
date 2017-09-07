@@ -10,7 +10,7 @@ namespace Fakturiska.Business.Enumerations
     public enum PriorityEnum
     {
         [Display(Name = "NIZAK PRIORITET")]
-        Nizak = 1,
+        Nizak = 0,
         [Display(Name = "NORMALAN PRIORITET")]
         Normalan,
         [Display(Name = "VAZNO")]

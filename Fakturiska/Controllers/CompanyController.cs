@@ -11,60 +11,59 @@ namespace Fakturiska.Controllers
     {
         public ActionResult Companies()
         {
-            return View(CompanyModel.GetAllCompanies());
+            return PartialView(CompanyModel.GetAllCompanies());
         }
 
         public ActionResult CreateCompany()
         {
-            return View();
+            return PartialView("_CreateEditCompany");
         }
 
         [HttpPost]
         public ActionResult CreateCompany(CompanyModel company)
         {
-            CompanyLogic.CreateCompany(new CompanyDTO
+            if (company.CompanyGuid == Guid.Empty)
             {
-                CompanyGuid = Guid.NewGuid(),
-                Name = company.Name,
-                PhoneNumber = company.PhoneNumber,
-                FaxNumber = company.FaxNumber,
-                Address = company.Address,
-                Website = company.Website,
-                Email = company.Email,
-                PersonalNumber = company.PersonalNumber,
-                PIB = company.PIB,
-                MIB = company.MIB,
-                AccountNumber = company.AccountNumber,
-                BankCode = company.BankCode
-            });
-
+                CompanyLogic.CreateCompany(new CompanyDTO
+                {
+                    CompanyGuid = Guid.NewGuid(),
+                    Name = company.Name,
+                    PhoneNumber = company.PhoneNumber,
+                    FaxNumber = company.FaxNumber,
+                    Address = company.Address,
+                    Website = company.Website,
+                    Email = company.Email,
+                    PersonalNumber = company.PersonalNumber,
+                    PIB = company.PIB,
+                    MIB = company.MIB,
+                    AccountNumber = company.AccountNumber,
+                    BankCode = company.BankCode
+                });
+            }
+            else
+            {
+                CompanyLogic.EditCompany(new CompanyDTO
+                {
+                    CompanyGuid = company.CompanyGuid,
+                    Name = company.Name,
+                    PhoneNumber = company.PhoneNumber,
+                    FaxNumber = company.FaxNumber,
+                    Address = company.Address,
+                    Website = company.Website,
+                    Email = company.Email,
+                    PersonalNumber = company.PersonalNumber,
+                    PIB = company.PIB,
+                    MIB = company.MIB,
+                    AccountNumber = company.AccountNumber,
+                    BankCode = company.BankCode
+                });
+            }
             return RedirectToAction("Companies");
         }
 
         public ActionResult EditCompany(Guid id)
         {
-            return View(new CompanyModel(id));
-        }
-
-        [HttpPost]
-        public ActionResult EditCompany(CompanyModel company)
-        {
-            CompanyLogic.EditCompany(new CompanyDTO
-            {
-                CompanyGuid = company.CompanyGuid,
-                Name = company.Name,
-                PhoneNumber = company.PhoneNumber,
-                FaxNumber = company.FaxNumber,
-                Address = company.Address,
-                Website = company.Website,
-                Email = company.Email,
-                PersonalNumber = company.PersonalNumber,
-                PIB = company.PIB,
-                MIB = company.MIB,
-                AccountNumber = company.AccountNumber,
-                BankCode = company.BankCode
-            });
-            return RedirectToAction("Companies");
+            return PartialView("_CreateEditCompany", new CompanyModel(id));
         }
 
         public ActionResult DeleteCompany(Guid id)
