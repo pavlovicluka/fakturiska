@@ -1,6 +1,8 @@
 ﻿using Fakturiska.Business.Logic;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -9,16 +11,43 @@ namespace Fakturiska.Models
     public class CompanyModel
     {
         public Guid CompanyGuid { get; set; }
+
+        [DisplayName("Naziv")]
+        [Required()]
         public String Name { get; set; }
+        [DisplayName("Telefon")]
+        [Required()]
+        [Phone]
         public String PhoneNumber { get; set; }
+        [DisplayName("Fax")]
+        [Required()]
+        [Phone]
         public String FaxNumber { get; set; }
+        [DisplayName("Adresa")]
+        [Required()]
         public String Address { get; set; }
+        [DisplayName("Website")]
+        [Required()]
+        [Url]
         public String Website { get; set; }
+        [DisplayName("Email")]
+        [Required()]
+        [EmailAddress]
         public String Email { get; set; }
+        [DisplayName("Maticni broj")]
+        [Required()]
         public String PersonalNumber { get; set; }
+        [DisplayName("PIB")]
+        [Required()]
         public String PIB { get; set; }
+        [DisplayName("MIB")]
+        [Required()]
         public String MIB { get; set; }
+        [DisplayName("Broj tekućeg računa")]
+        [Required()]
         public String AccountNumber { get; set; }
+        [DisplayName("Šifra za uplatu")]
+        [Required()]
         public String BankCode { get; set; }
 
         public CompanyModel()

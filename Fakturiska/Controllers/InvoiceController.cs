@@ -103,7 +103,7 @@ namespace Fakturiska.Controllers
                 });
             }
          
-            return RedirectToAction("Invoices");
+            return RedirectToAction("Index", "Home");
         }
 
         public ActionResult EditInvoice(Guid id)

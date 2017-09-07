@@ -58,7 +58,7 @@ namespace Fakturiska.Controllers
                     BankCode = company.BankCode
                 });
             }
-            return RedirectToAction("Companies");
+            return RedirectToAction("Index", "Home");
         }
 
         public ActionResult EditCompany(Guid id)
