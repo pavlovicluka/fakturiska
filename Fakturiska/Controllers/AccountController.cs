@@ -8,6 +8,7 @@ using System.Security.Claims;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using System.Net;
+using System.Web.Helpers;
 
 namespace Fakturiska.Controllers
 {
@@ -83,6 +84,16 @@ namespace Fakturiska.Controllers
                 Password = model.Password,
             });
             return RedirectToAction("Login");
+        }
+
+        public JsonResult GetCurrentUser()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var identity = (ClaimsIdentity)User.Identity;
+                return Json(new UserModel(int.Parse(identity.GetUserId())));
+            }
+            return null;
         }
     }
 }

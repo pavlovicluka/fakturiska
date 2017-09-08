@@ -11,7 +11,7 @@ namespace Fakturiska.Controllers
     {
         public ActionResult Users()
         {
-            return PartialView(UserModel.GetAllUsers());
+            return View(UserModel.GetAllUsers());
         }
 
         [HttpPost]

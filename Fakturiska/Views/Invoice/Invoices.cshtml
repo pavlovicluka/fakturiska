@@ -82,8 +82,8 @@
     </table>
 
     <h2>Pretrazi arhivu faktura</h2>
-    <input id="searchArchive" type="text" />
-    <select id="categorySelect">
+    <input id="searchArchive" type="search" class="form-control" />
+    <select id="categorySelect" class="form-control">
         <option value="0">Broj fakture</option>
         <option value="1">Datum kreiranja</option>
         <option value="2">Predracun</option>
@@ -100,7 +100,7 @@
     <table id="tableArchive" class="table">
         <thead>
             <tr>
-                <th>
+                <th data-priority="1">
                     @Html.DisplayNameFor(model => model.InvoiceId)
                 </th>
                 <th>
@@ -136,7 +136,7 @@
                 <th>
                     @Html.DisplayNameFor(model => model.PayerName)
                 </th>
-                <th>
+                <th data-priority="2">
 
                 </th>
             </tr>
@@ -271,54 +271,7 @@
 </div>
 
 @section Scripts {
-    @Scripts.Render("~/Scripts/dropzone.js")
-    @Scripts.Render("~/Scripts/moment.js")
-    @Scripts.Render("~/Scripts/bootstrap-datetimepicker.js")
-
-    <script>
-        var tableArchive;
-        $(document).ready(function () {
-            tableArchive = $('#tableArchive').DataTable({
-                ordering: false,
-                bFilter: true,
-                dom: 'ltip',
-                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-            });
-
-            $('#searchArchive').on('keyup change', function () {
-                if (tableArchive.search() !== this.value || this.value == "") {
-                    tableArchive
-                        .columns($('#categorySelect').val())
-                        .search(this.value)
-                        .draw();
-                }
-            });
-
-            $('#categorySelect').change(function () {
-                $('#searchArchive').val("");
-                tableArchive
-                    .columns()
-                    .search("")
-                    .draw();
-            });
-
-            tableInvoices = $('#tableInvoices').DataTable({
-                "columnDefs": [{
-                    "targets": 2,
-                    "searchable": false,
-                    "orderable": false,
-                }],
-                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-            });
-
-            new Dropzone(document.body, {
-                url: "/Invoice/Upload",
-                dragenter: function () {
-                },
-                dragleave: function () {
-                },
-            });
-        });
-    </script>
+    @Scripts.Render("~/Scripts/Custom/invoices.js")
+    @Scripts.Render("~/Scripts/Custom/invoice.js")
 }
 

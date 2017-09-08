@@ -16,7 +16,7 @@ namespace Fakturiska.Controllers
     {
         public ActionResult Invoices()
         {
-            return PartialView(InvoiceModel.GetAllInvoices());
+            return View(InvoiceModel.GetAllInvoices());
         }
 
         public ActionResult CreateInvoice()
@@ -102,8 +102,8 @@ namespace Fakturiska.Controllers
                     PayerId = payerId,
                 });
             }
-         
-            return RedirectToAction("Index", "Home");
+
+            return RedirectToAction("Invoices");
         }
 
         public ActionResult EditInvoice(Guid id)

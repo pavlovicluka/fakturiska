@@ -7,15 +7,15 @@
 <div id="popover-content" class="hide">
     <div id="createUserForm">
         Role:<br>
-        <select id="roleSelect">
+        <select id="roleSelect" class="form-control">
             <option value="1">Admin</option>
             <option value="2">User</option>
         </select>
         <br>
         Email:<br>
-        <input id="userEmail" type="email">
-        <br><br>
-        <button id="createUser">Submit</button>
+        <input id="userEmail" type="email" class="form-control">
+        <br>
+        <a class="btn btn-success" id="createUser">Submit</a>
     </div>
 </div> 
 
@@ -52,43 +52,8 @@
 </table>
 
 @section Scripts {
-<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#tableUsers').DataTable({
-            "columnDefs": [{
-                "targets": 2,
-                "searchable": false,
-                "orderable": false,
-            }]
-        });
-
-        $('.editEmail').editable();
-        var popover = $('#addUser').popover({
-            html: true,
-            title: function () {
-                return $("#popover-head").html();
-            },
-            content: function () {
-                return $("#popover-content").html();
-            }
-        });
-
-        $(document).on('click', '#createUser', function () {
-            console.log($('.popover-content').find('#roleSelect').val());
-            console.log($('.popover-content').find('#userEmail').val());
-
-            $.post("CreateUserWithoutPassword", { email: $('.popover-content').find('#userEmail').val(), role: $('.popover-content').find('#roleSelect').val() }, function (result) {
-                $('.popover-content').find('#roleSelect').val("1");
-                $('.popover-content').find('#userEmail').val("");
-                $('#addUser').popover('hide');
-            });
-        });
-    });
-</script>
+    @Scripts.Render("~/Scripts/Custom/users.js")
 }
-
 
 
 

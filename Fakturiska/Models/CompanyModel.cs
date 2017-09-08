@@ -10,17 +10,17 @@ namespace Fakturiska.Models
 {
     public class CompanyModel
     {
-        public Guid CompanyGuid { get; set; }
+        public Guid? CompanyGuid { get; set; }
 
         [DisplayName("Naziv")]
-        [Required()]
+        [Required(ErrorMessage = "Polje Naziv je obavezno")]
         public String Name { get; set; }
         [DisplayName("Telefon")]
-        [Required()]
+        [Required(ErrorMessage = "Polje Telefon je obavezno")]
         [Phone]
         public String PhoneNumber { get; set; }
         [DisplayName("Fax")]
-        [Required()]
+        [Required(ErrorMessage = "Polje Fax je obavezno")]
         [Phone]
         public String FaxNumber { get; set; }
         [DisplayName("Adresa")]

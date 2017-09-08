@@ -18,10 +18,10 @@
 </div>
 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#createCompanyModal">Kreiraj</button>
 
-<table id="tableCompanies" class="table">
+<table id="tableCompanies" class="table display nowrap">
     <thead>
         <tr>
-            <th>
+            <th data-priority="1">
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
@@ -54,7 +54,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.BankCode)
             </th>
-            <th></th>
+            <th data-priority="2"></th>
         </tr>
     </thead>
 
@@ -122,16 +122,6 @@
     </tbody>
 </table>
 
-@section Scripts{
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#tableCompanies').DataTable({
-                "columnDefs": [{
-                    "targets": 11,
-                    "searchable": false,
-                    "orderable": false,
-                }]
-            });
-        });
-    </script>
+@section Scripts {
+    @Scripts.Render("~/Scripts/Custom/companies.js")
 }

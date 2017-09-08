@@ -10,10 +10,7 @@ namespace Fakturiska.Controllers
     {
         public ActionResult Index()
         {
-            if (!User.Identity.IsAuthenticated)
-                return RedirectToAction("Login", "Account");
-            var identity = (ClaimsIdentity)User.Identity;
-            return View(new UserModel(int.Parse(identity.GetUserId())));
+            return RedirectToAction("Invoices", "Invoice");
         }
     }
 }

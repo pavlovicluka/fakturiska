@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using Fakturiska.Business.Logic;
 using Fakturiska.Business.DTOs;
 using Fakturiska.Models;
+using System.Web.ModelBinding;
 
 namespace Fakturiska.Controllers
 {
@@ -11,7 +12,7 @@ namespace Fakturiska.Controllers
     {
         public ActionResult Companies()
         {
-            return PartialView(CompanyModel.GetAllCompanies());
+            return View(CompanyModel.GetAllCompanies());
         }
 
         public ActionResult CreateCompany()
@@ -22,43 +23,47 @@ namespace Fakturiska.Controllers
         [HttpPost]
         public ActionResult CreateCompany(CompanyModel company)
         {
-            if (company.CompanyGuid == Guid.Empty)
+            if (ModelState.IsValid)
             {
-                CompanyLogic.CreateCompany(new CompanyDTO
+                if (company.CompanyGuid == null || company.CompanyGuid == Guid.Empty)
                 {
-                    CompanyGuid = Guid.NewGuid(),
-                    Name = company.Name,
-                    PhoneNumber = company.PhoneNumber,
-                    FaxNumber = company.FaxNumber,
-                    Address = company.Address,
-                    Website = company.Website,
-                    Email = company.Email,
-                    PersonalNumber = company.PersonalNumber,
-                    PIB = company.PIB,
-                    MIB = company.MIB,
-                    AccountNumber = company.AccountNumber,
-                    BankCode = company.BankCode
-                });
-            }
-            else
-            {
-                CompanyLogic.EditCompany(new CompanyDTO
+                    CompanyLogic.CreateCompany(new CompanyDTO
+                    {
+                        CompanyGuid = Guid.NewGuid(),
+                        Name = company.Name,
+                        PhoneNumber = company.PhoneNumber,
+                        FaxNumber = company.FaxNumber,
+                        Address = company.Address,
+                        Website = company.Website,
+                        Email = company.Email,
+                        PersonalNumber = company.PersonalNumber,
+                        PIB = company.PIB,
+                        MIB = company.MIB,
+                        AccountNumber = company.AccountNumber,
+                        BankCode = company.BankCode
+                    });
+                }
+                else
                 {
-                    CompanyGuid = company.CompanyGuid,
-                    Name = company.Name,
-                    PhoneNumber = company.PhoneNumber,
-                    FaxNumber = company.FaxNumber,
-                    Address = company.Address,
-                    Website = company.Website,
-                    Email = company.Email,
-                    PersonalNumber = company.PersonalNumber,
-                    PIB = company.PIB,
-                    MIB = company.MIB,
-                    AccountNumber = company.AccountNumber,
-                    BankCode = company.BankCode
-                });
+                    CompanyLogic.EditCompany(new CompanyDTO
+                    {
+                        CompanyGuid = (Guid)company.CompanyGuid,
+                        Name = company.Name,
+                        PhoneNumber = company.PhoneNumber,
+                        FaxNumber = company.FaxNumber,
+                        Address = company.Address,
+                        Website = company.Website,
+                        Email = company.Email,
+                        PersonalNumber = company.PersonalNumber,
+                        PIB = company.PIB,
+                        MIB = company.MIB,
+                        AccountNumber = company.AccountNumber,
+                        BankCode = company.BankCode
+                    });
+                }
+                return RedirectToAction("Companies");
             }
-            return RedirectToAction("Index", "Home");
+            return PartialView("_CreateEditCompany", company);
         }
 
         public ActionResult EditCompany(Guid id)

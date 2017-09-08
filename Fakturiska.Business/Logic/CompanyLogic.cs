@@ -178,7 +178,7 @@ namespace Fakturiska.Business.Logic
             List<CompanyDTO> companyDTOs = new List<CompanyDTO>();
             using (var dc = new FakturiskaDBEntities())
             {
-                List<Company> companies = dc.Companies.Where(company => company.Name.ToLower().Trim().StartsWith(prefix) && company.DeleteDate == null).ToList();
+                List<Company> companies = dc.Companies.Where(company => company.Name.ToLower().Trim().Contains(prefix) && company.DeleteDate == null).ToList();
                 foreach (var company in companies)
                 {
                     companyDTOs.Add(new CompanyDTO
