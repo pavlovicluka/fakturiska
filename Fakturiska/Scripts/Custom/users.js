@@ -2,12 +2,13 @@
     $("#navbarLoggedIn_Users").addClass("active");
 
     $('#tableUsers').DataTable({
+        "dom": '<"pull-left"f><"pull-right"l>t<"pull-left"i><"pull-right"p>',
         responsive: true,
         "columnDefs": [{
             "targets": 2,
             "searchable": false,
             "orderable": false,
-        }]
+        }],
     });
 
     $('.editEmail').editable();

@@ -2,10 +2,10 @@
     $("#navbarLoggedIn_Invoices").addClass("active");
 
     var tableArchive = $('#tableArchive').DataTable({
+        "dom": '<"pull-right"l>t<"pull-left"i><"pull-right"p>',
         responsive: true,
         ordering: false,
         bFilter: true,
-        dom: 'ltip',
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
     });
 
@@ -27,6 +27,7 @@
     });
 
     tableInvoices = $('#tableInvoices').DataTable({
+        "dom": '<"pull-left"f><"pull-right"l>t<"pull-left"i><"pull-right"p>',
         "columnDefs": [{
             "targets": 2,
             "searchable": false,

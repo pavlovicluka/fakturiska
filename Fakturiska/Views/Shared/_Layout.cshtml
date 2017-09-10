@@ -33,10 +33,11 @@
     </div>
 
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/Scripts/Custom/layout.js")
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("https://cdn.datatables.net/v/bs/dt-1.10.15/r-2.1.1/datatables.min.js")
-    @Scripts.Render("//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js")
+    @Scripts.Render("https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js")
     @Scripts.Render("https://code.jquery.com/ui/1.12.1/jquery-ui.min.js")
 
     @Scripts.Render("~/Scripts/dropzone.js")
@@ -44,8 +45,8 @@
     @Scripts.Render("~/Scripts/bootstrap-datetimepicker.js")
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.15/r-2.1.1/datatables.min.css" />
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" />
     <link rel="stylesheet" href="~/Content/Custom/main.css" />
 
     @RenderSection("scripts", required: false)
