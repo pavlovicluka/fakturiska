@@ -12,7 +12,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Edit Invoice</h4>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" id="createInvoiceForm">
                     @Html.Action("CreateInvoice", "Invoice")
                 </div>
                 <div class="modal-footer">
@@ -22,9 +22,15 @@
             </div>
         </div>
     </div>
-    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#createInvoiceModal">Dodaj novu</button>
+    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#createInvoiceModal" onclick="setModal('#createInvoiceForm')">Dodaj novu</button>
 
     <h2>Nove fakture</h2>
+    <div class="form-group col-md-3" style="padding-right:0px">
+        <div class="input-group">
+            <input class="form-control" id="searchInvoices" type="search" placeholder="Pretrazi">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
+        </div>
+    </div>
     <table id="tableInvoices" class="table">
         <thead>
             <tr>
@@ -60,17 +66,17 @@
                                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                                             <h4 class="modal-title">Edit Invoice</h4>
                                         </div>
-                                        <div class="modal-body">
+                                        <div class="modal-body" id="@string.Concat("editInvoiceForm", count)">
                                             @Html.Action("EditInvoice", "Invoice", new { id = item.InvoiceGuid })
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                            <input type="submit" class="btn btn-success" value="Edit" form="invoiceForm" />
+                                            <input type="submit" class="btn btn-success" data-dismiss="modal" value="Edit" form="invoiceForm" />
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="@string.Concat("#editInvoiceModal", count)">Izmeni</button>
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="@string.Concat("#editInvoiceModal", count)" onclick="setModal('@string.Concat("#editInvoiceForm", count)')">Izmeni</button>
                             @Html.ActionLink("Arhiviraj", "ArchiveInvoice", new { id = item.InvoiceGuid }) |
                             @Ajax.ActionLink("Stampaj", "PrintInvoice", new { filePath = item.FilePath }, new AjaxOptions { }) |
                             @Html.ActionLink("Obrisi", "DeleteInvoice", new { id = item.InvoiceGuid })
@@ -81,22 +87,36 @@
         </tbody>
     </table>
 
-    <h2>Pretrazi arhivu faktura</h2>
-    <input id="searchArchive" type="search" class="form-control" />
-    <select id="categorySelect" class="form-control">
-        <option value="0">Broj fakture</option>
-        <option value="1">Datum kreiranja</option>
-        <option value="2">Predracun</option>
-        <option value="3">Racun</option>
-        <option value="4">Ulazna</option>
-        <option value="5">Placena</option>
-        <option value="6">Problematicna</option>
-        <option value="7">Suma</option>
-        <option value="8">Datum placanja</option>
-        <option value="9">Prioritet</option>
-        <option value="10">Primalac</option>
-        <option value="11">Uplatilac</option>
-    </select>
+    <div class="row">
+        <div class="col-md-6">
+            <h2 class="col-md-offset-4">Pretrazi arhivu faktura</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-md-3" style="padding-right:0px">
+            <div class="input-group">
+                <input class="form-control" id="searchArchive" type="search" placeholder="Pretrazi">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
+            </div>
+        </div>
+        <div class="col-md-2" style="padding-left:0px">
+            <select id="categorySelect" class="form-control">
+                <option value="0">Broj fakture</option>
+                <option value="1">Datum kreiranja</option>
+                <option value="2">Predracun</option>
+                <option value="3">Racun</option>
+                <option value="4">Ulazna</option>
+                <option value="5">Placena</option>
+                <option value="6">Problematicna</option>
+                <option value="7">Suma</option>
+                <option value="8">Datum placanja</option>
+                <option value="9">Prioritet</option>
+                <option value="10">Primalac</option>
+                <option value="11">Uplatilac</option>
+            </select>
+        </div>
+    </div>
     <table id="tableArchive" class="table">
         <thead>
             <tr>
@@ -249,7 +269,7 @@
                                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                                             <h4 class="modal-title">Edit Invoice</h4>
                                         </div>
-                                        <div class="modal-body">
+                                        <div class="modal-body" id="@string.Concat("editInvoiceForm", count)">
                                             @Html.Action("EditInvoice", "Invoice", new { id = item.InvoiceGuid })
                                         </div>
                                         <div class="modal-footer">
@@ -259,7 +279,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="@string.Concat("#editArchivedInvoiceModal", count)">Izmeni</button>
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="@string.Concat("#editArchivedInvoiceModal", count)" onclick="setModal('@string.Concat("#editInvoiceForm", count)')">Izmeni</button>
                             @Html.ActionLink("Obrisi", "DeleteInvoice", new { id = item.InvoiceGuid }) |
                             @Ajax.ActionLink("Stampaj", "PrintInvoice", new { filePath = item.FilePath }, new AjaxOptions { })
                         </td>

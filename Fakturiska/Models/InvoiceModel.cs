@@ -41,6 +41,7 @@ namespace Fakturiska.Models
         [DisplayName("Datum plaćanja")]
         public DateTime? PaidDate { get; set; }
         [DisplayName("Važnost")]
+        [Required()]
         public PriorityEnum Priority { get; set; }
         [DisplayName("Važnost")]
         public string PriorityName { get; set; }

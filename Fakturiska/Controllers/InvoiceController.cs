@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Web;
 using System.Collections.Generic;
 using System.Net;
+using System.Web.ModelBinding;
 
 namespace Fakturiska.Controllers
 {
@@ -32,37 +33,45 @@ namespace Fakturiska.Controllers
             CompanyModel companyReceiver = model.CompanyReceiver;
             CompanyModel companyPayer = model.CompanyPayer;
 
-            int? receiverId = CompanyLogic.CreateCompany(new CompanyDTO
+            int? receiverId = null;
+            if (companyReceiver != null)
             {
-                CompanyGuid = Guid.NewGuid(),
-                Name = companyReceiver.Name,
-                PhoneNumber = companyReceiver.PhoneNumber,
-                FaxNumber = companyReceiver.FaxNumber,
-                Address = companyReceiver.Address,
-                Website = companyReceiver.Website,
-                Email = companyReceiver.Email,
-                PersonalNumber = companyReceiver.PersonalNumber,
-                PIB = companyReceiver.PIB,
-                MIB = companyReceiver.MIB,
-                AccountNumber = companyReceiver.AccountNumber,
-                BankCode = companyReceiver.BankCode
-            });
+                receiverId = CompanyLogic.CreateCompany(new CompanyDTO
+                {
+                    CompanyGuid = Guid.NewGuid(),
+                    Name = companyReceiver.Name,
+                    PhoneNumber = companyReceiver.PhoneNumber,
+                    FaxNumber = companyReceiver.FaxNumber,
+                    Address = companyReceiver.Address,
+                    Website = companyReceiver.Website,
+                    Email = companyReceiver.Email,
+                    PersonalNumber = companyReceiver.PersonalNumber,
+                    PIB = companyReceiver.PIB,
+                    MIB = companyReceiver.MIB,
+                    AccountNumber = companyReceiver.AccountNumber,
+                    BankCode = companyReceiver.BankCode
+                });
+            }
 
-            int? payerId = CompanyLogic.CreateCompany(new CompanyDTO
+            int? payerId = null;
+            if (companyPayer != null)
             {
-                CompanyGuid = Guid.NewGuid(),
-                Name = companyPayer.Name,
-                PhoneNumber = companyPayer.PhoneNumber,
-                FaxNumber = companyPayer.FaxNumber,
-                Address = companyPayer.Address,
-                Website = companyPayer.Website,
-                Email = companyPayer.Email,
-                PersonalNumber = companyPayer.PersonalNumber,
-                PIB = companyPayer.PIB,
-                MIB = companyPayer.MIB,
-                AccountNumber = companyPayer.AccountNumber,
-                BankCode = companyPayer.BankCode
-            });
+                payerId = CompanyLogic.CreateCompany(new CompanyDTO
+                {
+                    CompanyGuid = Guid.NewGuid(),
+                    Name = companyPayer.Name,
+                    PhoneNumber = companyPayer.PhoneNumber,
+                    FaxNumber = companyPayer.FaxNumber,
+                    Address = companyPayer.Address,
+                    Website = companyPayer.Website,
+                    Email = companyPayer.Email,
+                    PersonalNumber = companyPayer.PersonalNumber,
+                    PIB = companyPayer.PIB,
+                    MIB = companyPayer.MIB,
+                    AccountNumber = companyPayer.AccountNumber,
+                    BankCode = companyPayer.BankCode
+                });
+            }
 
             if (invoice.InvoiceGuid == Guid.Empty)
             {

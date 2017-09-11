@@ -23,8 +23,8 @@ namespace Fakturiska.Controllers
         [HttpPost]
         public ActionResult CreateCompany(CompanyModel company)
         {
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 if (company.CompanyGuid == null || company.CompanyGuid == Guid.Empty)
                 {
                     CompanyLogic.CreateCompany(new CompanyDTO
@@ -62,7 +62,7 @@ namespace Fakturiska.Controllers
                     });
                 }
                 return RedirectToAction("Companies");
-            }
+           // }
             return PartialView("_CreateEditCompany", company);
         }
 
@@ -71,6 +71,7 @@ namespace Fakturiska.Controllers
             return PartialView("_CreateEditCompany", new CompanyModel(id));
         }
 
+        [HttpPost]
         public ActionResult DeleteCompany(Guid id)
         {
             CompanyLogic.DeleteCompany(id);

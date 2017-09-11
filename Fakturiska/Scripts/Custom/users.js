@@ -1,14 +1,23 @@
 ﻿$(document).ready(function () {
     $("#navbarLoggedIn_Users").addClass("active");
 
-    $('#tableUsers').DataTable({
-        "dom": '<"pull-left"f><"pull-right"l>t<"pull-left"i><"pull-right"p>',
+    tableUsers = $('#tableUsers').DataTable({
+        "dom": '<"pull-right"l>t<"pull-left"i><"pull-right"p>',
+        language: { search: "" },
         responsive: true,
         "columnDefs": [{
             "targets": 2,
             "searchable": false,
-            "orderable": false,
-        }],
+            "orderable": false
+        }]
+    });
+
+    $('#searchUsers').on('keyup change', function () {
+        if (tableUsers.search() !== this.value || this.value === "") {
+            tableUsers
+                .search(this.value)
+                .draw();
+        }
     });
 
     $('.editEmail').editable();
