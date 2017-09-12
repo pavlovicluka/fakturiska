@@ -150,12 +150,46 @@ namespace Fakturiska.Business.Logic
             }
         }
 
-        public static IEnumerable<InvoiceDTO> GetAllInvoices()
+        public static IEnumerable<InvoiceDTO> GetInvoices()
         {
             List<InvoiceDTO> invoiceDTOs = new List<InvoiceDTO>();
             using (var dc = new FakturiskaDBEntities())
             {
-                List<Invoice> invoices = dc.Invoices.Where(invoice => invoice.DeleteDate == null).ToList();
+                List<Invoice> invoices = dc.Invoices.Where(invoice => invoice.DeleteDate == null && invoice.Archive == null).ToList();
+                foreach (var invoice in invoices)
+                {
+                    InvoiceDTO invoiceDTO = new InvoiceDTO();
+                    invoiceDTO.InvoiceId = invoice.InvoiceId;
+                    invoiceDTO.InvoiceGuid = invoice.InvoiceUId;
+                    invoiceDTO.Date = invoice.Date;
+                    invoiceDTO.InvoiceEstimate = invoice.InvoiceEstimate;
+                    invoiceDTO.InvoiceTotal = invoice.InvoiceTotal;
+                    invoiceDTO.Incoming = invoice.Incoming;
+                    invoiceDTO.Paid = invoice.Paid;
+                    invoiceDTO.Risk = invoice.Risk;
+                    invoiceDTO.Sum = invoice.Sum;
+                    invoiceDTO.PaidDate = invoice.PaidDate;
+                    if (invoice.Priority != null)
+                        invoiceDTO.PriorityName = invoice.Priority.Description;
+                    if (invoice.CompanyReceiver != null)
+                        invoiceDTO.ReceiverName = invoice.CompanyReceiver.Name;
+                    if (invoice.CompanyPayer != null)
+                        invoiceDTO.PayerName = invoice.CompanyPayer.Name;
+                    invoiceDTO.FilePath = invoice.FilePath;
+                    invoiceDTO.Archive = invoice.Archive;
+
+                    invoiceDTOs.Add(invoiceDTO);
+                }
+            }
+            return invoiceDTOs;
+        }
+
+        public static IEnumerable<InvoiceDTO> GetArchivedInvoices()
+        {
+            List<InvoiceDTO> invoiceDTOs = new List<InvoiceDTO>();
+            using (var dc = new FakturiskaDBEntities())
+            {
+                List<Invoice> invoices = dc.Invoices.Where(invoice => invoice.DeleteDate == null && invoice.Archive != null).ToList();
                 foreach (var invoice in invoices)
                 {
                     InvoiceDTO invoiceDTO = new InvoiceDTO();

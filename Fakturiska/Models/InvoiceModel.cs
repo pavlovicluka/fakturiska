@@ -60,9 +60,31 @@ namespace Fakturiska.Models
 
         }
 
-        public static IEnumerable<InvoiceModel> GetAllInvoices()
+        public static IEnumerable<InvoiceModel> GetInvoices()
         {
-            return InvoiceLogic.GetAllInvoices().Select(invoice => new InvoiceModel
+            return InvoiceLogic.GetInvoices().Select(invoice => new InvoiceModel
+            {
+                InvoiceId = invoice.InvoiceId,
+                InvoiceGuid = invoice.InvoiceGuid,
+                Date = invoice.Date,
+                InvoiceEstimate = invoice.InvoiceEstimate,
+                InvoiceTotal = invoice.InvoiceTotal,
+                Incoming = invoice.Incoming,
+                Paid = invoice.Paid,
+                Risk = invoice.Risk,
+                Sum = invoice.Sum,
+                PaidDate = invoice.PaidDate,
+                PriorityName = invoice.PriorityName,
+                ReceiverName = invoice.ReceiverName,
+                PayerName = invoice.PayerName,
+                FilePath = invoice.FilePath,
+                Archive = invoice.Archive,
+            });
+        }
+
+        public static IEnumerable<InvoiceModel> GetArchivedInvoices()
+        {
+            return InvoiceLogic.GetArchivedInvoices().Select(invoice => new InvoiceModel
             {
                 InvoiceId = invoice.InvoiceId,
                 InvoiceGuid = invoice.InvoiceGuid,

@@ -17,7 +17,17 @@ namespace Fakturiska.Controllers
     {
         public ActionResult Invoices()
         {
-            return View(InvoiceModel.GetAllInvoices());
+            return View();
+        }
+
+        public ActionResult TableInvoices()
+        {
+            return PartialView("_TableInvoices", InvoiceModel.GetInvoices());
+        }
+
+        public ActionResult TableArchivedInvoices()
+        {
+            return PartialView("_TableArchivedInvoices", InvoiceModel.GetArchivedInvoices());
         }
 
         public ActionResult CreateInvoice()
@@ -112,7 +122,11 @@ namespace Fakturiska.Controllers
                 });
             }
 
-            return RedirectToAction("Invoices");
+            if(invoice.Archive == null)
+            {
+                return PartialView("_TableInvoices", InvoiceModel.GetInvoices());
+            }
+            return PartialView("_TableArchivedInvoices", InvoiceModel.GetArchivedInvoices());
         }
 
         public ActionResult EditInvoice(Guid id)
@@ -120,28 +134,18 @@ namespace Fakturiska.Controllers
             return PartialView("_CreateEditInvoice", new InvoiceCompaniesModel(id));
         }
 
+        [HttpPost]
         public ActionResult DeleteInvoice(Guid id)
         {
             InvoiceLogic.DeleteInvoice(id);
-            return RedirectToAction("Invoices");
+            return Json("Succeed");
         }
 
+        [HttpPost]
         public ActionResult ArchiveInvoice(Guid id)
         {
             InvoiceLogic.ArchiveInvoice(id);
-            return RedirectToAction("Invoices");
-        }
-
-        public void PrintInvoice(String filePath)
-        {
-            WebClient User = new WebClient();
-            Byte[] FileBuffer = User.DownloadData(filePath);
-            if (FileBuffer != null)
-            {
-                Response.ContentType = "application/pdf";
-                Response.AddHeader("content-length", FileBuffer.Length.ToString());
-                Response.BinaryWrite(FileBuffer);
-            }
+            return Json("Succeed");
         }
 
         [HttpPost]
@@ -163,6 +167,18 @@ namespace Fakturiska.Controllers
         {
             IEnumerable<CompanyDTO> allCompanies = CompanyLogic.GetAllCompaniesAutocomplete(prefix);
             return Json(allCompanies, JsonRequestBehavior.AllowGet);
+        }
+
+        public void PrintInvoice(String filePath)
+        {
+            WebClient User = new WebClient();
+            Byte[] FileBuffer = User.DownloadData(filePath);
+            if (FileBuffer != null)
+            {
+                Response.ContentType = "application/pdf";
+                Response.AddHeader("content-length", FileBuffer.Length.ToString());
+                Response.BinaryWrite(FileBuffer);
+            }
         }
     }
 }

@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Fakturiska.Models.UserModel>
+
+<table id="tableUsers" class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RoleName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @{int count = 0; }
+        @foreach (var item in Model)
+        {
+            count++;
+            <tr id="@count">
+                <td>
+                    <a href="#" id="userEmail" class="editEmail" data-type="text" data-pk="@item.UserGuid" data-url="EditUser" data-title="Edit email">@item.Email</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RoleName)
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger" onclick="deleteUser('@item.UserGuid', @count)"><span class="glyphicon glyphicon-remove"></span></button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

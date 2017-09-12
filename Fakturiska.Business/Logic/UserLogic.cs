@@ -170,12 +170,31 @@ namespace Fakturiska.Business.Logic
             }
         }
 
-        public static IEnumerable<UserDTO> GetAllUsers()
+        public static IEnumerable<UserDTO> GetUsers()
         {
             List<UserDTO> usersDTO = new List<UserDTO>();
             using (var dc = new FakturiskaDBEntities())
             {
                 List<User> users = dc.Users.Where(user => user.DeleteDate == null && user.Password != null).ToList();
+                foreach (var user in users)
+                {
+                    usersDTO.Add(new UserDTO
+                    {
+                        UserGuid = user.UserUId,
+                        Email = user.Email,
+                        RoleId = user.RoleId,
+                    });
+                }
+            }
+            return usersDTO;
+        }
+
+        public static IEnumerable<UserDTO> GetUsersWaiting()
+        {
+            List<UserDTO> usersDTO = new List<UserDTO>();
+            using (var dc = new FakturiskaDBEntities())
+            {
+                List<User> users = dc.Users.Where(user => user.DeleteDate == null && user.Password == null).ToList();
                 foreach(var user in users)
                 {
                     usersDTO.Add(new UserDTO

@@ -21,6 +21,11 @@
     });
 });
 
+var currentModalId;
+function setModal(id) {
+    currentModalId = id;
+}
+
 $(function () {
     $('form').submit(function () {
         if ($(this).valid()) {
@@ -28,9 +33,22 @@ $(function () {
                 url: this.action,
                 type: this.method,
                 data: $(this).serialize(),
-                success: function (result) {
-                    $('#createCompanyModal').modal('toggle');
-                    $('#tableCompanies').html($(result).find("#tableCompanies"));
+                success: function (result) {  
+                    var modal;
+                    if (currentModalId === "createCompanyModal") {
+                        modal = $('#createCompanyModal');
+                    } else {
+                        modal = $('#editCompanyModal' + currentModalId);
+                    }
+
+                    if (result.substring(1, 2) === "t") {
+                        modal.modal('hide');
+                        $('body').removeClass('modal-open');
+                        $('.modal-backdrop').remove();
+                        $('#result').html(result);
+                    } else {
+                        modal.find(".modal-body").html(result);
+                    }
                 }
             });
         }
@@ -38,13 +56,13 @@ $(function () {
     });
 });
 
-function deleteCompany(id) {
+function deleteCompany(companyId, modalId) {
     $.ajax({
         url: "/Company/DeleteCompany",
         type: "POST",
-        data: { id: id },
+        data: { id: companyId },
         success: function (result) {
-            $('#result').html(result);
+            $("#" + modalId).remove();
         }
     });
 }

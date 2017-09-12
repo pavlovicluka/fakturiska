@@ -61,13 +61,23 @@ namespace Fakturiska.Models
             }
         }
              
-        public static IEnumerable<UserModel> GetAllUsers()
+        public static IEnumerable<UserModel> GetUsers()
         {
-            return UserLogic.GetAllUsers().Select(user => new UserModel
+            return UserLogic.GetUsers().Select(user => new UserModel
             {
                 UserGuid = user.UserGuid,
                 Email = user.Email,
                 RoleName = ((RoleEnum) user.RoleId).ToString(),
+            });
+        }
+
+        public static IEnumerable<UserModel> GetUsersWaiting()
+        {
+            return UserLogic.GetUsersWaiting().Select(user => new UserModel
+            {
+                UserGuid = user.UserGuid,
+                Email = user.Email,
+                RoleName = ((RoleEnum)user.RoleId).ToString(),
             });
         }
     }

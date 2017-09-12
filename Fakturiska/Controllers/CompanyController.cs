@@ -12,7 +12,12 @@ namespace Fakturiska.Controllers
     {
         public ActionResult Companies()
         {
-            return View(CompanyModel.GetAllCompanies());
+            return View();
+        }
+
+        public ActionResult TableCompanies()
+        {
+            return PartialView("_TableCompanies", CompanyModel.GetAllCompanies());
         }
 
         public ActionResult CreateCompany()
@@ -23,8 +28,8 @@ namespace Fakturiska.Controllers
         [HttpPost]
         public ActionResult CreateCompany(CompanyModel company)
         {
-            //if (ModelState.IsValid)
-            //{
+            if (ModelState.IsValid)
+            {
                 if (company.CompanyGuid == null || company.CompanyGuid == Guid.Empty)
                 {
                     CompanyLogic.CreateCompany(new CompanyDTO
@@ -61,8 +66,8 @@ namespace Fakturiska.Controllers
                         BankCode = company.BankCode
                     });
                 }
-                return RedirectToAction("Companies");
-           // }
+                return PartialView("_TableCompanies", CompanyModel.GetAllCompanies());
+            }
             return PartialView("_CreateEditCompany", company);
         }
 
@@ -75,7 +80,7 @@ namespace Fakturiska.Controllers
         public ActionResult DeleteCompany(Guid id)
         {
             CompanyLogic.DeleteCompany(id);
-            return RedirectToAction("Companies");
+            return Json("Succeed");
         }
     }
 }

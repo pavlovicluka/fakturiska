@@ -1,0 +1,108 @@
+﻿@model IEnumerable<Fakturiska.Models.CompanyModel>
+
+<table id="tableCompanies" class="table">
+    <thead class="row">
+        <tr>
+            <th class="col-md-1" data-priority="1">
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th class="col-md-1">
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </th>
+            <th class="col-md-1">
+                @Html.DisplayNameFor(model => model.FaxNumber)
+            </th>
+            <th class="col-md-1">
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th class="col-md-1">
+                @Html.DisplayNameFor(model => model.Website)
+            </th>
+            <th class="col-md-1">
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th class="col-md-1">
+                @Html.DisplayNameFor(model => model.PersonalNumber)
+            </th>
+            <th class="col-md-1">
+                @Html.DisplayNameFor(model => model.PIB)
+            </th>
+            <th class="col-md-1">
+                @Html.DisplayNameFor(model => model.MIB)
+            </th>
+            <th class="col-md-1">
+                @Html.DisplayNameFor(model => model.AccountNumber)
+            </th>
+            <th class="col-md-1">
+                @Html.DisplayNameFor(model => model.BankCode)
+            </th>
+            <th class="col-md-1" data-priority="2"></th>
+        </tr>
+    </thead>
+
+    <tbody class="row">
+        @{int count = 0;}
+        @foreach (var item in Model)
+            {
+                count++;
+            <tr id="@count">
+                <td id="Name" class="col-md-1">
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td id="PhoneNumber" class="col-md-1">
+                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                </td>
+                <td id="FaxNumber" class="col-md-1">
+                    @Html.DisplayFor(modelItem => item.FaxNumber)
+                </td>
+                <td id="Address" class="col-md-1">
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td id="Website" class="col-md-1">
+                    @Html.DisplayFor(modelItem => item.Website)
+                </td>
+                <td id="Email" class="col-md-1">
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td id="PersonalNumber" class="col-md-1">
+                    @Html.DisplayFor(modelItem => item.PersonalNumber)
+                </td>
+                <td id="PIB" class="col-md-1">
+                    @Html.DisplayFor(modelItem => item.PIB)
+                </td>
+                <td id="MIB" class="col-md-1">
+                    @Html.DisplayFor(modelItem => item.MIB)
+                </td>
+                <td id="AccountNumber" class="col-md-1">
+                    @Html.DisplayFor(modelItem => item.AccountNumber)
+                </td>
+                <td id="BankCode" class="col-md-1">
+                    @Html.DisplayFor(modelItem => item.BankCode)
+                </td>
+                <td class="col-md-1">
+                    <div class="modal fade" id="@string.Concat("editCompanyModal", count)" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Edit Company</h4>
+                                </div>
+                                <div class="modal-body">
+                                    @Html.Action("EditCompany", "Company", new { id = item.CompanyGuid })
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="submit" class="btn btn-success" value="Edit" form="@string.Concat("companyForm", item.Name)" />
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="@string.Concat("#editCompanyModal", count)" onclick="setModal(@count)"><span class="glyphicon glyphicon-edit"></span></button>
+                        <button type="button" class="btn btn-danger" onclick="deleteCompany('@item.CompanyGuid', @count)"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>             
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

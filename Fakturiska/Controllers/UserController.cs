@@ -11,7 +11,17 @@ namespace Fakturiska.Controllers
     {
         public ActionResult Users()
         {
-            return View(UserModel.GetAllUsers());
+            return View();
+        }
+
+        public ActionResult TableUsers()
+        {
+            return PartialView("_TableUsers", UserModel.GetUsers());
+        }
+
+        public ActionResult TableUsersWaiting()
+        {
+            return PartialView("_TableUsersWaiting", UserModel.GetUsersWaiting());
         }
 
         [HttpPost]
@@ -22,13 +32,14 @@ namespace Fakturiska.Controllers
                 UserGuid = new Guid(pk),
                 Email = value,
             });
-            return RedirectToAction("Users");
+            return Json("Succeed");
         }
 
+        [HttpPost]
         public ActionResult DeleteUser(Guid id)
         {
             UserLogic.DeleteUser(id);
-            return RedirectToAction("Users");
+            return Json("Succeed");
         }
 
         [HttpPost]
@@ -40,7 +51,7 @@ namespace Fakturiska.Controllers
                 Email = email,
                 RoleId = int.Parse(role),
             });
-            return RedirectToAction("Users");
+            return Json("Succeed");
         }
     }
 }

@@ -21,42 +21,27 @@
 
 <a href="#" id="addUser" title="Add User" class="btn btn-info" data-toggle="popover">Add User</a><br>
 
-
+<h2>Korisnici</h2>
 <div class="form-group col-md-3" style="padding-right:0px">
     <div class="input-group">
         <input class="form-control" id="searchUsers" type="search" placeholder="Pretrazi">
         <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
     </div>
 </div>
-<table id="tableUsers" class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RoleName)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
+<div id="result">
+    @Html.Action("TableUsers", "User")
+</div>
 
-    <tbody>
-        @foreach (var item in Model) {
-            <tr>
-                <td>
-                    <a href="#" id="userEmail" class="editEmail" data-type="text" data-pk="@item.UserGuid" data-url="EditUser" data-title="Edit email">@item.Email</a> 
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RoleName)
-                </td>
-                <td>
-                    @Html.ActionLink("Obrisi", "DeleteUser", new {  id=item.UserGuid  })
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<h2>Novi Korisnici</h2>
+<div class="form-group col-md-3" style="padding-right:0px">
+    <div class="input-group">
+        <input class="form-control" id="searchUsersWaiting" type="search" placeholder="Pretrazi">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
+    </div>
+</div>
+<div id="result">
+    @Html.Action("TableUsersWaiting", "User")
+</div>
 
 @section Scripts {
     @Scripts.Render("~/Scripts/Custom/users.js")

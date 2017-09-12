@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Fakturiska.Models.InvoiceModel>
+
+<table id="tableInvoices" class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.InvoiceId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @{int count = 0;}
+        @foreach (var item in Model)
+            {
+                count++;
+                if (item.Archive == null)
+                {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.InvoiceId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        <div class="modal fade" id="@string.Concat("editInvoiceModal", count)" role="dialog">
+                            <div class="modal-dialog" style="width: 1000px;">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">Edit Invoice</h4>
+                                    </div>
+                                    <div class="modal-body" id="@string.Concat("editInvoiceForm", count)">
+                                        @Html.Action("EditInvoice", "Invoice", new { id = item.InvoiceGuid })
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                        <input type="submit" class="btn btn-success" data-dismiss="modal" value="Edit" form="invoiceForm" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="@string.Concat("#editInvoiceModal", count)" onclick="setModal('@string.Concat("#editInvoiceForm", count)')">Izmeni</button>
+                        @Html.ActionLink("Arhiviraj", "ArchiveInvoice", new { id = item.InvoiceGuid }) |
+                        @Ajax.ActionLink("Stampaj", "PrintInvoice", new { filePath = item.FilePath }, new AjaxOptions { }) |
+                        @Html.ActionLink("Obrisi", "DeleteInvoice", new { id = item.InvoiceGuid })
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
