@@ -19,7 +19,11 @@
     </div>
 </div> 
 
-<a href="#" id="addUser" title="Add User" class="btn btn-info" data-toggle="popover">Add User</a><br>
+<div class="row">
+    <div class="pull-right" style="padding-top:35px">
+        <a class="btn btn-info btn-lg" id="addUser" data-toggle="popover" data-placement="bottom">Kreiraj nalog</a>
+    </div>
+</div>
 
 <h2>Korisnici</h2>
 <div class="form-group col-md-3" style="padding-right:0px">
@@ -39,7 +43,7 @@
         <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
     </div>
 </div>
-<div id="result">
+<div id="resultWaiting">
     @Html.Action("TableUsersWaiting", "User")
 </div>
 

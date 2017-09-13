@@ -1,4 +1,5 @@
-﻿using Fakturiska.Business.Enumerations;
+﻿using Fakturiska.Business.DTOs;
+using Fakturiska.Business.Enumerations;
 using Fakturiska.Business.Logic;
 using System;
 using System.Collections.Generic;
@@ -67,7 +68,7 @@ namespace Fakturiska.Models
             {
                 UserGuid = user.UserGuid,
                 Email = user.Email,
-                RoleName = ((RoleEnum) user.RoleId).ToString(),
+                RoleName = user.RoleName,
             });
         }
 
@@ -77,7 +78,7 @@ namespace Fakturiska.Models
             {
                 UserGuid = user.UserGuid,
                 Email = user.Email,
-                RoleName = ((RoleEnum)user.RoleId).ToString(),
+                RoleName = user.RoleName,
             });
         }
     }

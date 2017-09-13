@@ -1,4 +1,5 @@
-﻿using Fakturiska.Business.Enumerations;
+﻿using Fakturiska.Business.DTOs;
+using Fakturiska.Business.Enumerations;
 using Fakturiska.Business.Logic;
 using System;
 using System.Collections.Generic;
@@ -60,48 +61,62 @@ namespace Fakturiska.Models
 
         }
 
+        public InvoiceModel(InvoiceDTO invoice)
+        {
+            InvoiceId = invoice.InvoiceId;
+            InvoiceGuid = invoice.InvoiceGuid;
+            Date = invoice.Date;
+            InvoiceEstimate = invoice.InvoiceEstimate;
+            InvoiceTotal = invoice.InvoiceTotal;
+            Incoming = invoice.Incoming;
+            Paid = invoice.Paid;
+            Risk = invoice.Risk;
+            Sum = invoice.Sum;
+            PaidDate = invoice.PaidDate;
+            if (invoice.PriorityId != null)
+            {
+                Priority = (PriorityEnum)invoice.PriorityId;
+                PriorityName = invoice.PriorityName;
+            }
+            ReceiverName = invoice.ReceiverName;
+            PayerName = invoice.PayerName;
+            FilePath = invoice.FilePath;
+            Archive = invoice.Archive;
+        }
+
         public static IEnumerable<InvoiceModel> GetInvoices()
         {
-            return InvoiceLogic.GetInvoices().Select(invoice => new InvoiceModel
-            {
-                InvoiceId = invoice.InvoiceId,
-                InvoiceGuid = invoice.InvoiceGuid,
-                Date = invoice.Date,
-                InvoiceEstimate = invoice.InvoiceEstimate,
-                InvoiceTotal = invoice.InvoiceTotal,
-                Incoming = invoice.Incoming,
-                Paid = invoice.Paid,
-                Risk = invoice.Risk,
-                Sum = invoice.Sum,
-                PaidDate = invoice.PaidDate,
-                PriorityName = invoice.PriorityName,
-                ReceiverName = invoice.ReceiverName,
-                PayerName = invoice.PayerName,
-                FilePath = invoice.FilePath,
-                Archive = invoice.Archive,
-            });
+            return InvoiceLogic.GetInvoices().Select(invoice => new InvoiceModel(invoice));
         }
 
         public static IEnumerable<InvoiceModel> GetArchivedInvoices()
         {
-            return InvoiceLogic.GetArchivedInvoices().Select(invoice => new InvoiceModel
-            {
-                InvoiceId = invoice.InvoiceId,
-                InvoiceGuid = invoice.InvoiceGuid,
-                Date = invoice.Date,
-                InvoiceEstimate = invoice.InvoiceEstimate,
-                InvoiceTotal = invoice.InvoiceTotal,
-                Incoming = invoice.Incoming,
-                Paid = invoice.Paid,
-                Risk = invoice.Risk,
-                Sum = invoice.Sum,
-                PaidDate = invoice.PaidDate,
-                PriorityName = invoice.PriorityName,
-                ReceiverName = invoice.ReceiverName,
-                PayerName = invoice.PayerName,
-                FilePath = invoice.FilePath,
-                Archive = invoice.Archive,
-            });
+            return InvoiceLogic.GetArchivedInvoices().Select(invoice => new InvoiceModel(invoice));
+        }
+
+        public static InvoiceDTO MapModelToDTO(InvoiceModel invoice, int? userId, int? receiverId, int? payerId, string filePath)
+        {
+            InvoiceDTO invoiceDTO = new InvoiceDTO();
+            if (invoice.InvoiceGuid != null && invoice.InvoiceGuid != Guid.Empty)
+                invoiceDTO.InvoiceGuid = invoice.InvoiceGuid;
+            if (userId != null)
+                invoiceDTO.UserId = (int)userId;
+            invoiceDTO.Date = invoice.Date;
+            invoiceDTO.InvoiceEstimate = Convert.ToInt32(invoice.InvoiceEstimateChecked);
+            invoiceDTO.InvoiceTotal = Convert.ToInt32(invoice.InvoiceTotalChecked);
+            invoiceDTO.Incoming = Convert.ToInt32(invoice.IncomingChecked);
+            invoiceDTO.Paid = Convert.ToInt32(invoice.PaidChecked);
+            invoiceDTO.Risk = Convert.ToInt32(invoice.RiskChecked);
+            invoiceDTO.Sum = invoice.Sum;
+            invoiceDTO.PriorityId = (int)invoice.Priority + 1;
+            if (receiverId != null)
+                invoiceDTO.ReceiverId = receiverId;
+            if (payerId != null)
+                invoiceDTO.PayerId = payerId;
+            if (filePath != null)
+                invoiceDTO.FilePath = filePath;
+
+            return invoiceDTO;
         }
     }
 }

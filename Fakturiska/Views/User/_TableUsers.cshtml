@@ -18,7 +18,7 @@
         @foreach (var item in Model)
         {
             count++;
-            <tr id="@count">
+            <tr id="@string.Concat("row", count)">
                 <td>
                     <a href="#" id="userEmail" class="editEmail" data-type="text" data-pk="@item.UserGuid" data-url="EditUser" data-title="Edit email">@item.Email</a>
                 </td>
@@ -26,7 +26,7 @@
                     @Html.DisplayFor(modelItem => item.RoleName)
                 </td>
                 <td>
-                    <button type="button" class="btn btn-danger" onclick="deleteUser('@item.UserGuid', @count)"><span class="glyphicon glyphicon-remove"></span></button>
+                    <a class="btn btn-danger" onclick="deleteUser('@item.UserGuid', @count, 'false')"><span class="glyphicon glyphicon-remove"></span></a>
                 </td>
             </tr>
         }

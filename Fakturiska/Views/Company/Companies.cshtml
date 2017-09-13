@@ -5,7 +5,7 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Create Company</h4>
             </div>
-            <div class="modal-body">
+            <div class="modal-body row">
                 @Html.Action("CreateCompany", "Company")
             </div>
             <div class="modal-footer">
@@ -17,7 +17,9 @@
 </div>
 
 <div class="row">
-    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#createCompanyModal" onclick="setModal('createCompanyModal')">Kreiraj</button>
+    <div class="pull-right" style="padding-top:35px">
+        <a class="btn btn-info btn-lg" data-toggle="modal" data-target="#createCompanyModal" onclick="setModal('#createCompanyModal')">Kreiraj</a>
+    </div>
 </div>
 
 <div class="form-group col-md-3" style="padding-right:0px">

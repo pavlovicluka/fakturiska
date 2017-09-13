@@ -14,6 +14,7 @@ namespace Fakturiska.Business.Logic
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
             // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=316888
             OwinConfig.ConfigureAuth(app);
+            app.MapSignalR();
         }
     }
 }

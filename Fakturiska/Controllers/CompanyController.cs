@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
 using Fakturiska.Business.Logic;
-using Fakturiska.Business.DTOs;
 using Fakturiska.Models;
-using System.Web.ModelBinding;
 
 namespace Fakturiska.Controllers
 {
@@ -32,39 +30,11 @@ namespace Fakturiska.Controllers
             {
                 if (company.CompanyGuid == null || company.CompanyGuid == Guid.Empty)
                 {
-                    CompanyLogic.CreateCompany(new CompanyDTO
-                    {
-                        CompanyGuid = Guid.NewGuid(),
-                        Name = company.Name,
-                        PhoneNumber = company.PhoneNumber,
-                        FaxNumber = company.FaxNumber,
-                        Address = company.Address,
-                        Website = company.Website,
-                        Email = company.Email,
-                        PersonalNumber = company.PersonalNumber,
-                        PIB = company.PIB,
-                        MIB = company.MIB,
-                        AccountNumber = company.AccountNumber,
-                        BankCode = company.BankCode
-                    });
+                    CompanyLogic.CreateCompany(CompanyModel.MapModelToDTO(company));
                 }
                 else
                 {
-                    CompanyLogic.EditCompany(new CompanyDTO
-                    {
-                        CompanyGuid = (Guid)company.CompanyGuid,
-                        Name = company.Name,
-                        PhoneNumber = company.PhoneNumber,
-                        FaxNumber = company.FaxNumber,
-                        Address = company.Address,
-                        Website = company.Website,
-                        Email = company.Email,
-                        PersonalNumber = company.PersonalNumber,
-                        PIB = company.PIB,
-                        MIB = company.MIB,
-                        AccountNumber = company.AccountNumber,
-                        BankCode = company.BankCode
-                    });
+                    CompanyLogic.CreateCompany(CompanyModel.MapModelToDTO(company));
                 }
                 return PartialView("_TableCompanies", CompanyModel.GetAllCompanies());
             }

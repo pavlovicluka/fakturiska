@@ -47,11 +47,10 @@ namespace Fakturiska.Controllers
         {
             UserLogic.CreateUserWithoutPassword(new UserDTO
             {
-                UserGuid = Guid.NewGuid(),
                 Email = email,
                 RoleId = int.Parse(role),
             });
-            return Json("Succeed");
+            return PartialView("_TableUsersWaiting", UserModel.GetUsersWaiting());
         }
     }
 }

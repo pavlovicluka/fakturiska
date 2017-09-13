@@ -68,106 +68,104 @@
         }
 
         @foreach (var item in Model)
-            {
-                if (item.Archive == 1)
-                {
-                    count++;
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.InvoiceId)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Date)
-                    </td>
-                    <td>
-                        @if (isChecked(item.InvoiceEstimate) == 1)
-                        {
-                            @: DA
+        {
+
+            count++;
+            <tr id="@string.Concat("rowArchive", count)">
+                <td>
+                    @Html.DisplayFor(modelItem => item.InvoiceId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @if (isChecked(item.InvoiceEstimate) == 1)
+                    {
+                        @: DA
                             }
-                        else if (isChecked(item.InvoiceEstimate) == 0)
-                        {
-                            @: NE
+                    else if (isChecked(item.InvoiceEstimate) == 0)
+                    {
+                        @: NE
                             }
-                    </td>
-                    <td>
-                        @if (isChecked(item.InvoiceTotal) == 1)
-                        {
-                            @: DA
+                </td>
+                <td>
+                    @if (isChecked(item.InvoiceTotal) == 1)
+                    {
+                        @: DA
                              }
-                        else if (isChecked(item.InvoiceTotal) == 0)
-                        {
-                            @: NE
+                    else if (isChecked(item.InvoiceTotal) == 0)
+                    {
+                        @: NE
                              }
-                    </td>
-                    <td>
-                        @if (isChecked(item.Incoming) == 1)
-                        {
-                            @: DA
+                </td>
+                <td>
+                    @if (isChecked(item.Incoming) == 1)
+                    {
+                        @: DA
                              }
-                        else if (isChecked(item.Incoming) == 0)
-                        {
-                            @: NE
+                    else if (isChecked(item.Incoming) == 0)
+                    {
+                        @: NE
                             }
-                    </td>
-                    <td>
-                        @if (isChecked(item.Paid) == 1)
-                        {
-                            @: DA
+                </td>
+                <td>
+                    @if (isChecked(item.Paid) == 1)
+                    {
+                        @: DA
                             }
-                        else if (isChecked(item.Paid) == 0)
-                        {
-                            @: NE
+                    else if (isChecked(item.Paid) == 0)
+                    {
+                        @: NE
                              }
-                    </td>
-                    <td>
-                        @if (isChecked(item.Risk) == 1)
-                        {
-                            @: DA
+                </td>
+                <td>
+                    @if (isChecked(item.Risk) == 1)
+                    {
+                        @: DA
                              }
-                        else if (isChecked(item.Risk) == 0)
-                        {
-                            @: NE
+                    else if (isChecked(item.Risk) == 0)
+                    {
+                        @: NE
                             }
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Sum)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PaidDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PriorityName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ReceiverName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PayerName)
-                    </td>
-                    <td>
-                        <div class="modal fade" id="@string.Concat("editArchivedInvoiceModal", count)" role="dialog">
-                            <div class="modal-dialog" style="width: 1000px;">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        <h4 class="modal-title">Edit Invoice</h4>
-                                    </div>
-                                    <div class="modal-body" id="@string.Concat("editInvoiceForm", count)">
-                                        @Html.Action("EditInvoice", "Invoice", new { id = item.InvoiceGuid })
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                        <input type="submit" class="btn btn-success" value="Edit" form="invoiceForm" />
-                                    </div>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Sum)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaidDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PriorityName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReceiverName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PayerName)
+                </td>
+                <td>
+                    <div class="modal fade" id="@string.Concat("editArchivedInvoiceModal", count)" role="dialog">
+                        <div class="modal-dialog" style="width: 1000px;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Izmeni fakturu</h4>
+                                </div>
+                                <div class="modal-body row">
+                                    @Html.Action("EditInvoice", "Invoice", new { id = item.InvoiceGuid })
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="submit" class="btn btn-success" value="Edit" form="@string.Concat("invoiceForm", item.InvoiceId)" />
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="@string.Concat("#editArchivedInvoiceModal", count)" onclick="setModal('@string.Concat("#editInvoiceForm", count)')">Izmeni</button>
-                        @Html.ActionLink("Obrisi", "DeleteInvoice", new { id = item.InvoiceGuid }) |
-                        @Ajax.ActionLink("Stampaj", "PrintInvoice", new { filePath = item.FilePath }, new AjaxOptions { })
-                    </td>
-                </tr>
-            }
+                    </div>
+                    <a class="btn btn-info" onclick="setModal('@string.Concat("#editArchivedInvoiceModal", count)')" data-toggle="modal" data-target="@string.Concat("#editArchivedInvoiceModal", count)"><span class="glyphicon glyphicon-edit"></span></a>
+                    <a class="btn btn-danger" onclick="deleteInvoice('@item.InvoiceGuid', @count, 'true')"><span class="glyphicon glyphicon-remove"></span></a>
+                    <a class="btn btn-primary" href="@string.Concat("/Invoice/PrintInvoice?filePath=", item.FilePath)"><span class="glyphicon glyphicon-print"></span></a>
+                </td>
+            </tr>       
         }
     </tbody>
 </table>

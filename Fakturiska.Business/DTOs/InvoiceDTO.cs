@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Fakturiska.Database;
+using System;
 
 namespace Fakturiska.Business.DTOs
 {
@@ -28,5 +25,41 @@ namespace Fakturiska.Business.DTOs
         public string FilePath { get; set; }
         public int? Archive { get; set; }
         public DateTime? DeleteDate { get; set; }
+
+        public InvoiceDTO()
+        {
+
+        }
+
+        public InvoiceDTO(Invoice invoice)
+        {
+            InvoiceId = invoice.InvoiceId;
+            InvoiceGuid = invoice.InvoiceUId;
+            Date = invoice.Date;
+            InvoiceEstimate = invoice.InvoiceEstimate;
+            InvoiceTotal = invoice.InvoiceTotal;
+            Incoming = invoice.Incoming;
+            Paid = invoice.Paid;
+            Risk = invoice.Risk;
+            Sum = invoice.Sum;
+            PaidDate = invoice.PaidDate;
+            if (invoice.Priority != null)
+            {
+                PriorityId = invoice.PriorityId;
+                PriorityName = invoice.Priority.Description;
+            }
+            if (invoice.CompanyReceiver != null)
+            {
+                ReceiverId = invoice.ReceiverId;
+                ReceiverName = invoice.CompanyReceiver.Name;
+            }
+            if (invoice.CompanyPayer != null)
+            {
+                PayerId = invoice.PayerId;
+                PayerName = invoice.CompanyPayer.Name;
+            }
+            FilePath = invoice.FilePath;
+            Archive = invoice.Archive;
+        }
     }
 }

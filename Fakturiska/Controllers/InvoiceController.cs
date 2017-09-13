@@ -46,80 +46,24 @@ namespace Fakturiska.Controllers
             int? receiverId = null;
             if (companyReceiver != null)
             {
-                receiverId = CompanyLogic.CreateCompany(new CompanyDTO
-                {
-                    CompanyGuid = Guid.NewGuid(),
-                    Name = companyReceiver.Name,
-                    PhoneNumber = companyReceiver.PhoneNumber,
-                    FaxNumber = companyReceiver.FaxNumber,
-                    Address = companyReceiver.Address,
-                    Website = companyReceiver.Website,
-                    Email = companyReceiver.Email,
-                    PersonalNumber = companyReceiver.PersonalNumber,
-                    PIB = companyReceiver.PIB,
-                    MIB = companyReceiver.MIB,
-                    AccountNumber = companyReceiver.AccountNumber,
-                    BankCode = companyReceiver.BankCode
-                });
+                receiverId = CompanyLogic.CreateCompany(CompanyModel.MapModelToDTO(companyReceiver));
             }
 
             int? payerId = null;
             if (companyPayer != null)
             {
-                payerId = CompanyLogic.CreateCompany(new CompanyDTO
-                {
-                    CompanyGuid = Guid.NewGuid(),
-                    Name = companyPayer.Name,
-                    PhoneNumber = companyPayer.PhoneNumber,
-                    FaxNumber = companyPayer.FaxNumber,
-                    Address = companyPayer.Address,
-                    Website = companyPayer.Website,
-                    Email = companyPayer.Email,
-                    PersonalNumber = companyPayer.PersonalNumber,
-                    PIB = companyPayer.PIB,
-                    MIB = companyPayer.MIB,
-                    AccountNumber = companyPayer.AccountNumber,
-                    BankCode = companyPayer.BankCode
-                });
+                payerId = CompanyLogic.CreateCompany(CompanyModel.MapModelToDTO(companyPayer));
             }
 
             if (invoice.InvoiceGuid == Guid.Empty)
             {
                 string filePath = InvoiceLogic.ConvertAndSaveFile(invoice.File);
 
-                InvoiceLogic.CreateInvoice(new InvoiceDTO
-                {
-                    InvoiceGuid = Guid.NewGuid(),
-                    UserId = int.Parse(identity.GetUserId()),
-                    Date = invoice.Date,
-                    InvoiceEstimate = Convert.ToInt32(invoice.InvoiceEstimateChecked),
-                    InvoiceTotal = Convert.ToInt32(invoice.InvoiceTotalChecked),
-                    Incoming = Convert.ToInt32(invoice.IncomingChecked),
-                    Paid = Convert.ToInt32(invoice.PaidChecked),
-                    Risk = Convert.ToInt32(invoice.RiskChecked),
-                    PriorityId = (int)invoice.Priority + 1,
-                    Sum = invoice.Sum,
-                    ReceiverId = receiverId,
-                    PayerId = payerId,
-                    FilePath = filePath,
-                });
+                InvoiceLogic.CreateInvoice(InvoiceModel.MapModelToDTO(invoice, int.Parse(identity.GetUserId()), receiverId, payerId, filePath));
             }
             else
             {
-                InvoiceLogic.EditInvoice(new InvoiceDTO
-                {
-                    InvoiceGuid = invoice.InvoiceGuid,
-                    Date = invoice.Date,
-                    InvoiceEstimate = Convert.ToInt32(invoice.InvoiceEstimateChecked),
-                    InvoiceTotal = Convert.ToInt32(invoice.InvoiceTotalChecked),
-                    Incoming = Convert.ToInt32(invoice.IncomingChecked),
-                    Paid = Convert.ToInt32(invoice.PaidChecked),
-                    Risk = Convert.ToInt32(invoice.RiskChecked),
-                    Sum = invoice.Sum,
-                    PriorityId = (int)invoice.Priority + 1,
-                    ReceiverId = receiverId,
-                    PayerId = payerId,
-                });
+                InvoiceLogic.EditInvoice(InvoiceModel.MapModelToDTO(invoice, null, receiverId, payerId, null));
             }
 
             if(invoice.Archive == null)
@@ -145,7 +89,19 @@ namespace Fakturiska.Controllers
         public ActionResult ArchiveInvoice(Guid id)
         {
             InvoiceLogic.ArchiveInvoice(id);
-            return Json("Succeed");
+            return PartialView("_TableArchivedInvoices", InvoiceModel.GetArchivedInvoices());
+        }
+
+        public void PrintInvoice(String filePath)
+        {
+            WebClient User = new WebClient();
+            Byte[] FileBuffer = User.DownloadData(filePath);
+            if (FileBuffer != null)
+            {
+                Response.ContentType = "application/pdf";
+                Response.AddHeader("content-length", FileBuffer.Length.ToString());
+                Response.BinaryWrite(FileBuffer);
+            }
         }
 
         [HttpPost]
@@ -167,18 +123,6 @@ namespace Fakturiska.Controllers
         {
             IEnumerable<CompanyDTO> allCompanies = CompanyLogic.GetAllCompaniesAutocomplete(prefix);
             return Json(allCompanies, JsonRequestBehavior.AllowGet);
-        }
-
-        public void PrintInvoice(String filePath)
-        {
-            WebClient User = new WebClient();
-            Byte[] FileBuffer = User.DownloadData(filePath);
-            if (FileBuffer != null)
-            {
-                Response.ContentType = "application/pdf";
-                Response.AddHeader("content-length", FileBuffer.Length.ToString());
-                Response.BinaryWrite(FileBuffer);
-            }
         }
     }
 }

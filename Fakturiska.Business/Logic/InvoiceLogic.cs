@@ -2,6 +2,7 @@
 using Fakturiska.Database;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using Microsoft.AspNet.SignalR;
 using OpenPop.Mime;
 using System;
 using System.Collections.Generic;
@@ -41,15 +42,7 @@ namespace Fakturiska.Business.Logic
             using (var dc = new FakturiskaDBEntities())
             {
                 dc.Invoices.Add(i);
-
-                try
-                {
-                    dc.SaveChanges();
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
+                dc.SaveChanges();
             }
         }
 
@@ -57,21 +50,8 @@ namespace Fakturiska.Business.Logic
         {
             using (var dc = new FakturiskaDBEntities())
             {
-                var invoice = dc.Invoices.Where(i => i.InvoiceUId == invoiceGuid).FirstOrDefault();
-                return new InvoiceDTO
-                {
-                    Date = invoice.Date,
-                    InvoiceEstimate = invoice.InvoiceEstimate,
-                    InvoiceTotal = invoice.InvoiceTotal,
-                    Incoming = invoice.Incoming,
-                    Paid = invoice.Paid,
-                    Risk = invoice.Risk,
-                    Sum = invoice.Sum,
-                    PaidDate = invoice.PaidDate,
-                    PriorityId = invoice.PriorityId,
-                    ReceiverId = invoice.ReceiverId,
-                    PayerId = invoice.PayerId,
-                };
+                var invoice = dc.Invoices.FirstOrDefault(i => i.InvoiceUId == invoiceGuid);
+                return new InvoiceDTO(invoice);
             }
         }
 
@@ -99,14 +79,7 @@ namespace Fakturiska.Business.Logic
                    i.ReceiverId = invoice.ReceiverId;
                    i.PayerId = invoice.PayerId;
                 }
-                try
-                {
-                    dc.SaveChanges();
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
+                dc.SaveChanges();
             }
         }
 
@@ -119,14 +92,7 @@ namespace Fakturiska.Business.Logic
                 {
                     invoice.Archive = 1;
                 }
-                try
-                {
-                    dc.SaveChanges();
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
+                dc.SaveChanges();
             }
         }
 
@@ -139,83 +105,35 @@ namespace Fakturiska.Business.Logic
                 {
                     invoice.DeleteDate = DateTime.Now;
                 }
-                try
-                {
-                    dc.SaveChanges();
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
+                dc.SaveChanges();
             }
         }
 
         public static IEnumerable<InvoiceDTO> GetInvoices()
         {
-            List<InvoiceDTO> invoiceDTOs = new List<InvoiceDTO>();
+            List<InvoiceDTO> invoiceDTOs = null;
             using (var dc = new FakturiskaDBEntities())
             {
-                List<Invoice> invoices = dc.Invoices.Where(invoice => invoice.DeleteDate == null && invoice.Archive == null).ToList();
-                foreach (var invoice in invoices)
-                {
-                    InvoiceDTO invoiceDTO = new InvoiceDTO();
-                    invoiceDTO.InvoiceId = invoice.InvoiceId;
-                    invoiceDTO.InvoiceGuid = invoice.InvoiceUId;
-                    invoiceDTO.Date = invoice.Date;
-                    invoiceDTO.InvoiceEstimate = invoice.InvoiceEstimate;
-                    invoiceDTO.InvoiceTotal = invoice.InvoiceTotal;
-                    invoiceDTO.Incoming = invoice.Incoming;
-                    invoiceDTO.Paid = invoice.Paid;
-                    invoiceDTO.Risk = invoice.Risk;
-                    invoiceDTO.Sum = invoice.Sum;
-                    invoiceDTO.PaidDate = invoice.PaidDate;
-                    if (invoice.Priority != null)
-                        invoiceDTO.PriorityName = invoice.Priority.Description;
-                    if (invoice.CompanyReceiver != null)
-                        invoiceDTO.ReceiverName = invoice.CompanyReceiver.Name;
-                    if (invoice.CompanyPayer != null)
-                        invoiceDTO.PayerName = invoice.CompanyPayer.Name;
-                    invoiceDTO.FilePath = invoice.FilePath;
-                    invoiceDTO.Archive = invoice.Archive;
-
-                    invoiceDTOs.Add(invoiceDTO);
-                }
+                var invoices = dc.Invoices.Where(invoice => invoice.DeleteDate == null && invoice.Archive == null).ToList();
+                invoiceDTOs = invoices.Select(invoice => new InvoiceDTO(invoice)).ToList();
             }
             return invoiceDTOs;
         }
 
         public static IEnumerable<InvoiceDTO> GetArchivedInvoices()
         {
-            List<InvoiceDTO> invoiceDTOs = new List<InvoiceDTO>();
+            List<InvoiceDTO> invoiceDTOs = null;
             using (var dc = new FakturiskaDBEntities())
             {
-                List<Invoice> invoices = dc.Invoices.Where(invoice => invoice.DeleteDate == null && invoice.Archive != null).ToList();
-                foreach (var invoice in invoices)
-                {
-                    InvoiceDTO invoiceDTO = new InvoiceDTO();
-                    invoiceDTO.InvoiceId = invoice.InvoiceId;
-                    invoiceDTO.InvoiceGuid = invoice.InvoiceUId;
-                    invoiceDTO.Date = invoice.Date;
-                    invoiceDTO.InvoiceEstimate = invoice.InvoiceEstimate;
-                    invoiceDTO.InvoiceTotal = invoice.InvoiceTotal;
-                    invoiceDTO.Incoming = invoice.Incoming;
-                    invoiceDTO.Paid = invoice.Paid;
-                    invoiceDTO.Risk = invoice.Risk;
-                    invoiceDTO.Sum = invoice.Sum;
-                    invoiceDTO.PaidDate = invoice.PaidDate;
-                    if (invoice.Priority != null)
-                        invoiceDTO.PriorityName = invoice.Priority.Description;
-                    if (invoice.CompanyReceiver != null)
-                        invoiceDTO.ReceiverName = invoice.CompanyReceiver.Name;
-                    if (invoice.CompanyPayer != null)
-                        invoiceDTO.PayerName = invoice.CompanyPayer.Name;
-                    invoiceDTO.FilePath = invoice.FilePath;
-                    invoiceDTO.Archive = invoice.Archive;
-
-                    invoiceDTOs.Add(invoiceDTO);
-                }
+                var invoices = dc.Invoices.Where(invoice => invoice.DeleteDate == null && invoice.Archive != null).ToList();
+                invoiceDTOs = invoices.Select(invoice => new InvoiceDTO(invoice)).ToList();
             }
             return invoiceDTOs;
+        }
+
+        private static Invoice GetInvoiceByGuid(Guid invoiceGuid, FakturiskaDBEntities dc)
+        {
+            return dc.Invoices.FirstOrDefault(i => i.InvoiceUId == invoiceGuid && i.DeleteDate == null);
         }
 
         public static string ConvertAndSaveFile(HttpPostedFileBase invoiceFile)
@@ -250,13 +168,10 @@ namespace Fakturiska.Business.Logic
             return path;
         }
 
-        private static Invoice GetInvoiceByGuid(Guid invoiceGuid, FakturiskaDBEntities dc)
+        public static void ReceiveMail()
         {
-            return dc.Invoices.Where(i => i.InvoiceUId == invoiceGuid && i.DeleteDate == null).FirstOrDefault();
-        }
+            var context = GlobalHost.ConnectionManager.GetHubContext<RealTime>();
 
-        private static void ReceiveMail()
-        {
             OpenPop.Pop3.Pop3Client PopClient = new OpenPop.Pop3.Pop3Client();
             PopClient.Connect("pop.mail.com", 995, true);
             PopClient.Authenticate("pavlovicluka.99@mail.com", "proba123", OpenPop.Pop3.AuthenticationMethod.UsernameAndPassword);
@@ -274,12 +189,14 @@ namespace Fakturiska.Business.Logic
             {
                 foreach (var attachment in msg.FindAllAttachments())
                 {
-                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(attachment.FileName);
+                    /*var fileName = Guid.NewGuid().ToString() + Path.GetExtension(attachment.FileName);
                     string filePath = Path.Combine(HttpContext.Current.Server.MapPath("~/Files/"), fileName);
                     FileStream Stream = new FileStream(filePath, FileMode.Create);
                     BinaryWriter BinaryStream = new BinaryWriter(Stream);
                     BinaryStream.Write(attachment.Body);
-                    BinaryStream.Close();
+                    BinaryStream.Close();*/
+
+                    context.Clients.All.Send("Mail received!");
                 }
             }
             PopClient.DeleteAllMessages();

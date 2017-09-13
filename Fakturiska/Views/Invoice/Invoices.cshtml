@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Fakturiska.Models.InvoiceModel>
 
 @{
-    ViewBag.Title = "Invoices";
+    ViewBag.Title = "Upravljanje fakturama";
 }
 
 <div class="container">
@@ -10,21 +10,30 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Edit Invoice</h4>
+                    <h4 class="modal-title">Kreiraj fakturu</h4>
                 </div>
-                <div class="modal-body" id="createInvoiceForm">
+                <div class="modal-body row" id="createInvoiceForm">
                     @Html.Action("CreateInvoice", "Invoice")
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-success" value="Create" form="invoiceForm" />
+                    <input type="submit" class="btn btn-success" value="Kreiraj" form="invoiceForm0" />
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Zatvori</button>
                 </div>
             </div>
         </div>
     </div>
-    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#createInvoiceModal" onclick="setModal('#createInvoiceForm')">Dodaj novu</button>
+    <div class="row">
+        <div class="pull-right" style="padding-top:35px">
+            <a class="btn btn-info btn-lg" data-toggle="modal" data-target="#createInvoiceModal" onclick="setModal('#createInvoiceModal')">Dodaj novu</a>
+        </div>
+    </div>
 
-    <h2>Nove fakture</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <h2 class="col-md-offset-8">Nove fakture</h2>
+        </div>
+    </div>
+
     <div class="form-group col-md-3" style="padding-right:0px">
         <div class="input-group">
             <input class="form-control" id="searchInvoices" type="search" placeholder="Pretrazi">
@@ -68,9 +77,14 @@
     <div id="resultArchive">
         @Html.Action("TableArchivedInvoices", "Invoice")
     </div>
+    <input type="button" id="sendmessage" value="Send" />
 </div>
 
 @section Scripts {
+    @Scripts.Render("~/Scripts/jquery.signalR-2.2.2.js")
+    <script src="/signalr/hubs"></script>
+    @Scripts.Render("~/Scripts/notify.min.js")
+
     @Scripts.Render("~/Scripts/Custom/invoices.js")
     @Scripts.Render("~/Scripts/Custom/invoice.js")
 }

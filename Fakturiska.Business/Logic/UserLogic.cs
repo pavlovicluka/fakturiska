@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Fakturiska.Business.Logic
 {
@@ -18,12 +16,7 @@ namespace Fakturiska.Business.Logic
             {
                 var user = dc.Users.Where(u => u.Email == email && u.Password == password && u.DeleteDate == null).ToList();
                 if (user.Any()) {
-                    return new UserDTO
-                    {
-                        Email = user.First().Email,
-                        RoleName = user.First().Role.Description,
-                        UserId = user.First().UserId
-                    };
+                    return new UserDTO(user.First());
                 } 
                 return null;
             }
@@ -33,7 +26,7 @@ namespace Fakturiska.Business.Logic
         {
             User u = new User()
             {
-                UserUId = user.UserGuid,
+                UserUId = Guid.NewGuid(),
                 Email = user.Email,
                 Password = user.Password,
                 RoleId = user.RoleId
@@ -42,15 +35,7 @@ namespace Fakturiska.Business.Logic
             using(var dc = new FakturiskaDBEntities())
             {
                 dc.Users.Add(u);
-
-                try
-                {
-                    dc.SaveChanges();
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
+                dc.SaveChanges();
             }
         }
 
@@ -58,7 +43,7 @@ namespace Fakturiska.Business.Logic
         {
             User u = new User()
             {
-                UserUId = user.UserGuid,
+                UserUId = Guid.NewGuid(),
                 Email = user.Email,
                 RoleId = user.RoleId
             };
@@ -66,15 +51,7 @@ namespace Fakturiska.Business.Logic
             using (var dc = new FakturiskaDBEntities())
             {
                 dc.Users.Add(u);
-
-                try
-                {
-                    dc.SaveChanges();
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
+                dc.SaveChanges();
 
                 string body = "Click on this link to set your password: http://localhost:54276/Account/SetPassword/?id=" + user.UserGuid;
                 SendMail(body, user.Email);
@@ -90,14 +67,7 @@ namespace Fakturiska.Business.Logic
                 {
                     u.Password = user.Password;
                 }
-                try
-                {
-                    dc.SaveChanges();
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
+                dc.SaveChanges();
             }
         }
 
@@ -110,14 +80,7 @@ namespace Fakturiska.Business.Logic
                 {
                     u.Email = user.Email;
                 }
-                try
-                {
-                    dc.SaveChanges();
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
+                dc.SaveChanges();
             }
         }
 
@@ -130,14 +93,7 @@ namespace Fakturiska.Business.Logic
                 {
                     user.DeleteDate = DateTime.Now;
                 }
-                try
-                {
-                    dc.SaveChanges();
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
+                dc.SaveChanges();
             }
         }
 
@@ -145,14 +101,8 @@ namespace Fakturiska.Business.Logic
         {
             using (var dc = new FakturiskaDBEntities())
             {
-                var user = dc.Users.Where(u => u.UserUId == userGuid).FirstOrDefault();
-                return new UserDTO
-                {
-                    UserGuid = user.UserUId,
-                    RoleName = user.Role.Description,
-                    Email = user.Email,
-                    Password = user.Password
-                };
+                var user = dc.Users.FirstOrDefault(u => u.UserUId == userGuid);
+                return new UserDTO(user);
             }
         }
 
@@ -160,52 +110,31 @@ namespace Fakturiska.Business.Logic
         {
             using (var dc = new FakturiskaDBEntities())
             {
-                var user = dc.Users.Where(u => u.UserId == userId).FirstOrDefault();
-                return new UserDTO
-                {
-                    UserGuid = user.UserUId,
-                    RoleName = user.Role.Description,
-                    Email = user.Email,
-                };
+                var user = dc.Users.FirstOrDefault(u => u.UserId == userId);
+                return new UserDTO(user);
             }
         }
 
         public static IEnumerable<UserDTO> GetUsers()
         {
-            List<UserDTO> usersDTO = new List<UserDTO>();
+            List<UserDTO> usersDTOs = null;
             using (var dc = new FakturiskaDBEntities())
             {
-                List<User> users = dc.Users.Where(user => user.DeleteDate == null && user.Password != null).ToList();
-                foreach (var user in users)
-                {
-                    usersDTO.Add(new UserDTO
-                    {
-                        UserGuid = user.UserUId,
-                        Email = user.Email,
-                        RoleId = user.RoleId,
-                    });
-                }
+                var users = dc.Users.Where(user => user.DeleteDate == null && user.Password != null).ToList();
+                usersDTOs = users.Select(user => new UserDTO(user)).ToList();
             }
-            return usersDTO;
+            return usersDTOs;
         }
 
         public static IEnumerable<UserDTO> GetUsersWaiting()
         {
-            List<UserDTO> usersDTO = new List<UserDTO>();
+            List<UserDTO> usersDTOs = null;
             using (var dc = new FakturiskaDBEntities())
             {
-                List<User> users = dc.Users.Where(user => user.DeleteDate == null && user.Password == null).ToList();
-                foreach(var user in users)
-                {
-                    usersDTO.Add(new UserDTO
-                    {
-                        UserGuid = user.UserUId,
-                        Email = user.Email,
-                        RoleId = user.RoleId,
-                    });
-                }
+                var users = dc.Users.Where(user => user.DeleteDate == null && user.Password == null).ToList();
+                usersDTOs = users.Select(user => new UserDTO(user)).ToList();
             }
-            return usersDTO;
+            return usersDTOs;
         }
 
         public static void SendMail(string body, string to)
@@ -219,6 +148,7 @@ namespace Fakturiska.Business.Logic
             };
             MailMessage mail = new MailMessage
             {
+                Subject = "Otvoren nalog na portalu Fakturiska",
                 From = new MailAddress("pavlovicluka.99@mail.com", "Fakturiska"),
                 Body = body
             };
@@ -229,7 +159,7 @@ namespace Fakturiska.Business.Logic
 
         private static User GetUserById(Guid userGuid, FakturiskaDBEntities dc)
         {
-            return dc.Users.Where(u => u.UserUId == userGuid && u.DeleteDate == null).FirstOrDefault();
+            return dc.Users.FirstOrDefault(u => u.UserUId == userGuid && u.DeleteDate == null);
         }
     }
 }

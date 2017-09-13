@@ -46,37 +46,37 @@
             {
                 count++;
             <tr id="@count">
-                <td id="Name" class="col-md-1">
+                <td>
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
-                <td id="PhoneNumber" class="col-md-1">
+                <td>
                     @Html.DisplayFor(modelItem => item.PhoneNumber)
                 </td>
-                <td id="FaxNumber" class="col-md-1">
+                <td>
                     @Html.DisplayFor(modelItem => item.FaxNumber)
                 </td>
-                <td id="Address" class="col-md-1">
+                <td>
                     @Html.DisplayFor(modelItem => item.Address)
                 </td>
-                <td id="Website" class="col-md-1">
+                <td>
                     @Html.DisplayFor(modelItem => item.Website)
                 </td>
-                <td id="Email" class="col-md-1">
+                <td>
                     @Html.DisplayFor(modelItem => item.Email)
                 </td>
-                <td id="PersonalNumber" class="col-md-1">
+                <td>
                     @Html.DisplayFor(modelItem => item.PersonalNumber)
                 </td>
-                <td id="PIB" class="col-md-1">
+                <td>
                     @Html.DisplayFor(modelItem => item.PIB)
                 </td>
-                <td id="MIB" class="col-md-1">
+                <td>
                     @Html.DisplayFor(modelItem => item.MIB)
                 </td>
-                <td id="AccountNumber" class="col-md-1">
+                <td>
                     @Html.DisplayFor(modelItem => item.AccountNumber)
                 </td>
-                <td id="BankCode" class="col-md-1">
+                <td>
                     @Html.DisplayFor(modelItem => item.BankCode)
                 </td>
                 <td class="col-md-1">
@@ -87,7 +87,7 @@
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     <h4 class="modal-title">Edit Company</h4>
                                 </div>
-                                <div class="modal-body">
+                                <div class="modal-body row">
                                     @Html.Action("EditCompany", "Company", new { id = item.CompanyGuid })
                                 </div>
                                 <div class="modal-footer">
@@ -98,7 +98,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="@string.Concat("#editCompanyModal", count)" onclick="setModal(@count)"><span class="glyphicon glyphicon-edit"></span></button>
+                        <button type="button" class="btn btn-info" onclick="setModal(@count)" data-toggle="modal" data-target="@string.Concat("#editCompanyModal", count)" ><span class="glyphicon glyphicon-edit"></span></button>
                         <button type="button" class="btn btn-danger" onclick="deleteCompany('@item.CompanyGuid', @count)"><span class="glyphicon glyphicon-remove"></span></button>
                     </div>             
                 </td>

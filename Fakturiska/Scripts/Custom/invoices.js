@@ -3,6 +3,7 @@
 
     tableInvoices = $('#tableInvoices').DataTable({
         "dom": '<"pull-right"l>t<"pull-left"i><"pull-right"p>',
+        responsive: true,
         language: { search: "" },
         "columnDefs": [{
             "targets": 2,
@@ -62,13 +63,70 @@ $(function () {
                 type: this.method,
                 data: $(this).serialize(),
                 success: function (result) {
-                    //$('#editInvoiceModal').modal('toggle');
-                    //$('#createInvoiceModal').modal('toggle');
-                    $('#tableInvoices').html($(result).find("#tableInvoices"));
-                    $('#tableArchive').html($(result).find("#tableArchive"));
+                    var modal;
+                    var archived = false;
+                    if (currentModalId.indexOf("createInvoiceModal") !== -1) {
+                        modal = $('#createInvoiceModal');
+                    } else if (currentModalId.indexOf("editInvoiceModal") !== -1) {
+                        modal = $('#editInvoiceModal' + currentModalId);
+                    } else if (currentModalId.indexOf("editArchivedInvoiceModal") !== -1) {
+                        modal = $('#editArchivedInvoiceModal' + currentModalId);
+                        archived = true;
+                    }
+
+                    if (result.substring(1, 2) === "t") {
+                        modal.modal('hide');
+                        $('body').removeClass('modal-open');
+                        $('.modal-backdrop').remove();
+                        if (archived)
+                        {
+                            $('#resultArchive').html(result);
+                        } else {
+                            $('#result').html(result);
+                        }
+                    } else {
+                        modal.find(".modal-body").html(result);
+                    }
                 }
             });
         }
         return false;
     });
+});
+
+function deleteInvoice(invoiceId, rowId, archived) {
+    $.ajax({
+        url: "/Invoice/DeleteInvoice",
+        type: "POST",
+        data: { id: invoiceId },
+        success: function (result) {
+            if (archived === "true") {
+                $("#rowArchive" + rowId).remove();
+            } else {
+                $("#row" + rowId).remove();
+            }
+        }
+    });
+}
+
+function archiveInvoice(invoiceId, rowId) {
+    $.ajax({
+        url: "/Invoice/ArchiveInvoice",
+        type: "POST",
+        data: { id: invoiceId },
+        success: function (result) {
+            $("#row" + rowId).remove();
+            $('#resultArchive').html(result);
+        }
+    });
+}
+
+$(function () {
+    var chat = $.connection.realTime;
+
+    chat.client.Send = function (message) {
+        $.notify(message, "success");
+    };
+
+    $.connection.hub.start();
 });

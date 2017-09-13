@@ -14,9 +14,10 @@
     </thead>
 
     <tbody>
+        @{int count = 0; }
         @foreach (var item in Model)
         {
-            <tr>
+            <tr id="@string.Concat("rowWaiting", count)">
                 <td>
                     <a href="#" id="userEmail" class="editEmail" data-type="text" data-pk="@item.UserGuid" data-url="EditUser" data-title="Edit email">@item.Email</a>
                 </td>
@@ -24,7 +25,7 @@
                     @Html.DisplayFor(modelItem => item.RoleName)
                 </td>
                 <td>
-                    @Html.ActionLink("Obrisi", "DeleteUser", new { id = item.UserGuid })
+                    <a class="btn btn-danger" onclick="deleteUser('@item.UserGuid', @count, 'true')"><span class="glyphicon glyphicon-remove"></span></a>
                 </td>
             </tr>
         }

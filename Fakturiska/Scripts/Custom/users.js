@@ -39,6 +39,23 @@
             $('.popover-content').find('#roleSelect').val("1");
             $('.popover-content').find('#userEmail').val("");
             $('#addUser').popover('hide');
+
+            $('#resultWaiting').html(result);
         });
     });
 });
+
+function deleteUser(userId, rowId, waiting) {
+    $.ajax({
+        url: "/User/DeleteUser",
+        type: "POST",
+        data: { id: userId },
+        success: function (result) {
+            if (waiting === "true") {
+                $("#rowWaiting" + rowId).remove();
+            } else {
+                $("#row" + rowId).remove();
+            }
+        }
+    });
+}

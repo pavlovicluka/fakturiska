@@ -23,5 +23,27 @@ namespace Fakturiska.Business.DTOs
         public String AccountNumber { get; set; }
         public String BankCode { get; set; }
         public DateTime? DeleteDate { get; set; }
+
+        public CompanyDTO()
+        {
+
+        }
+
+        public CompanyDTO(Company company)
+        {
+            CompanyId = company.CompanyId;
+            CompanyGuid = company.CompanyUId;
+            Name = company.Name;
+            PhoneNumber = company.PhoneNumber;
+            FaxNumber = company.FaxNumber;
+            Address = company.Address;
+            Website = company.Website;
+            Email = company.Email;
+            PersonalNumber = company.PersonalNumber;
+            PIB = company.PIB;
+            MIB = company.MIB;
+            AccountNumber = company.AccountNumber;
+            BankCode = company.BankCode;
+        }
     }
 }

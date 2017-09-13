@@ -1,4 +1,5 @@
-﻿using Fakturiska.Business.Logic;
+﻿using Fakturiska.Business.DTOs;
+using Fakturiska.Business.Logic;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,30 +25,30 @@ namespace Fakturiska.Models
         [Phone]
         public String FaxNumber { get; set; }
         [DisplayName("Adresa")]
-        [Required()]
+        [Required(ErrorMessage = "Polje Adresa je obavezno")]
         public String Address { get; set; }
         [DisplayName("Website")]
-        [Required()]
+        [Required(ErrorMessage = "Polje Website je obavezno")]
         [Url]
         public String Website { get; set; }
         [DisplayName("Email")]
-        [Required()]
+        [Required(ErrorMessage = "Polje Email je obavezno")]
         [EmailAddress]
         public String Email { get; set; }
         [DisplayName("Maticni broj")]
-        [Required()]
+        [Required(ErrorMessage = "Polje Maticni broj je obavezno")]
         public String PersonalNumber { get; set; }
         [DisplayName("PIB")]
-        [Required()]
+        [Required(ErrorMessage = "Polje PIB je obavezno")]
         public String PIB { get; set; }
         [DisplayName("MIB")]
-        [Required()]
+        [Required(ErrorMessage = "Polje MIB je obavezno")]
         public String MIB { get; set; }
         [DisplayName("Broj tekućeg računa")]
-        [Required()]
+        [Required(ErrorMessage = "Polje Broj tekućeg računa je obavezno")]
         public String AccountNumber { get; set; }
         [DisplayName("Šifra za uplatu")]
-        [Required()]
+        [Required(ErrorMessage = "Polje Šifra za uplatu je obavezno")]
         public String BankCode { get; set; }
 
         public CompanyModel()
@@ -72,6 +73,22 @@ namespace Fakturiska.Models
             this.BankCode = company.BankCode;
         }
 
+        public CompanyModel(CompanyDTO company)
+        {
+            CompanyGuid = company.CompanyGuid;
+            Name = company.Name;
+            PhoneNumber = company.PhoneNumber;
+            FaxNumber = company.FaxNumber;
+            Address = company.Address;
+            Website = company.Website;
+            Email = company.Email;
+            PersonalNumber = company.PersonalNumber;
+            PIB = company.PIB;
+            MIB = company.MIB;
+            AccountNumber = company.AccountNumber;
+            BankCode = company.BankCode;
+        }
+
         public static IEnumerable<CompanyModel> GetAllCompanies()
         {
             return CompanyLogic.GetAllCompanies().Select(company => new CompanyModel
@@ -89,6 +106,26 @@ namespace Fakturiska.Models
                 AccountNumber = company.AccountNumber,
                 BankCode = company.BankCode
             });
+        }
+
+        public static CompanyDTO MapModelToDTO(CompanyModel company)
+        {
+            CompanyDTO companyDTO = new CompanyDTO();
+            if (company.CompanyGuid != null && company.CompanyGuid != Guid.Empty)
+                companyDTO.CompanyGuid = (Guid)company.CompanyGuid;
+            companyDTO.Name = company.Name;
+            companyDTO.PhoneNumber = company.PhoneNumber;
+            companyDTO.FaxNumber = company.FaxNumber;
+            companyDTO.Address = company.Address;
+            companyDTO.Website = company.Website;
+            companyDTO.Email = company.Email;
+            companyDTO.PersonalNumber = company.PersonalNumber;
+            companyDTO.PIB = company.PIB;
+            companyDTO.MIB = company.MIB;
+            companyDTO.AccountNumber = company.AccountNumber;
+            companyDTO.BankCode = company.BankCode;
+
+            return companyDTO;
         }
     }
 }

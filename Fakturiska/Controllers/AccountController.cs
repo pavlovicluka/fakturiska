@@ -57,7 +57,6 @@ namespace Fakturiska.Controllers
         {
             UserLogic.CreateUser(new UserDTO
             {
-                UserGuid = Guid.NewGuid(),
                 Email = model.Email,
                 Password = model.Password,
                 RoleId = (int)model.Role,

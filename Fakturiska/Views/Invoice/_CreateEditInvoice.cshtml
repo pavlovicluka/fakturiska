@@ -1,9 +1,17 @@
 ﻿@model Fakturiska.Models.InvoiceCompaniesModel
 
-@using (Html.BeginForm("CreateInvoice", "Invoice", new { enctype = "multipart/form-data" }, FormMethod.Post, htmlAttributes: new { @id = "invoiceForm" }))
+@{
+    int formId = 0;
+    if (Model != null)
+    {
+        formId = Model.Invoice.InvoiceId;
+    }
+}
+@using (Html.BeginForm("CreateInvoice", "Invoice", new { enctype = "multipart/form-data" }, FormMethod.Post, htmlAttributes: new { @id = string.Concat("invoiceForm", formId) }))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.Invoice.InvoiceGuid)
+    @Html.HiddenFor(model => model.Invoice.Archive)
     <div class="form-horizontal">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -285,19 +293,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-10">
-                @if (Model == null)
-                {
-                    <input type="submit" value="Create" class="btn btn-default" />
-                }
-                else
-                {
-                    <input type="submit" value="Edit" class="btn btn-default" />
-                }
             </div>
         </div>
     </div>

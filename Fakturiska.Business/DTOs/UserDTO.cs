@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Fakturiska.Database;
+using System;
 
 namespace Fakturiska.Business.DTOs
 {
@@ -15,5 +12,19 @@ namespace Fakturiska.Business.DTOs
         public int RoleId { get; set; }
         public string RoleName { get; set; }
         public DateTime DeleteDate { get; set; }
+
+        public UserDTO()
+        {
+
+        }
+
+        public UserDTO(User user)
+        {
+            UserId = user.UserId;
+            UserGuid = user.UserUId;
+            Email = user.Email;
+            Password = user.Password;
+            RoleName = user.Role.Description;
+        }
     }
 }

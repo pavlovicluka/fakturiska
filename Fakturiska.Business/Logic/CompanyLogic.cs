@@ -3,8 +3,6 @@ using Fakturiska.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Fakturiska.Business.Logic
 {
@@ -22,7 +20,7 @@ namespace Fakturiska.Business.Logic
             {
                 Company com = new Company()
                 {
-                    CompanyUId = company.CompanyGuid,
+                    CompanyUId = Guid.NewGuid(),
                     Name = company.Name,
                     PhoneNumber = company.PhoneNumber,
                     FaxNumber = company.FaxNumber,
@@ -39,17 +37,9 @@ namespace Fakturiska.Business.Logic
                 using (var dc = new FakturiskaDBEntities())
                 {
                     dc.Companies.Add(com);
+                    dc.SaveChanges();
 
-                    try
-                    {
-                        dc.SaveChanges();
-                    }
-                    catch (Exception e)
-                    {
-                        throw e;
-                    }
-
-                    companyId =  dc.Companies.Where(c => c.CompanyUId == com.CompanyUId).FirstOrDefault().CompanyId;
+                    companyId =  dc.Companies.FirstOrDefault(c => c.CompanyUId == com.CompanyUId).CompanyId;
                 }
             }
             return companyId;
@@ -59,7 +49,7 @@ namespace Fakturiska.Business.Logic
         {
             using (var dc = new FakturiskaDBEntities())
             {
-                var com = dc.Companies.Where(c => c.Name == company.Name).FirstOrDefault();
+                var com = dc.Companies.FirstOrDefault(c => c.Name == company.Name);
                 if(com != null)
                 {
                     return com.CompanyId;
@@ -72,21 +62,8 @@ namespace Fakturiska.Business.Logic
         {
             using (var dc = new FakturiskaDBEntities())
             {
-                var company = dc.Companies.Where(c => c.CompanyUId == companyGuid).FirstOrDefault();
-                return new CompanyDTO
-                {
-                    Name = company.Name,
-                    PhoneNumber = company.PhoneNumber,
-                    FaxNumber = company.FaxNumber,
-                    Address = company.Address,
-                    Website = company.Website,
-                    Email = company.Email,
-                    PersonalNumber = company.PersonalNumber,
-                    PIB = company.PIB,
-                    MIB = company.MIB,
-                    AccountNumber = company.AccountNumber,
-                    BankCode = company.BankCode
-                };
+                var company = dc.Companies.FirstOrDefault(c => c.CompanyUId == companyGuid);
+                return new CompanyDTO(company);
             }
         }
 
@@ -94,21 +71,8 @@ namespace Fakturiska.Business.Logic
         {
             using (var dc = new FakturiskaDBEntities())
             {
-                var company = dc.Companies.Where(c => c.CompanyId == companyId).FirstOrDefault();
-                return new CompanyDTO
-                {
-                    Name = company.Name,
-                    PhoneNumber = company.PhoneNumber,
-                    FaxNumber = company.FaxNumber,
-                    Address = company.Address,
-                    Website = company.Website,
-                    Email = company.Email,
-                    PersonalNumber = company.PersonalNumber,
-                    PIB = company.PIB,
-                    MIB = company.MIB,
-                    AccountNumber = company.AccountNumber,
-                    BankCode = company.BankCode
-                };
+                var company = dc.Companies.FirstOrDefault(c => c.CompanyId == companyId);
+                return new CompanyDTO(company);
             }
         }
 
@@ -150,54 +114,23 @@ namespace Fakturiska.Business.Logic
 
         public static IEnumerable<CompanyDTO> GetAllCompanies()
         {
-            List<CompanyDTO> companyDTO = null;
+            List<CompanyDTO> companyDTOs = null;
             using (var dc = new FakturiskaDBEntities())
             {
-                companyDTO = dc.Companies.Where(company => company.DeleteDate == null).Select(company => new CompanyDTO
-                {
-                    CompanyGuid = company.CompanyUId,
-                    Name = company.Name,
-                    PhoneNumber = company.PhoneNumber,
-                    FaxNumber = company.FaxNumber,
-                    Address = company.Address,
-                    Website = company.Website,
-                    Email = company.Email,
-                    PersonalNumber = company.PersonalNumber,
-                    PIB = company.PIB,
-                    MIB = company.MIB,
-                    AccountNumber = company.AccountNumber,
-                    BankCode = company.BankCode
-                }).ToList();
+                var companies = dc.Companies.Where(company => company.DeleteDate == null).ToList();
+                companyDTOs = companies.Select(company => new CompanyDTO(company)).ToList();
             }
-            return companyDTO;
+            return companyDTOs;
         }
 
         public static IEnumerable<CompanyDTO> GetAllCompaniesAutocomplete(string prefix)
         {
             prefix = prefix.ToLower();
-            List<CompanyDTO> companyDTOs = new List<CompanyDTO>();
+            List<CompanyDTO> companyDTOs = null;
             using (var dc = new FakturiskaDBEntities())
             {
-                List<Company> companies = dc.Companies.Where(company => company.Name.ToLower().Trim().Contains(prefix) && company.DeleteDate == null).ToList();
-                foreach (var company in companies)
-                {
-                    companyDTOs.Add(new CompanyDTO
-                    {
-                        CompanyId = company.CompanyId,
-                        CompanyGuid = company.CompanyUId,
-                        Name = company.Name,
-                        PhoneNumber = company.PhoneNumber,
-                        FaxNumber = company.FaxNumber,
-                        Address = company.Address,
-                        Website = company.Website,
-                        Email = company.Email,
-                        PersonalNumber = company.PersonalNumber,
-                        PIB = company.PIB,
-                        MIB = company.MIB,
-                        AccountNumber = company.AccountNumber,
-                        BankCode = company.BankCode
-                    });
-                }
+                var companies = dc.Companies.Where(company => company.Name.ToLower().Trim().Contains(prefix) && company.DeleteDate == null).ToList();
+                companyDTOs = companies.Select(company => new CompanyDTO(company)).ToList();
             }
             return companyDTOs;
         }
