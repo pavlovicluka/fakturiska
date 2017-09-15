@@ -1,6 +1,19 @@
 ﻿$(document).ready(function () {
     $("#navbarLoggedIn_Invoices").addClass("active");
 
+    setDataTables();
+    setDataTablesArchive();
+
+    new Dropzone(document.body, {
+        url: "/Invoice/Upload",
+        dragenter: function () {
+        },
+        dragleave: function () {
+        }
+    });
+});
+
+function setDataTables() {
     tableInvoices = $('#tableInvoices').DataTable({
         "dom": '<"pull-right"l>t<"pull-left"i><"pull-right"p>',
         responsive: true,
@@ -20,7 +33,9 @@
                 .draw();
         }
     });
+}
 
+function setDataTablesArchive() {
     var tableArchive = $('#tableArchive').DataTable({
         "dom": '<"pull-right"l>t<"pull-left"i><"pull-right"p>',
         responsive: true,
@@ -45,15 +60,7 @@
             .search("")
             .draw();
     });
-
-    new Dropzone(document.body, {
-        url: "/Invoice/Upload",
-        dragenter: function () {
-        },
-        dragleave: function () {
-        }
-    });
-});
+}
 
 $(function () {
     $('form').submit(function () {
@@ -81,8 +88,10 @@ $(function () {
                         if (archived)
                         {
                             $('#resultArchive').html(result);
+                            setDataTablesArchive();
                         } else {
                             $('#result').html(result);
+                            setDataTables();
                         }
                     } else {
                         modal.find(".modal-body").html(result);

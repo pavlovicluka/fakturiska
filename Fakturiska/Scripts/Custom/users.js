@@ -1,6 +1,38 @@
 ﻿$(document).ready(function () {
     $("#navbarLoggedIn_Users").addClass("active");
 
+    setDataTables();
+    setDataTablesWaiting();
+
+    $('.editEmail').editable();
+    var popover = $('#addUser').popover({
+        html: true,
+        title: function () {
+            return $("#popover-head").html();
+        },
+        content: function () {
+            return $("#popover-content").html();
+        }
+    });
+
+    $(document).on('click', '#createUser', function () {
+
+       var role = $('.popover-content').find('#roleSelect').val();
+       var email = $('.popover-content').find('#userEmail').val();
+       $(".popover-content").html("<div class='center-block loader'></div>");
+
+        $.post("CreateUserWithoutPassword", { email: email, role: role }, function (result) {
+            $('.popover-content').find('#roleSelect').val("1");
+            $('.popover-content').find('#userEmail').val("");
+            $('#addUser').popover('hide');
+            $(".popover-content").html($("#createUserForm").html());
+
+            $('#resultWaiting').html(result);
+        });
+    });
+});
+
+function setDataTables() {
     tableUsers = $('#tableUsers').DataTable({
         "dom": '<"pull-right"l>t<"pull-left"i><"pull-right"p>',
         language: { search: "" },
@@ -19,31 +51,28 @@
                 .draw();
         }
     });
+}
 
-    $('.editEmail').editable();
-    var popover = $('#addUser').popover({
-        html: true,
-        title: function () {
-            return $("#popover-head").html();
-        },
-        content: function () {
-            return $("#popover-content").html();
+function setDataTablesWaiting() {
+    tableUsersWaiting = $('#tableUsersWaiting').DataTable({
+        "dom": '<"pull-right"l>t<"pull-left"i><"pull-right"p>',
+        language: { search: "" },
+        responsive: true,
+        "columnDefs": [{
+            "targets": 2,
+            "searchable": false,
+            "orderable": false
+        }]
+    });
+
+    $('#searchUsersWaiting').on('keyup change', function () {
+        if (tableUsersWaiting.search() !== this.value || this.value === "") {
+            tableUsersWaiting
+                .search(this.value)
+                .draw();
         }
     });
-
-    $(document).on('click', '#createUser', function () {
-        console.log($('.popover-content').find('#roleSelect').val());
-        console.log($('.popover-content').find('#userEmail').val());
-
-        $.post("CreateUserWithoutPassword", { email: $('.popover-content').find('#userEmail').val(), role: $('.popover-content').find('#roleSelect').val() }, function (result) {
-            $('.popover-content').find('#roleSelect').val("1");
-            $('.popover-content').find('#userEmail').val("");
-            $('#addUser').popover('hide');
-
-            $('#resultWaiting').html(result);
-        });
-    });
-});
+}
 
 function deleteUser(userId, rowId, waiting) {
     $.ajax({

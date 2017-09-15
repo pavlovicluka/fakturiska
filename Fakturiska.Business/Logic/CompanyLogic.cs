@@ -3,6 +3,7 @@ using Fakturiska.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Fakturiska.Business.Logic
 {
@@ -122,6 +123,34 @@ namespace Fakturiska.Business.Logic
             }
             return companyDTOs;
         }
+
+        public static List<CompanyDTO> GetCompanies(string searchBy, int take, int skip, string sortBy, bool sortDir, out int filteredResultsCount, out int totalResultsCount)
+        {
+            if (String.IsNullOrEmpty(searchBy))
+            {
+                sortBy = "CompanyId";
+                sortDir = true;
+            }
+
+            List<CompanyDTO> companyDTOs = null;
+            using (var dc = new FakturiskaDBEntities())
+            {
+                var companies = dc.Companies
+                            //.AsExpandable()
+                            .Where(company => company.DeleteDate == null)
+                           .OrderBy(company => company.CompanyId)
+                           .Skip(skip)
+                           .Take(take)
+                           .ToList();
+                companyDTOs = companies.Select(company => new CompanyDTO(company)).ToList();
+
+                //filteredResultsCount = dc.Companies.Where(company => company.DeleteDate == null).Count();
+                filteredResultsCount = take;
+                totalResultsCount = dc.Companies.Where(company => company.DeleteDate == null).Count();
+            }
+            return companyDTOs;
+        }
+
 
         public static IEnumerable<CompanyDTO> GetAllCompaniesAutocomplete(string prefix)
         {

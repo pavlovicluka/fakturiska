@@ -2,6 +2,8 @@
 using System.Web.Mvc;
 using Fakturiska.Business.Logic;
 using Fakturiska.Models;
+using Fakturiska.Business.DTOs;
+using System.Collections.Generic;
 
 namespace Fakturiska.Controllers
 {
@@ -51,6 +53,52 @@ namespace Fakturiska.Controllers
         {
             CompanyLogic.DeleteCompany(id);
             return Json("Succeed");
+        }
+
+        public JsonResult ServerSideSearchAction(DataTableAjaxPostModel model)
+        {
+            int filteredResultsCount;
+            int totalResultsCount;
+            var res = SearchCompanies(model, out filteredResultsCount, out totalResultsCount);
+
+            /*var result = new List<CompanyDTO>(res.Count);
+            int i = 0;
+            foreach (var s in res)
+            {
+                result.Add(res[i]);
+                i++;
+            };*/
+
+            return Json(new
+            {
+                draw = model.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
+        }
+
+        public IList<CompanyDTO> SearchCompanies(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
+        {
+            var searchBy = (model.search != null) ? model.search.value : null;
+            var take = model.length;
+            var skip = model.start;
+
+            string sortBy = "";
+            bool sortDir = true;
+
+            if (model.order != null)
+            {
+                sortBy = model.columns[model.order[0].column].data;
+                sortDir = model.order[0].dir.ToLower() == "asc";
+            }
+
+            var result = CompanyLogic.GetCompanies(searchBy, take, skip, sortBy, sortDir, out filteredResultsCount, out totalResultsCount);
+            if (result == null)
+            {
+                return new List<CompanyDTO>();
+            }
+            return result;
         }
     }
 }

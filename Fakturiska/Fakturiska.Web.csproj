@@ -200,6 +200,7 @@
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\InvoiceController.cs" />
     <Compile Include="Models\CompanyModel.cs" />
+    <Compile Include="Models\DataTableAjaxPostModel.cs" />
     <Compile Include="Models\InvoiceCompaniesModel.cs" />
     <Compile Include="Models\InvoiceModel.cs" />
     <Compile Include="Global.asax.cs">

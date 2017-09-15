@@ -1,23 +1,34 @@
 ﻿@model IEnumerable<Fakturiska.Models.UserModel>
 
 <div id="popover-head" class="hide">
-    some title
+    Kreiraj korisnika
 </div>
 
 <div id="popover-content" class="hide">
-    <div id="createUserForm">
-        Role:<br>
-        <select id="roleSelect" class="form-control">
-            <option value="1">Admin</option>
-            <option value="2">User</option>
-        </select>
-        <br>
-        Email:<br>
-        <input id="userEmail" type="email" class="form-control">
-        <br>
-        <a class="btn btn-success pull-right" id="createUser" style="margin-bottom:20px">Submit</a>
-    </div>
+    Role:<br>
+    <select id="roleSelect" class="form-control">
+        <option value="1">Admin</option>
+        <option value="2">User</option>
+    </select>
+    <br>
+    Email:<br>
+    <input id="userEmail" type="email" class="form-control">
+    <br>
+    <a class="btn btn-success pull-right" id="createUser" style="margin-bottom:20px">Submit</a>
 </div> 
+
+<div id="createUserForm" class="hide">
+    Role:<br>
+    <select id="roleSelect" class="form-control">
+        <option value="1">Admin</option>
+        <option value="2">User</option>
+    </select>
+    <br>
+    Email:<br>
+    <input id="userEmail" type="email" class="form-control">
+    <br>
+    <a class="btn btn-success pull-right" id="createUser" style="margin-bottom:20px">Submit</a>
+</div>
 
 <div class="row">
     <div class="pull-right" style="padding-top:35px">
@@ -25,7 +36,11 @@
     </div>
 </div>
 
-<h2>Korisnici</h2>
+<div class="row">
+    <div class="col-md-6">
+        <h2 class="col-md-offset-10">Korisnici</h2>
+    </div>
+</div>
 <div class="form-group col-md-3" style="padding-right:0px">
     <div class="input-group">
         <input class="form-control" id="searchUsers" type="search" placeholder="Pretrazi">
@@ -36,7 +51,11 @@
     @Html.Action("TableUsers", "User")
 </div>
 
-<h2>Novi Korisnici</h2>
+<div class="row">
+    <div class="col-md-6 center-block">
+        <h2 class="col-md-offset-4">Nepotvrdjeni korisnici</h2>
+    </div>
+</div>
 <div class="form-group col-md-3" style="padding-right:0px">
     <div class="input-group">
         <input class="form-control" id="searchUsersWaiting" type="search" placeholder="Pretrazi">

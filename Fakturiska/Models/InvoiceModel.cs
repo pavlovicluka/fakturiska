@@ -75,7 +75,7 @@ namespace Fakturiska.Models
             PaidDate = invoice.PaidDate;
             if (invoice.PriorityId != null)
             {
-                Priority = (PriorityEnum)invoice.PriorityId;
+                Priority = (PriorityEnum)(invoice.PriorityId - 1);
                 PriorityName = invoice.PriorityName;
             }
             ReceiverName = invoice.ReceiverName;

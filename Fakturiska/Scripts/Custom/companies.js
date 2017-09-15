@@ -1,10 +1,32 @@
 ﻿$(document).ready(function () {
     $("#navbarLoggedIn_Companies").addClass("active");
+    setDataTables(); 
+});
 
+function setDataTables() {
     tableCompanies = $('#tableCompanies').DataTable({
         "dom": '<"pull-right"l>t<"pull-left"i><"pull-right"p>',
         language: { search: "" },
+        aoColumns: [
+            { mData: 'Name' },
+            { mData: 'PhoneNumber' },
+            { mData: 'FaxNumber' },
+            { mData: 'Address' },
+            { mData: 'Website' },
+            { mData: 'Email' },
+            { mData: 'PersonalNumber' },
+            { mData: 'PIB' },
+            { mData: 'MIB' },
+            { mData: 'AccountNumber' },
+            { mData: 'BankCode' },
+        ],
         responsive: true,
+        "proccessing": true,
+        "serverSide": true,
+        "ajax": {
+            url: "/Company/ServerSideSearchAction",
+            type: 'POST'
+        },
         "columnDefs": [{
             "targets": 11,
             "searchable": false,
@@ -19,7 +41,7 @@
                 .draw();
         }
     });
-});
+}
 
 var currentModalId;
 function setModal(id) {
@@ -34,6 +56,8 @@ $(function () {
                 type: this.method,
                 data: $(this).serialize(),
                 success: function (result) {  
+                    console.log(result);
+
                     var modal;
                     if (currentModalId === "createCompanyModal") {
                         modal = $('#createCompanyModal');
@@ -46,6 +70,7 @@ $(function () {
                         $('body').removeClass('modal-open');
                         $('.modal-backdrop').remove();
                         $('#result').html(result);
+                        setDataTables();
                     } else {
                         modal.find(".modal-body").html(result);
                     }
