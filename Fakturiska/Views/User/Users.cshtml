@@ -5,34 +5,12 @@
 </div>
 
 <div id="popover-content" class="hide">
-    Role:<br>
-    <select id="roleSelect" class="form-control">
-        <option value="1">Admin</option>
-        <option value="2">User</option>
-    </select>
-    <br>
-    Email:<br>
-    <input id="userEmail" type="email" class="form-control">
-    <br>
-    <a class="btn btn-success pull-right" id="createUser" style="margin-bottom:20px">Submit</a>
+  
 </div> 
-
-<div id="createUserForm" class="hide">
-    Role:<br>
-    <select id="roleSelect" class="form-control">
-        <option value="1">Admin</option>
-        <option value="2">User</option>
-    </select>
-    <br>
-    Email:<br>
-    <input id="userEmail" type="email" class="form-control">
-    <br>
-    <a class="btn btn-success pull-right" id="createUser" style="margin-bottom:20px">Submit</a>
-</div>
 
 <div class="row">
     <div class="pull-right" style="padding-top:35px">
-        <a class="btn btn-info btn-lg" id="addUser" data-toggle="popover" data-placement="bottom">Kreiraj nalog</a>
+        <a class="btn btn-info btn-lg" onclick="createUser()" id="userPopover" data-toggle="popover" data-placement="bottom">Kreiraj nalog</a>
     </div>
 </div>
 

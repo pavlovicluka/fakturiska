@@ -5,7 +5,7 @@
     setDataTablesWaiting();
 
     $('.editEmail').editable();
-    var popover = $('#addUser').popover({
+    var popover = $('#userPopover').popover({
         html: true,
         title: function () {
             return $("#popover-head").html();
@@ -13,22 +13,6 @@
         content: function () {
             return $("#popover-content").html();
         }
-    });
-
-    $(document).on('click', '#createUser', function () {
-
-       var role = $('.popover-content').find('#roleSelect').val();
-       var email = $('.popover-content').find('#userEmail').val();
-       $(".popover-content").html("<div class='center-block loader'></div>");
-
-        $.post("CreateUserWithoutPassword", { email: email, role: role }, function (result) {
-            $('.popover-content').find('#roleSelect').val("1");
-            $('.popover-content').find('#userEmail').val("");
-            $('#addUser').popover('hide');
-            $(".popover-content").html($("#createUserForm").html());
-
-            $('#resultWaiting').html(result);
-        });
     });
 });
 
@@ -72,6 +56,45 @@ function setDataTablesWaiting() {
                 .draw();
         }
     });
+}
+
+function submitForm() {
+    var userForm = $("#userForm");
+    
+    if (userForm.valid()) {
+        $(".popover-content").html("<div class='center-block loader'></div>");
+        $.ajax({
+            url: "/User/CreateUserWithoutPassword",
+            type: "POST",
+            data: userForm.serialize(),
+            success: function (result) {
+                if (result.substring(1, 2) === "t") {
+                    $('#userPopover').popover('hide');
+                    $('#resultWaiting').html(result);
+                    setDataTablesWaiting();
+                } else {
+                    $(".popover-content").html(result);
+                }
+            }
+        });
+    }
+}
+
+var popoverOpened = false;
+function createUser() {
+    if (!popoverOpened) {
+        popoverOpened = true;
+        $.ajax({
+            url: "/User/CreateUserWithoutPassword",
+            type: "GET",
+            success: function (result) {
+                $('#userPopover').popover('show');
+                $(".popover-content").html(result);
+            }
+        });
+    } else {
+        popoverOpened = false;
+    }
 }
 
 function deleteUser(userId, rowId, waiting) {

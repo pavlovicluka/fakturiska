@@ -207,6 +207,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\UserModel.cs" />
+    <Compile Include="Models\UserModelWithoutPassword.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -371,6 +372,7 @@
     <Content Include="Views\Invoice\_TableArchivedInvoices.cshtml" />
     <Content Include="Views\User\_TableUsers.cshtml" />
     <Content Include="Views\User\_TableUsersWaiting.cshtml" />
+    <Content Include="Views\User\_CreateUserWithoutPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

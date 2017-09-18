@@ -8,7 +8,7 @@ namespace Fakturiska.Business.Enumerations
 {
     public enum RoleEnum
     {
-        Admin = 1,
+        Admin = 0,
         User
     }
 }

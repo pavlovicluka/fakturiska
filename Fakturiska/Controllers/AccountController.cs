@@ -17,7 +17,7 @@ namespace Fakturiska.Controllers
         public ActionResult Login()
         {
             if(User.Identity.IsAuthenticated)
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Invoices", "Invoice");
             return View();
         }
 
@@ -36,7 +36,7 @@ namespace Fakturiska.Controllers
                 }, DefaultAuthenticationTypes.ApplicationCookie);
 
                 HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = true }, ident);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Invoices", "Invoice");
             }
             return RedirectToAction("Login");
         }
@@ -44,7 +44,7 @@ namespace Fakturiska.Controllers
         public ActionResult Logout()
         {
             HttpContext.GetOwinContext().Authentication.SignOut();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login");
         }
 
         public ActionResult SignUp()
@@ -71,7 +71,7 @@ namespace Fakturiska.Controllers
             {
                 return View(new UserModel(userGuid));
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Invoices", "Invoice");
         }
 
         [HttpPost]

@@ -24,6 +24,27 @@ namespace Fakturiska.Controllers
             return PartialView("_TableUsersWaiting", UserModel.GetUsersWaiting());
         }
 
+        [HttpGet]
+        public ActionResult CreateUserWithoutPassword()
+        {
+            return PartialView("_CreateUserWithoutPassword");
+        }
+
+        [HttpPost]
+        public ActionResult CreateUserWithoutPassword(UserModelWithoutPassword user)
+        {
+            if (ModelState.IsValid)
+            {
+                UserLogic.CreateUserWithoutPassword(new UserDTO
+                {
+                    Email = user.Email,
+                    RoleId = (int)user.Role + 1,
+                });
+                return PartialView("_TableUsersWaiting", UserModel.GetUsersWaiting());
+            }
+            return PartialView("_CreateUserWithoutPassword", user);
+        }
+
         [HttpPost]
         public ActionResult EditUser(string value, string pk)
         {
@@ -40,17 +61,6 @@ namespace Fakturiska.Controllers
         {
             UserLogic.DeleteUser(id);
             return Json("Succeed");
-        }
-
-        [HttpPost]
-        public ActionResult CreateUserWithoutPassword(string email, string role)
-        {
-            UserLogic.CreateUserWithoutPassword(new UserDTO
-            {
-                Email = email,
-                RoleId = int.Parse(role),
-            });
-            return PartialView("_TableUsersWaiting", UserModel.GetUsersWaiting());
-        }
+        } 
     }
 }

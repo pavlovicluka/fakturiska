@@ -6,6 +6,7 @@
 function setDataTables() {
     tableCompanies = $('#tableCompanies').DataTable({
         "dom": '<"pull-right"l>t<"pull-left"i><"pull-right"p>',
+        paging: true,
         language: { search: "" },
         aoColumns: [
             { mData: 'Name' },
@@ -19,6 +20,7 @@ function setDataTables() {
             { mData: 'MIB' },
             { mData: 'AccountNumber' },
             { mData: 'BankCode' },
+            { mData: 'CompanyGuid' },
         ],
         responsive: true,
         "proccessing": true,
@@ -27,11 +29,17 @@ function setDataTables() {
             url: "/Company/ServerSideSearchAction",
             type: 'POST'
         },
-        "columnDefs": [{
-            "targets": 11,
-            "searchable": false,
-            "orderable": false
-        }]
+        "columnDefs": [
+            {
+                "targets": 11,
+                "searchable": false,
+                "orderable": false,
+                "render": function (data, type, row) {
+                    return '<div class="row" id="'+row.CompanyId+'"> <a class="btn btn-info" onclick="editCompany(\''
+                        + data + '\')"><span class="glyphicon glyphicon-edit"></span></a> <a class="btn btn-danger" onclick="deleteCompany(\''
+                        + data + '\' , \'' + row.CompanyId + '\')"><span class="glyphicon glyphicon-remove"></span></a> </div> ';
+                }
+            }]
     });
 
     $('#searchCompanies').on('keyup change', function () {
@@ -43,43 +51,52 @@ function setDataTables() {
     });
 }
 
-var currentModalId;
-function setModal(id) {
-    currentModalId = id;
+function submitForm() {
+    var companyForm = $("#companyForm");
+
+    if (companyForm.valid()) {
+        $.ajax({
+            url: "/Company/CreateCompany",
+            type: "POST",
+            data: companyForm.serialize(),
+            success: function (result) {
+
+                if (result.substring(1, 2) === "t") {
+                    $("#companyModal").modal('hide');
+                    $('body').removeClass('modal-open');
+                    $('.modal-backdrop').remove();
+                    $('#result').html(result);
+                    setDataTables();
+                } else {
+                    $("#companyModal").find(".modal-body").html(result);
+                }
+            }
+        });
+    }
 }
 
-$(function () {
-    $('form').submit(function () {
-        if ($(this).valid()) {
-            $.ajax({
-                url: this.action,
-                type: this.method,
-                data: $(this).serialize(),
-                success: function (result) {  
-                    console.log(result);
-
-                    var modal;
-                    if (currentModalId === "createCompanyModal") {
-                        modal = $('#createCompanyModal');
-                    } else {
-                        modal = $('#editCompanyModal' + currentModalId);
-                    }
-
-                    if (result.substring(1, 2) === "t") {
-                        modal.modal('hide');
-                        $('body').removeClass('modal-open');
-                        $('.modal-backdrop').remove();
-                        $('#result').html(result);
-                        setDataTables();
-                    } else {
-                        modal.find(".modal-body").html(result);
-                    }
-                }
-            });
+function createCompany() {
+    $.ajax({
+        url: "/Company/CreateCompany",
+        type: "GET",
+        success: function (result) {
+            $("#companyModalBody").html(result);
+            $("#companyModal").modal('toggle');
         }
-        return false;
     });
-});
+}
+
+function editCompany(companyId) {
+    $.ajax({
+        url: "/Company/EditCompany",
+        type: "POST",
+        data: { id: companyId },
+        success: function (result) {
+            $("#companyModalBody").html(result);
+            $("#companyModal").modal('toggle');
+        }
+    });
+}
 
 function deleteCompany(companyId, modalId) {
     $.ajax({
@@ -87,7 +104,7 @@ function deleteCompany(companyId, modalId) {
         type: "POST",
         data: { id: companyId },
         success: function (result) {
-            $("#" + modalId).remove();
+            $("#" + modalId).parent().closest('tr').remove();
         }
     });
 }

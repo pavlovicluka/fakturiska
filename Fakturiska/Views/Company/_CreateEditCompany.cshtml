@@ -1,13 +1,6 @@
 ﻿@model Fakturiska.Models.CompanyModel
 
-@{
-    string formId = "";
-    if(Model != null)
-    {
-        formId = Model.Name;
-    }
-}
-@using (Html.BeginForm("CreateCompany", "Company", FormMethod.Post, htmlAttributes: new { @id = string.Concat("companyForm", formId) })) 
+@using (Html.BeginForm("CreateCompany", "Company", FormMethod.Post, htmlAttributes: new { @id = "companyForm" })) 
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.CompanyGuid)

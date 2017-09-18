@@ -20,7 +20,6 @@ namespace Fakturiska.Models
         [Required()]
         public String Password { get; set; }
         [DisplayName("Rola")]
-        [Required()]
         public String RoleName { get; set; }
         [DisplayName("Rola")]
         [Required()]

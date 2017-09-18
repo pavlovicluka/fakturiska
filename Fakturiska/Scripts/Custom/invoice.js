@@ -6,9 +6,8 @@
     $(".ui-autocomplete-input").css("z-index", 100);
 }); 
 
-var currentModalId;
-function setModal(id) {
-    currentModalId = id;
+function prepareModal() {
+    currentModalId = "#invoiceModal";
 
     $(currentModalId).find("#CompanyReceiver_Name").autocomplete({
         select: function (a, b) {
@@ -33,7 +32,6 @@ function setModal(id) {
                 data: { prefix: request.term },
                 success: function (data) {
                     response($.map(data, function (item) {
-                        console.log(item.Name);
                         return {
                             label: item.Name, value: item.Name,
                             PhoneNumber: item.PhoneNumber,

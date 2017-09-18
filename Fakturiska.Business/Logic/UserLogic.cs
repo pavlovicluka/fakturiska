@@ -41,9 +41,10 @@ namespace Fakturiska.Business.Logic
 
         public static void CreateUserWithoutPassword(UserDTO user)
         {
+            Guid newUserGuid = Guid.NewGuid();
             User u = new User()
             {
-                UserUId = Guid.NewGuid(),
+                UserUId = newUserGuid,
                 Email = user.Email,
                 RoleId = user.RoleId
             };
@@ -53,7 +54,7 @@ namespace Fakturiska.Business.Logic
                 dc.Users.Add(u);
                 dc.SaveChanges();
 
-                string body = "Click on this link to set your password: http://localhost:54276/Account/SetPassword/?id=" + user.UserGuid;
+                string body = "Click on this link to set your password: http://localhost:54276/Account/SetPassword/?id=" + newUserGuid;
                 SendMail(body, user.Email);
             }
         }

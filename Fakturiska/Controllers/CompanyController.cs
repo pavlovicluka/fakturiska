@@ -20,6 +20,7 @@ namespace Fakturiska.Controllers
             return PartialView("_TableCompanies", CompanyModel.GetAllCompanies());
         }
 
+        [HttpGet]
         public ActionResult CreateCompany()
         {
             return PartialView("_CreateEditCompany");
@@ -36,13 +37,14 @@ namespace Fakturiska.Controllers
                 }
                 else
                 {
-                    CompanyLogic.CreateCompany(CompanyModel.MapModelToDTO(company));
+                    CompanyLogic.EditCompany(CompanyModel.MapModelToDTO(company));
                 }
                 return PartialView("_TableCompanies", CompanyModel.GetAllCompanies());
             }
             return PartialView("_CreateEditCompany", company);
         }
 
+        [HttpPost]
         public ActionResult EditCompany(Guid id)
         {
             return PartialView("_CreateEditCompany", new CompanyModel(id));
@@ -71,10 +73,10 @@ namespace Fakturiska.Controllers
 
             return Json(new
             {
-                draw = model.draw,
-                recordsTotal = totalResultsCount,
-                recordsFiltered = filteredResultsCount,
-                data = res
+                sEcho = model.draw,
+                iTotalRecords = totalResultsCount,
+                iTotalDisplayRecords = filteredResultsCount,
+                aaData = res
             });
         }
 
@@ -85,12 +87,12 @@ namespace Fakturiska.Controllers
             var skip = model.start;
 
             string sortBy = "";
-            bool sortDir = true;
+            string sortDir = "asc";
 
             if (model.order != null)
             {
                 sortBy = model.columns[model.order[0].column].data;
-                sortDir = model.order[0].dir.ToLower() == "asc";
+                sortDir = model.order[0].dir.ToLower();
             }
 
             var result = CompanyLogic.GetCompanies(searchBy, take, skip, sortBy, sortDir, out filteredResultsCount, out totalResultsCount);

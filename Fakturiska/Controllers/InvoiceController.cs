@@ -30,6 +30,7 @@ namespace Fakturiska.Controllers
             return PartialView("_TableArchivedInvoices", InvoiceModel.GetArchivedInvoices());
         }
 
+        [HttpGet]
         public ActionResult CreateInvoice()
         {
             return PartialView("_CreateEditInvoice");
@@ -73,6 +74,7 @@ namespace Fakturiska.Controllers
             return PartialView("_TableArchivedInvoices", InvoiceModel.GetArchivedInvoices());
         }
 
+        [HttpPost]
         public ActionResult EditInvoice(Guid id)
         {
             return PartialView("_CreateEditInvoice", new InvoiceCompaniesModel(id));

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Linq.Dynamic;
 
 namespace Fakturiska.Business.Logic
 {
@@ -124,28 +125,56 @@ namespace Fakturiska.Business.Logic
             return companyDTOs;
         }
 
-        public static List<CompanyDTO> GetCompanies(string searchBy, int take, int skip, string sortBy, bool sortDir, out int filteredResultsCount, out int totalResultsCount)
+        public static List<CompanyDTO> GetCompanies(string searchBy, int take, int skip, string sortBy, string sortDir, out int filteredResultsCount, out int totalResultsCount)
         {
-            if (String.IsNullOrEmpty(searchBy))
+            if(searchBy != null)
+            {
+                searchBy.Trim().ToLower();
+            } else
+            {
+                searchBy = "";
+            }
+
+            if (String.IsNullOrEmpty(sortBy))
             {
                 sortBy = "CompanyId";
-                sortDir = true;
+                sortDir = "asc";
             }
 
             List<CompanyDTO> companyDTOs = null;
             using (var dc = new FakturiskaDBEntities())
             {
                 var companies = dc.Companies
-                            //.AsExpandable()
-                            .Where(company => company.DeleteDate == null)
-                           .OrderBy(company => company.CompanyId)
+                            .Where(c => c.DeleteDate == null && (c.Name.ToLower().Contains(searchBy)
+                                                             || c.PhoneNumber.ToLower().Contains(searchBy)
+                                                             || c.FaxNumber.ToLower().Contains(searchBy)
+                                                             || c.Address.ToLower().Contains(searchBy)
+                                                             || c.Website.ToLower().Contains(searchBy)
+                                                             || c.Email.ToLower().Contains(searchBy)
+                                                             || c.PersonalNumber.ToLower().Contains(searchBy)
+                                                             || c.PIB.ToLower().Contains(searchBy)
+                                                             || c.MIB.ToLower().Contains(searchBy)
+                                                             || c.AccountNumber.ToLower().Contains(searchBy)
+                                                             || c.BankCode.ToLower().Contains(searchBy)))
+                           .OrderBy(sortBy + " " + sortDir)
                            .Skip(skip)
                            .Take(take)
                            .ToList();
                 companyDTOs = companies.Select(company => new CompanyDTO(company)).ToList();
 
-                //filteredResultsCount = dc.Companies.Where(company => company.DeleteDate == null).Count();
-                filteredResultsCount = take;
+                filteredResultsCount = dc.Companies
+                                        .Where(c => c.DeleteDate == null && (c.Name.ToLower().Contains(searchBy)
+                                                             || c.PhoneNumber.ToLower().Contains(searchBy)
+                                                             || c.FaxNumber.ToLower().Contains(searchBy)
+                                                             || c.Address.ToLower().Contains(searchBy)
+                                                             || c.Website.ToLower().Contains(searchBy)
+                                                             || c.Email.ToLower().Contains(searchBy)
+                                                             || c.PersonalNumber.ToLower().Contains(searchBy)
+                                                             || c.PIB.ToLower().Contains(searchBy)
+                                                             || c.MIB.ToLower().Contains(searchBy)
+                                                             || c.AccountNumber.ToLower().Contains(searchBy)
+                                                             || c.BankCode.ToLower().Contains(searchBy)))
+                                        .Count();
                 totalResultsCount = dc.Companies.Where(company => company.DeleteDate == null).Count();
             }
             return companyDTOs;
@@ -154,11 +183,11 @@ namespace Fakturiska.Business.Logic
 
         public static IEnumerable<CompanyDTO> GetAllCompaniesAutocomplete(string prefix)
         {
-            prefix = prefix.ToLower();
+            prefix = prefix.Trim().ToLower();
             List<CompanyDTO> companyDTOs = null;
             using (var dc = new FakturiskaDBEntities())
             {
-                var companies = dc.Companies.Where(company => company.Name.ToLower().Trim().Contains(prefix) && company.DeleteDate == null).ToList();
+                var companies = dc.Companies.Where(company => company.Name.ToLower().Contains(prefix) && company.DeleteDate == null).ToList();
                 companyDTOs = companies.Select(company => new CompanyDTO(company)).ToList();
             }
             return companyDTOs;

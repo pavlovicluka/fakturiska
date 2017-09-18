@@ -12,6 +12,7 @@
         }
     });
 });
+var archived = "false";
 
 function setDataTables() {
     tableInvoices = $('#tableInvoices').DataTable({
@@ -62,46 +63,61 @@ function setDataTablesArchive() {
     });
 }
 
-$(function () {
-    $('form').submit(function () {
-        if ($(this).valid()) {
-            $.ajax({
-                url: this.action,
-                type: this.method,
-                data: $(this).serialize(),
-                success: function (result) {
-                    var modal;
-                    var archived = false;
-                    if (currentModalId.indexOf("createInvoiceModal") !== -1) {
-                        modal = $('#createInvoiceModal');
-                    } else if (currentModalId.indexOf("editInvoiceModal") !== -1) {
-                        modal = $('#editInvoiceModal' + currentModalId);
-                    } else if (currentModalId.indexOf("editArchivedInvoiceModal") !== -1) {
-                        modal = $('#editArchivedInvoiceModal' + currentModalId);
-                        archived = true;
-                    }
+function submitForm() {
+    var invoiceForm = $("#invoiceForm");
 
-                    if (result.substring(1, 2) === "t") {
-                        modal.modal('hide');
-                        $('body').removeClass('modal-open');
-                        $('.modal-backdrop').remove();
-                        if (archived)
-                        {
-                            $('#resultArchive').html(result);
-                            setDataTablesArchive();
-                        } else {
-                            $('#result').html(result);
-                            setDataTables();
-                        }
+    if (invoiceForm.valid()) {
+        $.ajax({
+            url: "/Invoice/CreateInvoice",
+            type: "POST",
+            data: invoiceForm.serialize(),
+            success: function (result) {
+
+                if (result.substring(1, 2) === "t") {
+                    $("#invoiceModal").modal('hide');
+                    $('body').removeClass('modal-open');
+                    $('.modal-backdrop').remove();
+
+                    if (archived === "true") {
+                        $('#resultArchive').html(result);
+                        setDataTablesArchive();
                     } else {
-                        modal.find(".modal-body").html(result);
+                        $('#result').html(result);
+                        setDataTables();
                     }
+                } else {
+                    $("#invoiceModal").find(".modal-body").html(result);
                 }
-            });
+            }
+        });
+    }
+}
+
+function createInvoice() {
+    $.ajax({
+        url: "/Invoice/CreateInvoice",
+        type: "GET",
+        success: function (result) {
+            $("#invoiceModalBody").html(result);
+            prepareModal();
+            $("#invoiceModal").modal('toggle');
         }
-        return false;
     });
-});
+}
+
+function editInvoice(invoiceId, archive) {
+    $.ajax({
+        url: "/Invoice/EditInvoice",
+        type: "POST",
+        data: { id: invoiceId },
+        success: function (result) {
+            $("#invoiceModalBody").html(result);
+            prepareModal();
+            $("#invoiceModal").modal('toggle');
+            archived = archive;
+        }
+    });
+}
 
 function deleteInvoice(invoiceId, rowId, archived) {
     $.ajax({
