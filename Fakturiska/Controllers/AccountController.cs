@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using System.Net;
 using System.Web.Helpers;
+using System.Web.ModelBinding;
 
 namespace Fakturiska.Controllers
 {
@@ -24,21 +25,25 @@ namespace Fakturiska.Controllers
         [HttpPost]
         public ActionResult Login(UserModel model)
         {
-            UserDTO user = UserLogic.AuthorizeUser(model.Email, model.Password);
-            if (user != null)
+            if(ModelState.IsValid)
             {
-                var ident = new ClaimsIdentity(
-                new[] {
+                UserDTO user = UserLogic.AuthorizeUser(model.Email, model.Password);
+                if (user != null)
+                {
+                    var ident = new ClaimsIdentity(
+                    new[] {
                     new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                     new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "ASP.NET Identity", "http://www.w3.org/2001/XMLSchema#string"),
                     new Claim(ClaimTypes.Name, user.Email),
                     new Claim(ClaimTypes.Role, user.RoleName),
-                }, DefaultAuthenticationTypes.ApplicationCookie);
+                    }, DefaultAuthenticationTypes.ApplicationCookie);
 
-                HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = true }, ident);
-                return RedirectToAction("Invoices", "Invoice");
+                    HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = true }, ident);
+                    return RedirectToAction("Invoices", "Invoice");
+                }
+                return RedirectToAction("Login");
             }
-            return RedirectToAction("Login");
+            return View(model);
         }
 
         public ActionResult Logout()
