@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Linq.Dynamic;
+using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Hubs;
 
 namespace Fakturiska.Business.Logic
 {
@@ -44,6 +46,8 @@ namespace Fakturiska.Business.Logic
                     companyId =  dc.Companies.FirstOrDefault(c => c.CompanyUId == com.CompanyUId).CompanyId;
                 }
             }
+            var context = GlobalHost.ConnectionManager.GetHubContext<RealTime>();
+            context.Clients.All.CompaniesChange("refresh");
             return companyId;
         }
 
@@ -99,6 +103,8 @@ namespace Fakturiska.Business.Logic
                 }
                 dc.SaveChanges();
             }
+            var context = GlobalHost.ConnectionManager.GetHubContext<RealTime>();
+            context.Clients.All.CompaniesChange("refresh");
         }
 
         public static void DeleteCompany(Guid companyGuid)
@@ -112,6 +118,8 @@ namespace Fakturiska.Business.Logic
                 }
                 dc.SaveChanges();
             }
+            var context = GlobalHost.ConnectionManager.GetHubContext<RealTime>();
+            context.Clients.All.CompaniesChange("refresh");
         }
 
         public static IEnumerable<CompanyDTO> GetAllCompanies()

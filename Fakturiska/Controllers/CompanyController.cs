@@ -15,6 +15,7 @@ namespace Fakturiska.Controllers
             return View();
         }
 
+        [HttpGet]
         public ActionResult TableCompanies()
         {
             return PartialView("_TableCompanies", CompanyModel.GetAllCompanies());
@@ -62,14 +63,6 @@ namespace Fakturiska.Controllers
             int filteredResultsCount;
             int totalResultsCount;
             var res = SearchCompanies(model, out filteredResultsCount, out totalResultsCount);
-
-            /*var result = new List<CompanyDTO>(res.Count);
-            int i = 0;
-            foreach (var s in res)
-            {
-                result.Add(res[i]);
-                i++;
-            };*/
 
             return Json(new
             {

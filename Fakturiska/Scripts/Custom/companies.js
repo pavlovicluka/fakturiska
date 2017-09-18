@@ -108,3 +108,23 @@ function deleteCompany(companyId, modalId) {
         }
     });
 }
+
+$(function () {
+    var changes = $.connection.realTime;
+
+    changes.client.CompaniesChange = function (message) {
+        $.notify(message, "success");
+        if (message === "refresh") {
+            $.ajax({
+                url: "/Company/TableCompanies",
+                type: "GET",
+                success: function (result) {
+                    $('#result').html(result);
+                    setDataTables();
+                }
+            });
+        }
+    };
+
+    $.connection.hub.start();
+});
