@@ -23,6 +23,7 @@ function prepareModal() {
             $(currentModalId).find("#CompanyReceiver_" + "MIB").val(b.item.MIB);
             $(currentModalId).find("#CompanyReceiver_" + "AccountNumber").val(b.item.AccountNumber);
             $(currentModalId).find("#CompanyReceiver_" + "BankCode").val(b.item.BankCode);
+            $(currentModalId).find("#CompanyReceiver_" + "CompanyGuid").val(b.item.CompanyGuid);
         },
         source: function (request, response) {
             $.ajax({
@@ -43,7 +44,8 @@ function prepareModal() {
                             PIB: item.PIB,
                             MIB: item.MIB,
                             AccountNumber: item.AccountNumber,
-                            BankCode: item.BankCode
+                            BankCode: item.BankCode,
+                            CompanyGuid: item.CompanyGuid,
                         };
                     }));
 
@@ -69,6 +71,7 @@ function prepareModal() {
             $(currentModalId).find("#CompanyPayer_" + "MIB").val(b.item.MIB);
             $(currentModalId).find("#CompanyPayer_" + "AccountNumber").val(b.item.AccountNumber);
             $(currentModalId).find("#CompanyPayer_" + "BankCode").val(b.item.BankCode);
+            $(currentModalId).find("#CompanyPayer_" + "CompanyGuid").val(b.item.CompanyGuid);
         },
         source: function (request, response) {
             $.ajax({
@@ -89,7 +92,8 @@ function prepareModal() {
                             PIB: item.PIB,
                             MIB: item.MIB,
                             AccountNumber: item.AccountNumber,
-                            BankCode: item.BankCode
+                            BankCode: item.BankCode,
+                            CompanyGuid: item.CompanyGuid,
                         };
                     }));
 
@@ -134,6 +138,36 @@ function prepareModal() {
             $.validator.unobtrusive.parse('.payerFields');
         }
     });
+}
+
+function clearReceiver() {
+    $(currentModalId).find("#CompanyReceiver_" + "Name").val("");
+    $(currentModalId).find("#CompanyReceiver_" + "PhoneNumber").val("");
+    $(currentModalId).find("#CompanyReceiver_" + "FaxNumber").val("");
+    $(currentModalId).find("#CompanyReceiver_" + "Address").val("");
+    $(currentModalId).find("#CompanyReceiver_" + "Website").val("");
+    $(currentModalId).find("#CompanyReceiver_" + "Email").val("");
+    $(currentModalId).find("#CompanyReceiver_" + "PersonalNumber").val("");
+    $(currentModalId).find("#CompanyReceiver_" + "PIB").val("");
+    $(currentModalId).find("#CompanyReceiver_" + "MIB").val("");
+    $(currentModalId).find("#CompanyReceiver_" + "AccountNumber").val("");
+    $(currentModalId).find("#CompanyReceiver_" + "BankCode").val("");
+    $(currentModalId).find("#CompanyReceiver_" + "CompanyGuid").val("");
+}
+
+function clearPayer() {
+    $(currentModalId).find("#CompanyPayer_" + "Name").val("");
+    $(currentModalId).find("#CompanyPayer_" + "PhoneNumber").val("");
+    $(currentModalId).find("#CompanyPayer_" + "FaxNumber").val("");
+    $(currentModalId).find("#CompanyPayer_" + "Address").val("");
+    $(currentModalId).find("#CompanyPayer_" + "Website").val("");
+    $(currentModalId).find("#CompanyPayer_" + "Email").val("");
+    $(currentModalId).find("#CompanyPayer_" + "PersonalNumber").val("");
+    $(currentModalId).find("#CompanyPayer_" + "PIB").val("");
+    $(currentModalId).find("#CompanyPayer_" + "MIB").val("");
+    $(currentModalId).find("#CompanyPayer_" + "AccountNumber").val("");
+    $(currentModalId).find("#CompanyPayer_" + "BankCode").val("");
+    $(currentModalId).find("#CompanyPayer_" + "CompanyGuid").val("");
 }
 
 

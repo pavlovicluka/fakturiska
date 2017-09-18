@@ -82,8 +82,9 @@ namespace Fakturiska.Business.Logic
             }
         }
 
-        public static void EditCompany(CompanyDTO company)
+        public static int EditCompany(CompanyDTO company)
         {
+            int companyId = 0;
             using (var dc = new FakturiskaDBEntities())
             {
                 var c = GetCompanyById(company.CompanyGuid, dc);
@@ -102,9 +103,11 @@ namespace Fakturiska.Business.Logic
                     c.BankCode = company.BankCode;
                 }
                 dc.SaveChanges();
+                companyId = c.CompanyId;
             }
             var context = GlobalHost.ConnectionManager.GetHubContext<RealTime>();
             context.Clients.All.CompaniesChange("refresh");
+            return companyId;
         }
 
         public static void DeleteCompany(Guid companyGuid)

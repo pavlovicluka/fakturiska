@@ -44,34 +44,55 @@ namespace Fakturiska.Controllers
             CompanyModel companyReceiver = model.CompanyReceiver;
             CompanyModel companyPayer = model.CompanyPayer;
 
-            int? receiverId = null;
-            if (companyReceiver != null)
-            {
-                receiverId = CompanyLogic.CreateCompany(CompanyModel.MapModelToDTO(companyReceiver));
-            }
+            if (invoice.InvoiceGuid != Guid.Empty && ModelState.ContainsKey("Invoice.File"))
+                ModelState["Invoice.File"].Errors.Clear();
 
-            int? payerId = null;
-            if (companyPayer != null)
+            if (ModelState.IsValid)
             {
-                payerId = CompanyLogic.CreateCompany(CompanyModel.MapModelToDTO(companyPayer));
-            }
+                int? receiverId = null;
+                if (companyReceiver != null)
+                {
+                    if(companyReceiver.CompanyGuid == Guid.Empty)
+                    {
+                        receiverId = CompanyLogic.CreateCompany(CompanyModel.MapModelToDTO(companyReceiver));
+                    }
+                    else
+                    {
+                        receiverId = CompanyLogic.EditCompany(CompanyModel.MapModelToDTO(companyReceiver));
+                    }
+                }
 
-            if (invoice.InvoiceGuid == Guid.Empty)
-            {
-                string filePath = InvoiceLogic.ConvertAndSaveFile(invoice.File);
+                int? payerId = null;
+                if (companyPayer != null)
+                {
+                    if (companyPayer.CompanyGuid == Guid.Empty)
+                    {
+                        payerId = CompanyLogic.CreateCompany(CompanyModel.MapModelToDTO(companyPayer));
+                    }
+                    else
+                    {
+                        payerId = CompanyLogic.EditCompany(CompanyModel.MapModelToDTO(companyPayer));
+                    }
+                }
 
-                InvoiceLogic.CreateInvoice(InvoiceModel.MapModelToDTO(invoice, int.Parse(identity.GetUserId()), receiverId, payerId, filePath));
-            }
-            else
-            {
-                InvoiceLogic.EditInvoice(InvoiceModel.MapModelToDTO(invoice, null, receiverId, payerId, null));
-            }
+                if (invoice.InvoiceGuid == Guid.Empty)
+                {
+                    string filePath = InvoiceLogic.ConvertAndSaveFile(invoice.File);
 
-            if(invoice.Archive == null)
-            {
-                return PartialView("_TableInvoices", InvoiceModel.GetInvoices());
+                    InvoiceLogic.CreateInvoice(InvoiceModel.MapModelToDTO(invoice, int.Parse(identity.GetUserId()), receiverId, payerId, filePath));
+                }
+                else
+                {
+                    InvoiceLogic.EditInvoice(InvoiceModel.MapModelToDTO(invoice, null, receiverId, payerId, null));
+                }
+
+                if (invoice.Archive == null)
+                {
+                    return PartialView("_TableInvoices", InvoiceModel.GetInvoices());
+                }
+                return PartialView("_TableArchivedInvoices", InvoiceModel.GetArchivedInvoices());
             }
-            return PartialView("_TableArchivedInvoices", InvoiceModel.GetArchivedInvoices());
+            return PartialView("_CreateEditInvoice", model);
         }
 
         [HttpPost]

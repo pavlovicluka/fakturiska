@@ -87,6 +87,7 @@ function submitForm() {
                     }
                 } else {
                     $("#invoiceModal").find(".modal-body").html(result);
+                    prepareModal();
                 }
             }
         });
