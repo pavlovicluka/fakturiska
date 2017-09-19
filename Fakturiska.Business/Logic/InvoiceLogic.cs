@@ -23,7 +23,7 @@ namespace Fakturiska.Business.Logic
 
             Invoice i = new Invoice()
             {
-                InvoiceUId = invoice.InvoiceGuid,
+                InvoiceUId = Guid.NewGuid(),
                 UserId = invoice.UserId,
                 Date = invoice.Date,
                 InvoiceEstimate = invoice.InvoiceEstimate,
@@ -131,12 +131,21 @@ namespace Fakturiska.Business.Logic
             return invoiceDTOs;
         }
 
+        public static string GetFilePathByGuid(Guid invoiceGuid)
+        {
+            using (var dc = new FakturiskaDBEntities())
+            {
+                var invoice = dc.Invoices.FirstOrDefault(i => i.InvoiceUId == invoiceGuid);
+                return invoice.FilePath;
+            }
+        }
+
         private static Invoice GetInvoiceByGuid(Guid invoiceGuid, FakturiskaDBEntities dc)
         {
             return dc.Invoices.FirstOrDefault(i => i.InvoiceUId == invoiceGuid && i.DeleteDate == null);
         }
 
-        public static string ConvertAndSaveFile(HttpPostedFileBase invoiceFile)
+        public static string SaveFile(HttpPostedFileBase invoiceFile)
         {
             string path = "";
             if (invoiceFile != null && invoiceFile.ContentLength > 0)
@@ -144,26 +153,7 @@ namespace Fakturiska.Business.Logic
                 string name = Guid.NewGuid().ToString();
                 string extension = Path.GetExtension(invoiceFile.FileName);
                 path = Path.Combine(HttpContext.Current.Server.MapPath("~/Files/"), name + ".pdf");
-
-                if (extension.Equals(".jpg") || extension.Equals(".png"))
-                {
-                    Document document = new Document();
-                    using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
-                    {
-                        PdfWriter.GetInstance(document, stream);
-                        document.Open();
-                        using (var imageStream = invoiceFile.InputStream)
-                        {
-                            var image = Image.GetInstance(imageStream);
-                            document.Add(image);
-                        }
-                        document.Close();
-                    }
-                }
-                else if (extension.Equals(".pdf"))
-                {
-                    invoiceFile.SaveAs(path);
-                }
+                invoiceFile.SaveAs(path);
             }
             return path;
         }
@@ -201,6 +191,38 @@ namespace Fakturiska.Business.Logic
             }
             PopClient.DeleteAllMessages();
             PopClient.Disconnect();
+        }
+
+        private static string ConvertFile(HttpPostedFileBase invoiceFile)
+        {
+            string path = "";
+            if (invoiceFile != null && invoiceFile.ContentLength > 0)
+            {
+                string name = Guid.NewGuid().ToString();
+                string extension = Path.GetExtension(invoiceFile.FileName);
+                path = Path.Combine(HttpContext.Current.Server.MapPath("~/Files/"), name + ".pdf");
+
+                if (extension.Equals(".jpg") || extension.Equals(".png"))
+                {
+                    Document document = new Document();
+                    using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        PdfWriter.GetInstance(document, stream);
+                        document.Open();
+                        using (var imageStream = invoiceFile.InputStream)
+                        {
+                            var image = Image.GetInstance(imageStream);
+                            document.Add(image);
+                        }
+                        document.Close();
+                    }
+                }
+                else if (extension.Equals(".pdf"))
+                {
+                    invoiceFile.SaveAs(path);
+                }
+            }
+            return path;
         }
     }
 }

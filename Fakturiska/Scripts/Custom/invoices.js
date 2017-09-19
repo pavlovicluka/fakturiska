@@ -147,6 +147,12 @@ function archiveInvoice(invoiceId, rowId) {
     });
 }
 
+function printInvoice(guid) {
+    var w = window.open("/Invoice/PrintInvoice?guid=" + guid);
+    w.focus();
+    w.print();
+}
+
 $(function () {
     var chat = $.connection.realTime;
 

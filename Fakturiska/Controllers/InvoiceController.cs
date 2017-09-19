@@ -7,8 +7,8 @@ using Microsoft.AspNet.Identity;
 using System.Security.Claims;
 using System.Web;
 using System.Collections.Generic;
-using System.Net;
-using System.Web.ModelBinding;
+using System.IO;
+using MimeSharp;
 
 namespace Fakturiska.Controllers
 {
@@ -77,9 +77,11 @@ namespace Fakturiska.Controllers
 
                 if (invoice.InvoiceGuid == Guid.Empty)
                 {
-                    string filePath = InvoiceLogic.ConvertAndSaveFile(invoice.File);
-
-                    InvoiceLogic.CreateInvoice(InvoiceModel.MapModelToDTO(invoice, int.Parse(identity.GetUserId()), receiverId, payerId, filePath));
+                    string filePath = InvoiceLogic.SaveFile(invoice.File);
+                    if(filePath != "")
+                    {
+                        InvoiceLogic.CreateInvoice(InvoiceModel.MapModelToDTO(invoice, int.Parse(identity.GetUserId()), receiverId, payerId, filePath));
+                    }
                 }
                 else
                 {
@@ -115,29 +117,30 @@ namespace Fakturiska.Controllers
             return PartialView("_TableArchivedInvoices", InvoiceModel.GetArchivedInvoices());
         }
 
-        public void PrintInvoice(String filePath)
+        public void PrintInvoice(Guid guid)
         {
-            WebClient User = new WebClient();
-            Byte[] FileBuffer = User.DownloadData(filePath);
-            if (FileBuffer != null)
-            {
-                Response.ContentType = "application/pdf";
-                Response.AddHeader("content-length", FileBuffer.Length.ToString());
-                Response.BinaryWrite(FileBuffer);
-            }
+            string filePath = InvoiceLogic.GetFilePathByGuid(guid);
+            FileInfo fileInfo = new FileInfo(filePath);
+            var mime = new Mime();
+            string mimeType = mime.Lookup(filePath);
+
+            Response.AppendHeader("Connection", "keep-alive");
+            Response.AppendHeader("Content-Type", mimeType);
+            Response.AppendHeader("Expires", "0");
+            Response.AppendHeader("Cache-Control", "max-age=864000");
+            Response.AppendHeader("Content-Length:", fileInfo.Length.ToString());
+            Response.Flush();
+
+            Response.TransmitFile(filePath);
+            System.Web.HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
 
         [HttpPost]
         public ActionResult Upload(HttpPostedFileBase file)
         {
             var identity = (ClaimsIdentity)User.Identity;
-            string filePath = InvoiceLogic.ConvertAndSaveFile(file);
-            InvoiceLogic.CreateInvoice(new InvoiceDTO
-            {
-                InvoiceGuid = Guid.NewGuid(),
-                UserId = int.Parse(identity.GetUserId()),
-                FilePath = filePath
-            });
+            string filePath = InvoiceLogic.SaveFile(file);
+            InvoiceLogic.CreateInvoice(InvoiceModel.MapModelToDTO(null, int.Parse(identity.GetUserId()), null, null, filePath));
             return RedirectToAction("Invoices");
         }
 
