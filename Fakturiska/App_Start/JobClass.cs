@@ -12,7 +12,7 @@ namespace Fakturiska.App_Start
     {
         public void Execute(IJobExecutionContext context)
         {
-           // InvoiceLogic.ReceiveMail();
+           //InvoiceLogic.ReceiveMail();
         }
     }
 }

@@ -46,12 +46,23 @@ namespace Fakturiska.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditUser(string value, string pk)
+        public ActionResult EditUserEmail(string value, string pk)
         {
-            UserLogic.EditUser(new UserDTO
+            UserLogic.EditUserEmail(new UserDTO
             {
                 UserGuid = new Guid(pk),
                 Email = value,
+            });
+            return Json("Succeed");
+        }
+
+        [HttpPost]
+        public ActionResult EditUserRole(string value, string pk)
+        {
+            UserLogic.EditUserRole(new UserDTO
+            {
+                UserGuid = new Guid(pk),
+                RoleId = int.Parse(value),
             });
             return Json("Succeed");
         }

@@ -152,12 +152,16 @@ namespace Fakturiska.Business.Logic
             {
                 string name = Guid.NewGuid().ToString();
                 string extension = Path.GetExtension(invoiceFile.FileName);
-                path = Path.Combine(HttpContext.Current.Server.MapPath("~/Files/"), name + ".pdf");
-                invoiceFile.SaveAs(path);
+                if (extension == ".pdf" || extension == ".jpg" || extension == ".png")
+                {
+                    path = Path.Combine(HttpContext.Current.Server.MapPath("~/Files/"), name + extension);
+                    invoiceFile.SaveAs(path);
+                }  
             }
             return path;
         }
 
+        static string SERVER_PATH = @"C:\Users\ING\source\repos\Fakturiska\Fakturiska\Files\";
         public static void ReceiveMail()
         {
             var context = GlobalHost.ConnectionManager.GetHubContext<RealTime>();
@@ -175,21 +179,48 @@ namespace Fakturiska.Business.Logic
                 Messages.Add(getMessage);
             }
 
+            int count = 0;
             foreach (Message msg in Messages)
             {
+                count++;
+                string email = msg.Headers.From.Address;
+                int? userId = 0;
+                userId = UserLogic.GetUserIdByEmail(email);
                 foreach (var attachment in msg.FindAllAttachments())
                 {
-                    /*var fileName = Guid.NewGuid().ToString() + Path.GetExtension(attachment.FileName);
-                    string filePath = Path.Combine(HttpContext.Current.Server.MapPath("~/Files/"), fileName);
-                    FileStream Stream = new FileStream(filePath, FileMode.Create);
-                    BinaryWriter BinaryStream = new BinaryWriter(Stream);
-                    BinaryStream.Write(attachment.Body);
-                    BinaryStream.Close();*/
+                    try
+                    {
+                        string filePath = "";
+                        string name = Guid.NewGuid().ToString();
+                        string extension = Path.GetExtension(attachment.FileName);
 
-                    context.Clients.All.Send("Mail received!");
+                        if (extension == ".pdf" || extension == ".jpg" || extension == ".png")
+                        {
+                            //filePath = Path.Combine(HttpContext.Current.Server.MapPath("~/Files/"), name + extension);
+                            filePath = SERVER_PATH + name + extension;
+
+                            FileStream Stream = new FileStream(filePath, FileMode.Create);
+                            BinaryWriter BinaryStream = new BinaryWriter(Stream);
+                            BinaryStream.Write(attachment.Body);
+                            BinaryStream.Close();
+
+                            if (filePath != "" && userId != null)
+                            {
+                                CreateInvoice(new InvoiceDTO
+                                {
+                                    UserId = (int)userId,
+                                    FilePath = filePath
+                                });
+                                context.Clients.All.MailReceived("Invoice added by email");
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        PopClient.DeleteMessage(count);
+                    }
                 }
             }
-            PopClient.DeleteAllMessages();
             PopClient.Disconnect();
         }
 

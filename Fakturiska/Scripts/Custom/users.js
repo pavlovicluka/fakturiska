@@ -5,6 +5,10 @@
     setDataTablesWaiting();
 
     $('.editEmail').editable();
+    $('.editRole').editable({
+        source: [{ value: 1, text: "Admin" }, { value: 2, text: "User" }],
+    });
+    
     var popover = $('#userPopover').popover({
         html: true,
         title: function () {

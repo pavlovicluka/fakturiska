@@ -4,11 +4,29 @@
     setDataTables();
     setDataTablesArchive();
 
+    var dragCounter = 0;
     new Dropzone(document.body, {
         url: "/Invoice/Upload",
+        acceptedFiles: "application/pdf, image/jpeg, image/png",
+        previewsContainer: false,
+        clickable: false,
+        success: function (file, response) {
+            $.notify("Invoice uploaded", "success");
+            getInvoices();
+        },
         dragenter: function () {
+            dragCounter++;
+            $(".dimmer").show();
         },
         dragleave: function () {
+            dragCounter--;
+            if (dragCounter === 0) {
+                $(".dimmer").hide();
+            }
+        },
+        drop: function () {
+            dragCounter = 0;
+            $(".dimmer").hide();
         }
     });
 });
@@ -94,6 +112,17 @@ function submitForm() {
     }
 }
 
+function getInvoices() {
+    $.ajax({
+        url: "/Invoice/TableInvoices",
+        type: "GET",
+        success: function (result) {
+            $('#result').html(result);
+            setDataTables();
+        }
+    });
+}
+
 function createInvoice() {
     $.ajax({
         url: "/Invoice/CreateInvoice",
@@ -143,6 +172,7 @@ function archiveInvoice(invoiceId, rowId) {
         success: function (result) {
             $("#row" + rowId).remove();
             $('#resultArchive').html(result);
+            setDataTablesArchive();
         }
     });
 }
@@ -156,8 +186,9 @@ function printInvoice(guid) {
 $(function () {
     var chat = $.connection.realTime;
 
-    chat.client.Send = function (message) {
+    chat.client.MailReceived = function (message) {
         $.notify(message, "success");
+        getInvoices();
     };
 
     $.connection.hub.start();

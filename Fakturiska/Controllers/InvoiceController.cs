@@ -140,7 +140,14 @@ namespace Fakturiska.Controllers
         {
             var identity = (ClaimsIdentity)User.Identity;
             string filePath = InvoiceLogic.SaveFile(file);
-            InvoiceLogic.CreateInvoice(InvoiceModel.MapModelToDTO(null, int.Parse(identity.GetUserId()), null, null, filePath));
+            if(filePath != "")
+            {
+                InvoiceLogic.CreateInvoice(new InvoiceDTO
+                {
+                    UserId = int.Parse(identity.GetUserId()),
+                    FilePath = filePath
+                });
+            }
             return RedirectToAction("Invoices");
         }
 

@@ -138,6 +138,22 @@ function prepareModal() {
             $.validator.unobtrusive.parse('.payerFields');
         }
     });
+
+    /*new Dropzone(document.getElementById("fileUpload"), {
+        url: "/Invoice/Uploadd",
+        acceptedFiles: "application/pdf, image/jpeg, image/png",
+        success: function (file, response) {
+            //$.notify("Invoice uploaded", "success");
+            //getInvoices();
+            console.log("ovde!");
+        },
+        dragenter: function () {
+
+        },
+        dragleave: function () {
+
+        }
+    });*/
 }
 
 function clearReceiver() {

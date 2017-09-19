@@ -22,7 +22,7 @@
                     <a href="#" id="userEmail" class="editEmail" data-type="text" data-pk="@item.UserGuid" data-url="EditUser" data-title="Edit email">@item.Email</a>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.RoleName)
+                    <a href="#" id="userRole" class="editRole" data-type="select" data-pk="@item.UserGuid" data-url="EditUserRole" data-title="Edit Role">@item.RoleName</a>
                 </td>
                 <td>
                     <a class="btn btn-danger" onclick="deleteUser('@item.UserGuid', @count, 'true')"><span class="glyphicon glyphicon-remove"></span></a>

@@ -72,7 +72,7 @@ namespace Fakturiska.Business.Logic
             }
         }
 
-        public static void EditUser(UserDTO user)
+        public static void EditUserEmail(UserDTO user)
         {
             using (var dc = new FakturiskaDBEntities())
             {
@@ -80,6 +80,19 @@ namespace Fakturiska.Business.Logic
                 if (u != null)
                 {
                     u.Email = user.Email;
+                }
+                dc.SaveChanges();
+            }
+        }
+
+        public static void EditUserRole(UserDTO user)
+        {
+            using (var dc = new FakturiskaDBEntities())
+            {
+                var u = GetUserById(user.UserGuid, dc);
+                if (u != null)
+                {
+                    u.RoleId = user.RoleId;
                 }
                 dc.SaveChanges();
             }
@@ -113,6 +126,21 @@ namespace Fakturiska.Business.Logic
             {
                 var user = dc.Users.FirstOrDefault(u => u.UserId == userId);
                 return new UserDTO(user);
+            }
+        }
+
+        public static int? GetUserIdByEmail(string email)
+        {
+            using (var dc = new FakturiskaDBEntities())
+            {
+                var user = dc.Users.FirstOrDefault(u => u.Email == email);
+                if(user != null)
+                {
+                    return user.UserId;
+                } else
+                {
+                    return null;
+                }
             }
         }
 
