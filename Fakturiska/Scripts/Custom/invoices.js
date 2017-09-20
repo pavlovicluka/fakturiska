@@ -16,17 +16,17 @@
         },
         dragenter: function () {
             dragCounter++;
-            $(".dimmer").show();
+            $("#dimmerHome").show();
         },
         dragleave: function () {
             dragCounter--;
             if (dragCounter === 0) {
-                $(".dimmer").hide();
+                $("#dimmerHome").hide();
             }
         },
         drop: function () {
             dragCounter = 0;
-            $(".dimmer").hide();
+            $("#dimmerHome").hide();
         }
     });
 });
@@ -82,18 +82,27 @@ function setDataTablesArchive() {
 }
 
 function submitForm() {
-    dropzoneForm.processQueue();
-    //dropzoneForm.getQueuedFiles()[0]
-
+    var invoiceCompaniesModel = new FormData();
     var invoiceForm = $("#invoiceForm");
 
     if (invoiceForm.valid()) {
-        localData = invoiceForm.serialize();
+
+        var formArray = invoiceForm.serializeArray();
+        var formObject = {};
+        for (var i = 0; i < formArray.length; i++) {
+            formObject[formArray[i]['name']] = formArray[i]['value'];
+        }
+        for (var key in formObject) {
+            invoiceCompaniesModel.append(key, formObject[key]);
+        }
+        invoiceCompaniesModel.append("Invoice.File", dropzoneForm.getQueuedFiles()[0]);
+
         $.ajax({
             url: "/Invoice/CreateInvoice",
+            data: invoiceCompaniesModel,
             type: "POST",
-            data: JSON.stringify({ data: 'en-US' }),
-            dataType: 'json',
+            processData: false,
+            contentType: false,
             success: function (result) {
 
                 if (result.substring(1, 2) === "t") {

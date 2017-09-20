@@ -9,6 +9,7 @@ using System.Web;
 using System.Collections.Generic;
 using System.IO;
 using MimeSharp;
+using Newtonsoft.Json;
 
 namespace Fakturiska.Controllers
 {
@@ -37,14 +38,12 @@ namespace Fakturiska.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateInvoice(string file)
+        public ActionResult CreateInvoice(InvoiceCompaniesModel invoiceCompaniesModel)
         {
-            InvoiceCompaniesModel model = null;
-
             var identity = (ClaimsIdentity)User.Identity;
-            InvoiceModel invoice = model.Invoice;
-            CompanyModel companyReceiver = model.CompanyReceiver;
-            CompanyModel companyPayer = model.CompanyPayer;
+            InvoiceModel invoice = invoiceCompaniesModel.Invoice;
+            CompanyModel companyReceiver = invoiceCompaniesModel.CompanyReceiver;
+            CompanyModel companyPayer = invoiceCompaniesModel.CompanyPayer;
 
             if (invoice.InvoiceGuid != Guid.Empty && ModelState.ContainsKey("Invoice.File"))
                 ModelState["Invoice.File"].Errors.Clear();
@@ -96,7 +95,7 @@ namespace Fakturiska.Controllers
                 }
                 return PartialView("_TableArchivedInvoices", InvoiceModel.GetArchivedInvoices());
             }
-            return PartialView("_CreateEditInvoice", model);
+            return PartialView("_CreateEditInvoice", invoiceCompaniesModel);
         }
 
         [HttpPost]

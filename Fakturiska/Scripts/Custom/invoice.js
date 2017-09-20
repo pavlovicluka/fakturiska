@@ -140,22 +140,38 @@ function prepareModal() {
         }
     });
 
+    var dragCounter = 0;
     if (dropzoneForm == null) {
         dropzoneForm = new Dropzone(document.getElementById("invoiceModal"), {
             url: "/Invoice/UploadFromForm",
             acceptedFiles: "application/pdf, image/jpeg, image/png",
             autoProcessQueue: false,
             clickable: document.getElementById("addFile"),
+            maxFiles: 1,
+            previewsContainer: "#dzContainer",
             init: function () {
-                this.on("addedfile", function () {
-                    /*if (this.files[1] !== null) {
-                        this.removeFile(this.files[0]);
-                    }*/
+                this.on("maxfilesexceeded", function (file) {
+                    this.removeAllFiles();
+                    this.addFile(file);
                 });
             },
             success: function (file, response) {
                 console.log("odgovor" + response);
             },
+            dragenter: function () {
+                dragCounter++;
+                $("#dimmerModal").show();
+            },
+            dragleave: function () {
+                dragCounter--;
+                if (dragCounter === 0) {
+                    $("#dimmerModal").hide();
+                }
+            },
+            drop: function () {
+                dragCounter = 0;
+                $("#dimmerModal").hide();
+            }
         });
     }
     console.log(dropzoneForm);

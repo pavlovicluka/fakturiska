@@ -14,7 +14,6 @@ namespace Fakturiska.Models
         public CompanyModel CompanyReceiver { get; set; }
         public CompanyModel CompanyPayer { get; set; }
 
-
         public InvoiceCompaniesModel()
         {
         }
