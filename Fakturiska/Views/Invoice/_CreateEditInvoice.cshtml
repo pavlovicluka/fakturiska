@@ -78,7 +78,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.Invoice.File, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.TextBoxFor(model => model.Invoice.File, new { type = "file" })
+                        <a class="btn btn-default" id="addFile">Dodaj fajl</a>
                         @Html.ValidationMessageFor(model => model.Invoice.File, "", new { @class = "text-danger" })
                     </div>
                 </div>

@@ -2,6 +2,7 @@
     $("#navbarLoggedIn_Companies").addClass("active");
     setDataTables(); 
 });
+var changes;
 
 function setDataTables() {
     tableCompanies = $('#tableCompanies').DataTable({
@@ -67,6 +68,7 @@ function submitForm() {
                     $('.modal-backdrop').remove();
                     $('#result').html(result);
                     setDataTables();
+                    changes.server.companiesChanged("refresh");
                 } else {
                     $("#companyModal").find(".modal-body").html(result);
                 }
@@ -105,14 +107,15 @@ function deleteCompany(companyId, modalId) {
         data: { id: companyId },
         success: function (result) {
             $("#" + modalId).parent().closest('tr').remove();
+            changes.server.companiesChanged("refresh");
         }
     });
 }
 
 $(function () {
-    var changes = $.connection.realTime;
-
-    changes.client.CompaniesChange = function (message) {
+    changes = $.connection.realTime;
+    
+    changes.client.companiesChanged = function (message) {
         $.notify(message, "success");
         if (message === "refresh") {
             $.ajax({

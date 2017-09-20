@@ -46,8 +46,6 @@ namespace Fakturiska.Business.Logic
                     companyId =  dc.Companies.FirstOrDefault(c => c.CompanyUId == com.CompanyUId).CompanyId;
                 }
             }
-            var context = GlobalHost.ConnectionManager.GetHubContext<RealTime>();
-            context.Clients.All.CompaniesChange("refresh");
             return companyId;
         }
 
@@ -105,8 +103,6 @@ namespace Fakturiska.Business.Logic
                 dc.SaveChanges();
                 companyId = c.CompanyId;
             }
-            var context = GlobalHost.ConnectionManager.GetHubContext<RealTime>();
-            context.Clients.All.CompaniesChange("refresh");
             return companyId;
         }
 
@@ -121,8 +117,6 @@ namespace Fakturiska.Business.Logic
                 }
                 dc.SaveChanges();
             }
-            var context = GlobalHost.ConnectionManager.GetHubContext<RealTime>();
-            context.Clients.All.CompaniesChange("refresh");
         }
 
         public static IEnumerable<CompanyDTO> GetAllCompanies()

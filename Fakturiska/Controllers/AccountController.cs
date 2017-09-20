@@ -40,8 +40,10 @@ namespace Fakturiska.Controllers
 
                     HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = true }, ident);
                     return RedirectToAction("Invoices", "Invoice");
+                } else
+                {
+                    ModelState.AddModelError(string.Empty, "Pogresan email i/ili sifra");
                 }
-                return RedirectToAction("Login");
             }
             return View(model);
         }

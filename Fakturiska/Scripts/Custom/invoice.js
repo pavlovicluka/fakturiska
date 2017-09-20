@@ -6,6 +6,7 @@
     $(".ui-autocomplete-input").css("z-index", 100);
 }); 
 
+var dropzoneForm = null;
 function prepareModal() {
     currentModalId = "#invoiceModal";
 
@@ -139,21 +140,25 @@ function prepareModal() {
         }
     });
 
-    /*new Dropzone(document.getElementById("fileUpload"), {
-        url: "/Invoice/Uploadd",
-        acceptedFiles: "application/pdf, image/jpeg, image/png",
-        success: function (file, response) {
-            //$.notify("Invoice uploaded", "success");
-            //getInvoices();
-            console.log("ovde!");
-        },
-        dragenter: function () {
-
-        },
-        dragleave: function () {
-
-        }
-    });*/
+    if (dropzoneForm == null) {
+        dropzoneForm = new Dropzone(document.getElementById("invoiceModal"), {
+            url: "/Invoice/UploadFromForm",
+            acceptedFiles: "application/pdf, image/jpeg, image/png",
+            autoProcessQueue: false,
+            clickable: document.getElementById("addFile"),
+            init: function () {
+                this.on("addedfile", function () {
+                    /*if (this.files[1] !== null) {
+                        this.removeFile(this.files[0]);
+                    }*/
+                });
+            },
+            success: function (file, response) {
+                console.log("odgovor" + response);
+            },
+        });
+    }
+    console.log(dropzoneForm);
 }
 
 function clearReceiver() {

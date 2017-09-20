@@ -82,13 +82,18 @@ function setDataTablesArchive() {
 }
 
 function submitForm() {
+    dropzoneForm.processQueue();
+    //dropzoneForm.getQueuedFiles()[0]
+
     var invoiceForm = $("#invoiceForm");
 
     if (invoiceForm.valid()) {
+        localData = invoiceForm.serialize();
         $.ajax({
             url: "/Invoice/CreateInvoice",
             type: "POST",
-            data: invoiceForm.serialize(),
+            data: JSON.stringify({ data: 'en-US' }),
+            dataType: 'json',
             success: function (result) {
 
                 if (result.substring(1, 2) === "t") {
@@ -177,16 +182,15 @@ function archiveInvoice(invoiceId, rowId) {
     });
 }
 
-function printInvoice(guid) {
+
+function printInvoice(guid) {   
     var w = window.open("/Invoice/PrintInvoice?guid=" + guid);
-    w.focus();
     w.print();
 }
 
 $(function () {
-    var chat = $.connection.realTime;
-
-    chat.client.MailReceived = function (message) {
+    var changes = $.connection.realTime;
+    changes.client.MailReceived = function (message) {
         $.notify(message, "success");
         getInvoices();
     };

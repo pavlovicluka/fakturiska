@@ -37,8 +37,10 @@ namespace Fakturiska.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateInvoice(InvoiceCompaniesModel model)
+        public ActionResult CreateInvoice(string file)
         {
+            InvoiceCompaniesModel model = null;
+
             var identity = (ClaimsIdentity)User.Identity;
             InvoiceModel invoice = model.Invoice;
             CompanyModel companyReceiver = model.CompanyReceiver;
@@ -148,7 +150,21 @@ namespace Fakturiska.Controllers
                     FilePath = filePath
                 });
             }
-            return RedirectToAction("Invoices");
+            return Json("Succeded");
+        }
+
+        [HttpPost]
+        public ActionResult UploadFromForm(HttpPostedFileBase file)
+        {
+            string filePath = InvoiceLogic.SaveFile(file);
+            if (filePath != "")
+            {
+                return Json("Succeded");
+            }
+            else
+            {
+                return Json("File is required");
+            }
         }
 
         [HttpPost]

@@ -9,15 +9,9 @@ namespace Fakturiska.Business.Logic
 {
     public class RealTime : Hub
     {
-        /*public void Send(string message)
+        public void CompaniesChanged(string message)
         {
-            Clients.All.broadcastMessage(message);
+            Clients.Others.CompaniesChanged(message);
         }
-
-        public void CompaniesChange(string message)
-        {
-            Clients.Others.CompaniesChange(message);
-        }*/
-
     }
 }
