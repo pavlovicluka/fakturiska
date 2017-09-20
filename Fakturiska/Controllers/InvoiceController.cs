@@ -167,9 +167,9 @@ namespace Fakturiska.Controllers
         }
 
         [HttpPost]
-        public JsonResult Autocomplete(string prefix)
+        public JsonResult Autocomplete(string prefix, int fieldCase)
         {
-            IEnumerable<CompanyDTO> allCompanies = CompanyLogic.GetAllCompaniesAutocomplete(prefix);
+            IEnumerable<CompanyDTO> allCompanies = CompanyLogic.GetAllCompaniesAutocomplete(prefix, fieldCase);
             return Json(allCompanies, JsonRequestBehavior.AllowGet);
         }
     }

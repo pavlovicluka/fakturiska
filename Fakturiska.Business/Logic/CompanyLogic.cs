@@ -186,13 +186,25 @@ namespace Fakturiska.Business.Logic
         }
 
 
-        public static IEnumerable<CompanyDTO> GetAllCompaniesAutocomplete(string prefix)
+        public static IEnumerable<CompanyDTO> GetAllCompaniesAutocomplete(string prefix, int fieldCase)
         {
             prefix = prefix.Trim().ToLower();
             List<CompanyDTO> companyDTOs = null;
+            List<Company> companies = null;
             using (var dc = new FakturiskaDBEntities())
             {
-                var companies = dc.Companies.Where(company => company.Name.ToLower().Contains(prefix) && company.DeleteDate == null).ToList();
+                switch(fieldCase)
+                {
+                    case 1:
+                        companies = dc.Companies.Where(company => company.Name.ToLower().Contains(prefix) && company.DeleteDate == null).ToList();
+                        break;
+                    case 2:
+                        companies = dc.Companies.Where(company => company.PersonalNumber.ToLower().Contains(prefix) && company.DeleteDate == null).ToList();
+                        break;
+                    case 3:
+                        companies = dc.Companies.Where(company => company.PIB.ToLower().Contains(prefix) && company.DeleteDate == null).ToList();
+                        break;
+                }
                 companyDTOs = companies.Select(company => new CompanyDTO(company)).ToList();
             }
             return companyDTOs;

@@ -102,7 +102,7 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.CompanyReceiver.Name, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
-                                @Html.EditorFor(model => model.CompanyReceiver.Name, new { htmlAttributes = new { @class = "form-control receiverFields" } })
+                                @Html.EditorFor(model => model.CompanyReceiver.Name, new { htmlAttributes = new { @class = "form-control receiverFields receiverAutocomplete" } })
                                 @Html.ValidationMessageFor(model => model.CompanyReceiver.Name, "", new { @class = "text-danger receiverValidation" })
                             </div>
                         </div>
@@ -152,7 +152,7 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.CompanyReceiver.PersonalNumber, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
-                                @Html.EditorFor(model => model.CompanyReceiver.PersonalNumber, new { htmlAttributes = new { @class = "form-control receiverFields" } })
+                                @Html.EditorFor(model => model.CompanyReceiver.PersonalNumber, new { htmlAttributes = new { @class = "form-control receiverFields receiverAutocomplete" } })
                                 @Html.ValidationMessageFor(model => model.CompanyReceiver.PersonalNumber, "", new { @class = "text-danger receiverValidation" })
                             </div>
                         </div>
@@ -160,7 +160,7 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.CompanyReceiver.PIB, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
-                                @Html.EditorFor(model => model.CompanyReceiver.PIB, new { htmlAttributes = new { @class = "form-control receiverFields" } })
+                                @Html.EditorFor(model => model.CompanyReceiver.PIB, new { htmlAttributes = new { @class = "form-control receiverFields receiverAutocomplete" } })
                                 @Html.ValidationMessageFor(model => model.CompanyReceiver.PIB, "", new { @class = "text-danger receiverValidation" })
                             </div>
                         </div>
@@ -205,7 +205,7 @@
                     <div class="form-group">
                         @Html.LabelFor(model => model.CompanyPayer.Name, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.CompanyPayer.Name, new { htmlAttributes = new { @class = "form-control payerFields" } })
+                            @Html.EditorFor(model => model.CompanyPayer.Name, new { htmlAttributes = new { @class = "form-control payerFields payerAutocomplete" } })
                             @Html.ValidationMessageFor(model => model.CompanyPayer.Name, "", new { @class = "text-danger payerValidation" })
                         </div>
                     </div>
@@ -255,7 +255,7 @@
                     <div class="form-group">
                         @Html.LabelFor(model => model.CompanyPayer.PersonalNumber, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.CompanyPayer.PersonalNumber, new { htmlAttributes = new { @class = "form-control payerFields" } })
+                            @Html.EditorFor(model => model.CompanyPayer.PersonalNumber, new { htmlAttributes = new { @class = "form-control payerFields payerAutocomplete" } })
                             @Html.ValidationMessageFor(model => model.CompanyPayer.PersonalNumber, "", new { @class = "text-danger payerValidation" })
                         </div>
                     </div>
@@ -263,7 +263,7 @@
                     <div class="form-group">
                         @Html.LabelFor(model => model.CompanyPayer.PIB, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.CompanyPayer.PIB, new { htmlAttributes = new { @class = "form-control payerFields" } })
+                            @Html.EditorFor(model => model.CompanyPayer.PIB, new { htmlAttributes = new { @class = "form-control payerFields payerAutocomplete" } })
                             @Html.ValidationMessageFor(model => model.CompanyPayer.PIB, "", new { @class = "text-danger payerValidation" })
                         </div>
                     </div>
