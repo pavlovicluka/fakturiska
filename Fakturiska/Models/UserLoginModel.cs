@@ -1,5 +1,4 @@
-﻿using Fakturiska.Business.Enumerations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -8,17 +7,16 @@ using System.Web;
 
 namespace Fakturiska.Models
 {
-    public class UserModelWithoutPassword
+    public class UserLoginModel
     {
-        public Guid UserGuid { get; set; }
         [DisplayName("Email")]
         [Required()]
         public String Email { get; set; }
-        [DisplayName("Rola")]
+        [DisplayName("Šifra")]
         [Required()]
-        public RoleEnum Role { get; set; }
+        public String Password { get; set; }
 
-        public UserModelWithoutPassword()
+        public UserLoginModel()
         {
 
         }

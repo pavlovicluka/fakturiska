@@ -1,9 +1,9 @@
 ﻿using Quartz;
 using Quartz.Impl;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using Microsoft.AspNet.Identity;
+using Microsoft.Owin;
+using Microsoft.Owin.Security.Cookies;
+using Owin;
 
 namespace Fakturiska.App_Start
 {
@@ -25,6 +25,15 @@ namespace Fakturiska.App_Start
             .Build();
 
             scheduler.ScheduleJob(job, trigger);
+        }
+
+        public static void ConfigureAuth(IAppBuilder app)
+        {
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
+                LoginPath = new PathString("/Account/Login")
+            });
         }
     }
 }

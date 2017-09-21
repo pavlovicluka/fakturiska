@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using Fakturiska.Business.Logic;
 using Fakturiska.Business.DTOs;
 using Fakturiska.Models;
+using Fakturiska.Business.Enumerations;
 
 namespace Fakturiska.Controllers
 {
@@ -16,31 +17,38 @@ namespace Fakturiska.Controllers
 
         public ActionResult TableUsers()
         {
-            return PartialView("_TableUsers", UserModel.GetUsers());
+            return PartialView("_TableUsers", UserWithoutPasswordModel.GetUsers());
         }
 
         public ActionResult TableUsersWaiting()
         {
-            return PartialView("_TableUsersWaiting", UserModel.GetUsersWaiting());
+            return PartialView("_TableUsersWaiting", UserWithoutPasswordModel.GetUsersWaiting());
         }
 
         [HttpGet]
         public ActionResult CreateUserWithoutPassword()
         {
-            return PartialView("_CreateUserWithoutPassword");
+            return PartialView("_CreateUserWithoutPassword", new UserWithoutPasswordModel());
         }
 
         [HttpPost]
-        public ActionResult CreateUserWithoutPassword(UserModelWithoutPassword user)
+        public ActionResult CreateUserWithoutPassword(UserWithoutPasswordModel user)
         {
             if (ModelState.IsValid)
             {
-                UserLogic.CreateUserWithoutPassword(new UserDTO
+                var response = UserLogic.CreateUserWithoutPassword(new UserDTO
                 {
                     Email = user.Email,
-                    RoleId = (int)user.Role + 1,
+                    Role = (RoleEnum)user.Role,
                 });
-                return PartialView("_TableUsersWaiting", UserModel.GetUsersWaiting());
+                if(response == "succeed")
+                {
+                    return PartialView("_TableUsersWaiting", UserWithoutPasswordModel.GetUsersWaiting());
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Korisnik sa istim email-om je vec kreiran!");
+                }
             }
             return PartialView("_CreateUserWithoutPassword", user);
         }
@@ -62,7 +70,7 @@ namespace Fakturiska.Controllers
             UserLogic.EditUserRole(new UserDTO
             {
                 UserGuid = new Guid(pk),
-                RoleId = int.Parse(value),
+                Role = (RoleEnum)int.Parse(value),
             });
             return Json("Succeed");
         }

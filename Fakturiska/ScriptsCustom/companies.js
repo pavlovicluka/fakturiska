@@ -32,7 +32,24 @@ function setDataTables() {
         },
         "columnDefs": [
             {
+                "targets": 0,
+                "responsivePriority": 1,
+            },
+            {
+                "targets": 4,
+                "render": function (data, type, row) {
+                    return '<a href="' + data + '">' + data + '</a>';
+                }
+            },
+            {
+                "targets": 5,
+                "render": function (data, type, row) {
+                    return '<a href="mailto:' + data + '">' + data + '</a>';
+                }
+            },
+            {
                 "targets": 11,
+                "responsivePriority": 2,
                 "searchable": false,
                 "orderable": false,
                 "render": function (data, type, row) {

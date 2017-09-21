@@ -20,12 +20,20 @@
                 @Html.ActionLink("Fakturiska", "Invoices", "Invoice", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <div id="navbarLoggedIn" class="hide">
+                <div id="navbarLoggedIn">
                     <ul class="nav nav-pills nav-justified">
-                        <li id="navbarLoggedIn_Users" class="hide"><a href="/User/Users">Korisnici</a></li>
-                        <li id="navbarLoggedIn_Invoices"><a href="/Invoice/Invoices">Upravljanje fakturama</a></li>
-                        <li id="navbarLoggedIn_Companies"><a href="/Company/Companies">Pravna lica</a></li>
-                        <li><a href="/Account/Logout" id="navbarLoggedIn_logOut"></a></li>
+                        @using System.Security.Claims;
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                                var identity = (ClaimsIdentity)User.Identity;
+                                if (identity.Claims.ToArray()[3].Value == "Admin")
+                                {
+                                    <li id="navbarLoggedIn_Users"><a href="/User/Users">Korisnici</a></li>
+                                }
+                                <li id="navbarLoggedIn_Invoices"><a href="/Invoice/Invoices">Upravljanje fakturama</a></li>
+                                <li id="navbarLoggedIn_Companies"><a href="/Company/Companies">Pravna lica</a></li>
+                                <li><a href="/Account/Logout" id="navbarLoggedIn_logOut">Odjavite se: @identity.Name</a></li>
+                        }                      
                     </ul>
                 </div>
             </div>
@@ -33,7 +41,7 @@
     </div>
 
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/Scripts/Custom/layout.js")
+
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("https://cdn.datatables.net/v/bs/dt-1.10.15/r-2.1.1/datatables.min.js")
@@ -42,7 +50,10 @@
 
     @Scripts.Render("~/Scripts/dropzone.js")
     @Scripts.Render("~/Scripts/moment.js")
-    @Scripts.Render("~/Scripts/bootstrap-datetimepicker.js")
+
+    @Scripts.Render("~/Scripts/jquery.signalR-2.2.2.js")
+    <script src="/signalr/hubs"></script>
+    @Scripts.Render("~/Scripts/notify.min.js")
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.15/r-2.1.1/datatables.min.css" />
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">

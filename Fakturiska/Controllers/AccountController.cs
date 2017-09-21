@@ -8,8 +8,6 @@ using System.Security.Claims;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using System.Net;
-using System.Web.Helpers;
-using System.Web.ModelBinding;
 
 namespace Fakturiska.Controllers
 {
@@ -23,7 +21,7 @@ namespace Fakturiska.Controllers
         }
 
         [HttpPost]
-        public ActionResult Login(UserModel model)
+        public ActionResult Login(UserLoginModel model)
         {
             if(ModelState.IsValid)
             {
@@ -35,10 +33,11 @@ namespace Fakturiska.Controllers
                     new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                     new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "ASP.NET Identity", "http://www.w3.org/2001/XMLSchema#string"),
                     new Claim(ClaimTypes.Name, user.Email),
-                    new Claim(ClaimTypes.Role, user.RoleName),
+                    new Claim(ClaimTypes.Role, user.Role.ToString()),
                     }, DefaultAuthenticationTypes.ApplicationCookie);
 
                     HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = true }, ident);
+
                     return RedirectToAction("Invoices", "Invoice");
                 } else
                 {
@@ -56,17 +55,17 @@ namespace Fakturiska.Controllers
 
         public ActionResult SignUp()
         {
-            return View(new UserModel());
+            return View(new UserSetPasswordModel());
         }
 
         [HttpPost]
-        public ActionResult SignUp(UserModel model)
+        public ActionResult SignUp(UserSetPasswordModel model)
         {
             UserLogic.CreateUser(new UserDTO
             {
                 Email = model.Email,
                 Password = model.Password,
-                RoleId = (int)model.Role,
+                Role = model.Role,
             });
             return RedirectToAction("Login");
         }
@@ -76,30 +75,24 @@ namespace Fakturiska.Controllers
             string userGuid = WebUtility.HtmlDecode(Request.QueryString["id"]);
             if(userGuid != null)
             {
-                return View(new UserModel(userGuid));
+                return View(new UserSetPasswordModel(userGuid));
             }
             return RedirectToAction("Invoices", "Invoice");
         }
 
         [HttpPost]
-        public ActionResult SetPassword(UserModel model)
+        public ActionResult SetPassword(UserSetPasswordModel model)
         {
-            UserLogic.SetPassword(new UserDTO
+            if(ModelState.IsValid)
             {
-                UserGuid = model.UserGuid,
-                Password = model.Password,
-            });
-            return RedirectToAction("Login");
-        }
-
-        public JsonResult GetCurrentUser()
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                var identity = (ClaimsIdentity)User.Identity;
-                return Json(new UserModel(int.Parse(identity.GetUserId())));
+                UserLogic.SetPassword(new UserDTO
+                {
+                    UserGuid = model.UserGuid,
+                    Password = model.Password,
+                });
+                return RedirectToAction("Login");
             }
-            return null;
+            return View(model);
         }
     }
 }

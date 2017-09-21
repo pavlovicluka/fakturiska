@@ -3,7 +3,7 @@
 <table id="tableArchive" class="table">
     <thead>
         <tr>
-            <th data-priority="1">
+            <th>
                 @Html.DisplayNameFor(model => model.InvoiceId)
             </th>
             <th>
@@ -31,7 +31,7 @@
                 @Html.DisplayNameFor(model => model.PaidDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PriorityName)
+                @Html.DisplayNameFor(model => model.Priority)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ReceiverName)
@@ -39,7 +39,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.PayerName)
             </th>
-            <th data-priority="2">
+            <th>
 
             </th>
         </tr>
@@ -47,25 +47,6 @@
     <tbody>
 
         @{int count = 0;}
-        @{int isChecked(int? a)
-            {
-                if (a.HasValue)
-                {
-                    if ((int)a == 1)
-                    {
-                        return 1;
-                    }
-                    else
-                    {
-                        return 0;
-                    }
-                }
-                else
-                {
-                    return -1;
-                }
-            }
-        }
 
         @foreach (var item in Model)
         {
@@ -79,51 +60,44 @@
                     @Html.DisplayFor(modelItem => item.Date)
                 </td>
                 <td>
-                    @if (isChecked(item.InvoiceEstimate) == 1)
-                    {
-                        @: DA
-                            }
-                    else if (isChecked(item.InvoiceEstimate) == 0)
-                    {
-                        @: NE
-                            }
+                   @Html.DisplayFor(modelItem => item.InvoiceEstimate)
                 </td>
                 <td>
-                    @if (isChecked(item.InvoiceTotal) == 1)
+                    @if (item.InvoiceTotal)
                     {
                         @: DA
                              }
-                    else if (isChecked(item.InvoiceTotal) == 0)
+                    else if (!item.InvoiceTotal)
                     {
                         @: NE
                              }
                 </td>
                 <td>
-                    @if (isChecked(item.Incoming) == 1)
+                    @if (item.Incoming)
                     {
                         @: DA
                              }
-                    else if (isChecked(item.Incoming) == 0)
+                    else if (!item.Incoming)
                     {
                         @: NE
                             }
                 </td>
                 <td>
-                    @if (isChecked(item.Paid) == 1)
+                    @if (item.Paid)
                     {
                         @: DA
                             }
-                    else if (isChecked(item.Paid) == 0)
+                    else if (!item.Paid)
                     {
                         @: NE
                              }
                 </td>
                 <td>
-                    @if (isChecked(item.Risk) == 1)
+                    @if (item.Risk)
                     {
                         @: DA
                              }
-                    else if (isChecked(item.Risk) == 0)
+                    else if (!item.Risk)
                     {
                         @: NE
                             }

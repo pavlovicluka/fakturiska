@@ -1,4 +1,5 @@
-﻿using Fakturiska.Database;
+﻿using Fakturiska.Business.Enumerations;
+using Fakturiska.Database;
 using System;
 
 namespace Fakturiska.Business.DTOs
@@ -9,8 +10,7 @@ namespace Fakturiska.Business.DTOs
         public Guid UserGuid { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public int RoleId { get; set; }
-        public string RoleName { get; set; }
+        public RoleEnum Role { get; set; }
         public DateTime DeleteDate { get; set; }
 
         public UserDTO()
@@ -24,7 +24,7 @@ namespace Fakturiska.Business.DTOs
             UserGuid = user.UserUId;
             Email = user.Email;
             Password = user.Password;
-            RoleName = user.Role.Description;
+            Role = (RoleEnum)(user.RoleId - 1);
         }
     }
 }

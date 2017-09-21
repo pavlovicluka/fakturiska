@@ -29,7 +29,7 @@ namespace Fakturiska.Business.Logic
                 UserUId = Guid.NewGuid(),
                 Email = user.Email,
                 Password = user.Password,
-                RoleId = user.RoleId
+                RoleId = (int)user.Role + 1
             };
 
             using(var dc = new FakturiskaDBEntities())
@@ -39,24 +39,30 @@ namespace Fakturiska.Business.Logic
             }
         }
 
-        public static void CreateUserWithoutPassword(UserDTO user)
+        public static string CreateUserWithoutPassword(UserDTO user)
         {
-            Guid newUserGuid = Guid.NewGuid();
-            User u = new User()
+            var us = GetUserIdByEmail(user.Email);
+            if(us == null)
             {
-                UserUId = newUserGuid,
-                Email = user.Email,
-                RoleId = user.RoleId
-            };
+                Guid newUserGuid = Guid.NewGuid();
+                User u = new User()
+                {
+                    UserUId = newUserGuid,
+                    Email = user.Email,
+                    RoleId = (int)user.Role + 1
+                };
 
-            using (var dc = new FakturiskaDBEntities())
-            {
-                dc.Users.Add(u);
-                dc.SaveChanges();
+                using (var dc = new FakturiskaDBEntities())
+                {
+                    dc.Users.Add(u);
+                    dc.SaveChanges();
 
-                string body = "Click on this link to set your password: http://localhost:54276/Account/SetPassword/?id=" + newUserGuid;
-                SendMail(body, user.Email);
-            }
+                    string body = "Click on this link to set your password: http://localhost:54276/Account/SetPassword/?id=" + newUserGuid;
+                    SendMail(body, user.Email);
+                }
+                return "succeed";
+            } 
+            return "exists";
         }
 
         public static void SetPassword(UserDTO user)
@@ -92,7 +98,7 @@ namespace Fakturiska.Business.Logic
                 var u = GetUserById(user.UserGuid, dc);
                 if (u != null)
                 {
-                    u.RoleId = user.RoleId;
+                    u.RoleId = (int)user.Role;
                 }
                 dc.SaveChanges();
             }
@@ -115,7 +121,7 @@ namespace Fakturiska.Business.Logic
         {
             using (var dc = new FakturiskaDBEntities())
             {
-                var user = dc.Users.FirstOrDefault(u => u.UserUId == userGuid);
+                var user = dc.Users.FirstOrDefault(u => u.DeleteDate == null && u.UserUId == userGuid);
                 return new UserDTO(user);
             }
         }
@@ -124,7 +130,7 @@ namespace Fakturiska.Business.Logic
         {
             using (var dc = new FakturiskaDBEntities())
             {
-                var user = dc.Users.FirstOrDefault(u => u.UserId == userId);
+                var user = dc.Users.FirstOrDefault(u => u.DeleteDate == null && u.UserId == userId);
                 return new UserDTO(user);
             }
         }
@@ -133,7 +139,7 @@ namespace Fakturiska.Business.Logic
         {
             using (var dc = new FakturiskaDBEntities())
             {
-                var user = dc.Users.FirstOrDefault(u => u.Email == email);
+                var user = dc.Users.FirstOrDefault(u => u.DeleteDate == null && u.Email == email);
                 if(user != null)
                 {
                     return user.UserId;

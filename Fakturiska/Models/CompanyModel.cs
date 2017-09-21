@@ -1,9 +1,11 @@
 ﻿using Fakturiska.Business.DTOs;
 using Fakturiska.Business.Logic;
+using Foolproof;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -14,42 +16,61 @@ namespace Fakturiska.Models
         public Guid? CompanyGuid { get; set; }
 
         [DisplayName("Naziv")]
-        [Required(ErrorMessage = "Polje Naziv je obavezno")]
+        [RequiredIf("CompanyEmpty", false, ErrorMessage = "Polje Naziv je obavezno")]
         public String Name { get; set; }
         [DisplayName("Telefon")]
-        [Required(ErrorMessage = "Polje Telefon je obavezno")]
+        [RequiredIf("CompanyEmpty", false, ErrorMessage = "Polje Telefon je obavezno")]
         [Phone]
         public String PhoneNumber { get; set; }
         [DisplayName("Fax")]
-        [Required(ErrorMessage = "Polje Fax je obavezno")]
+        [RequiredIf("CompanyEmpty", false, ErrorMessage = "Polje Fax je obavezno")]
         [Phone]
         public String FaxNumber { get; set; }
         [DisplayName("Adresa")]
-        [Required(ErrorMessage = "Polje Adresa je obavezno")]
+        [RequiredIf("CompanyEmpty", false, ErrorMessage = "Polje Adresa je obavezno")]
         public String Address { get; set; }
         [DisplayName("Website")]
-        [Required(ErrorMessage = "Polje Website je obavezno")]
+        [RequiredIf("CompanyEmpty", false, ErrorMessage = "Polje Website je obavezno")]
         [Url]
         public String Website { get; set; }
         [DisplayName("Email")]
-        [Required(ErrorMessage = "Polje Email je obavezno")]
+        [RequiredIf("CompanyEmpty", false, ErrorMessage = "Polje Email je obavezno")]
         [EmailAddress]
         public String Email { get; set; }
         [DisplayName("Maticni broj")]
-        [Required(ErrorMessage = "Polje Maticni broj je obavezno")]
+        [RequiredIf("CompanyEmpty", false, ErrorMessage = "Polje Maticni broj je obavezno")]
         public String PersonalNumber { get; set; }
         [DisplayName("PIB")]
-        [Required(ErrorMessage = "Polje PIB je obavezno")]
+        [RequiredIf("CompanyEmpty", false, ErrorMessage = "Polje PIB je obavezno")]
         public String PIB { get; set; }
         [DisplayName("MIB")]
-        [Required(ErrorMessage = "Polje MIB je obavezno")]
+        [RequiredIf("CompanyEmpty", false, ErrorMessage = "Polje MIB je obavezno")]
         public String MIB { get; set; }
         [DisplayName("Broj tekućeg računa")]
-        [Required(ErrorMessage = "Polje Broj tekućeg računa je obavezno")]
+        [RequiredIf("CompanyEmpty", false, ErrorMessage = "Polje Broj tekućeg računa je obavezno")]
         public String AccountNumber { get; set; }
         [DisplayName("Šifra za uplatu")]
-        [Required(ErrorMessage = "Polje Šifra za uplatu je obavezno")]
+        [RequiredIf("CompanyEmpty", false, ErrorMessage = "Polje Šifra za uplatu je obavezno")]
         public String BankCode { get; set; }
+
+        [NotMapped]
+        public bool CompanyEmpty
+        {
+            get
+            {
+                return ((Name == "" || Name == null)
+                    && (PhoneNumber == "" || PhoneNumber == null)
+                    && (FaxNumber == "" || FaxNumber == null)
+                    && (Address == "" || Address == null)
+                    && (Website == "" || Website == null)
+                    && (Email == "" || Email == null)
+                    && (PersonalNumber == "" || PersonalNumber == null)
+                    && (PIB == "" || PIB == null)
+                    && (MIB == "" || MIB == null)
+                    && (AccountNumber == "" || AccountNumber == null)
+                    && (BankCode == "" || BankCode == null));
+            }
+        }
 
         public CompanyModel()
         {

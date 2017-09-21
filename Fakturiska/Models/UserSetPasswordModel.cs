@@ -1,6 +1,7 @@
 ﻿using Fakturiska.Business.DTOs;
 using Fakturiska.Business.Enumerations;
 using Fakturiska.Business.Logic;
+using Foolproof;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,27 +11,27 @@ using System.Web;
 
 namespace Fakturiska.Models
 {
-    public class UserModel
+    public class UserSetPasswordModel
     {
         public Guid UserGuid { get; set; }
         [DisplayName("Email")]
-        [Required()]
         public String Email { get; set; }
         [DisplayName("Šifra")]
         [Required()]
         public String Password { get; set; }
-        [DisplayName("Rola")]
-        public String RoleName { get; set; }
-        [DisplayName("Rola")]
+        [DisplayName("Potvrdite Šifru")]
         [Required()]
+        [EqualTo("Password", ErrorMessage = "Šifre se ne poklapaju")]
+        public String PasswordConfirm { get; set; }
+        [DisplayName("Rola")]
         public RoleEnum Role { get; set; }
 
-        public UserModel()
+        public UserSetPasswordModel()
         {
 
         }
 
-        public UserModel(Guid id)
+        /*public UserModel(Guid id)
         {
             var user = UserLogic.GetUserByGuid(id);
             this.UserGuid = id;
@@ -44,41 +45,21 @@ namespace Fakturiska.Models
             this.UserGuid = user.UserGuid;
             this.RoleName = user.RoleName;
             this.Email = user.Email;
-        }
+        }*/
 
-        public UserModel(string id)
+        public UserSetPasswordModel(string id)
         {
             try
             {
                 Guid userGuid = new Guid(id);
                 var user = UserLogic.GetUserByGuid(userGuid);
                 this.UserGuid = userGuid;
-                this.RoleName = user.RoleName;
+                this.Role = user.Role;
                 this.Email = user.Email;
             } catch (Exception e)
             {
                 throw e;
             }
-        }
-             
-        public static IEnumerable<UserModel> GetUsers()
-        {
-            return UserLogic.GetUsers().Select(user => new UserModel
-            {
-                UserGuid = user.UserGuid,
-                Email = user.Email,
-                RoleName = user.RoleName,
-            });
-        }
-
-        public static IEnumerable<UserModel> GetUsersWaiting()
-        {
-            return UserLogic.GetUsersWaiting().Select(user => new UserModel
-            {
-                UserGuid = user.UserGuid,
-                Email = user.Email,
-                RoleName = user.RoleName,
-            });
         }
     }
 }

@@ -1,15 +1,17 @@
 ﻿$(document).ready(function () {
-    $('.datepicker').datepicker({
-        format: 'DD/MM/YYYY'
-    });
+    $('.datepicker').datepicker();
 
     $(".ui-autocomplete-input").css("z-index", 100);
 }); 
 
 var currentModalId = "#invoiceModal";
 var dropzoneForm = null;
-function prepareModal() {
-    
+function prepareEditModal() {
+    if (dropzoneForm !== null) {
+        dropzoneForm.destroy();
+        dropzoneForm = null;
+    }
+
     $(currentModalId).find(".receiverAutocomplete").autocomplete({
         select: function (a, b) {
             setCompanyInfo("CompanyReceiver", b.item);
@@ -36,13 +38,13 @@ function prepareModal() {
                         var lab;
                         switch (fieldCase) {
                             case 1:
-                                lab = item.Name
+                                lab = item.Name;
                                 break;
                             case 2:
-                                lab = item.PersonalNumber
+                                lab = item.PersonalNumber;
                                 break;
                             case 3:
-                                lab = item.PIB
+                                lab = item.PIB;
                                 break;
                         }
 
@@ -59,7 +61,7 @@ function prepareModal() {
                             PIB: item.PIB,
                             MIB: item.MIB,
                             AccountNumber: item.AccountNumber,
-                            BankCode: item.BankCode,
+                            BankCode: item.BankCode
                         };
                     }));
 
@@ -97,13 +99,13 @@ function prepareModal() {
                         var lab;
                         switch (fieldCase) {
                             case 1:
-                                lab = item.Name
+                                lab = item.Name;
                                 break;
                             case 2:
-                                lab = item.PersonalNumber
+                                lab = item.PersonalNumber;
                                 break;
                             case 3:
-                                lab = item.PIB
+                                lab = item.PIB;
                                 break;
                         }
 
@@ -120,7 +122,7 @@ function prepareModal() {
                             PIB: item.PIB,
                             MIB: item.MIB,
                             AccountNumber: item.AccountNumber,
-                            BankCode: item.BankCode,
+                            BankCode: item.BankCode
                         };
                     }));
 
@@ -136,52 +138,22 @@ function prepareModal() {
         if ($(this).val().length === 0) {
             clearCompany("CompanyReceiver");
         }
-    })
+    });
 
     $(".payerAutocomplete").keypress(function (event) {
         if ($(this).val().length === 0) {
             clearCompany("CompanyPayer");
         }
-    })
-
-    $(currentModalId).find('#receiverCheckbox').change(function () {
-        if (this.checked) {
-            $(currentModalId).find(".receiverFields").removeAttr("disabled");
-            $(currentModalId).find(".receiverFields").attr("data-val", "true");
-            $(currentModalId).find('.receiverFields').data('unobtrusiveValidation');
-            $(currentModalId).find('.receiverFields').data('validator');
-            $.validator.unobtrusive.parse('.receiverFields');
-        } else {
-            $(currentModalId).find(".receiverFields").attr("disabled", "true");
-            $(currentModalId).find(".receiverValidation").empty();
-            $(currentModalId).find(".receiverFields").attr("data-val", "false");
-            $(currentModalId).find('.receiverFields').removeData('unobtrusiveValidation');
-            $(currentModalId).find('.receiverFields').removeData('validator');
-            $.validator.unobtrusive.parse('.receiverFields');
-        }
     });
+}
 
-    $(currentModalId).find('#payerCheckbox').change(function () {
-        if (this.checked) {
-            $(currentModalId).find(".payerFields").removeAttr("disabled");
-            $(currentModalId).find(".payerFields").attr("data-val", "true");
-            $(currentModalId).find('.payerFields').data('unobtrusiveValidation');
-            $(currentModalId).find('.payerFields').data('validator');
-            $.validator.unobtrusive.parse('.payerFields');
-        } else {
-            $(currentModalId).find(".payerFields").attr("disabled", "true");
-            $(currentModalId).find(".payerValidation").empty();
-            $(currentModalId).find(".payerFields").attr("data-val", "false");
-            $(currentModalId).find('.payerFields').removeData('unobtrusiveValidation');
-            $(currentModalId).find('.payerFields').removeData('validator');
-            $.validator.unobtrusive.parse('.payerFields');
-        }
-    });
+function prepareCreateModal() {
+    prepareEditModal();
 
     var dragCounter = 0;
-    if (dropzoneForm == null) {
+    if (dropzoneForm === null) {
         dropzoneForm = new Dropzone(document.getElementById("invoiceModal"), {
-            url: "/Invoice/UploadFromForm",
+            url: "/Invoice/Upload",
             acceptedFiles: "application/pdf, image/jpeg, image/png",
             autoProcessQueue: false,
             clickable: document.getElementById("addFile"),
@@ -228,17 +200,11 @@ function setCompanyInfo(companyType, c) {
     $(currentModalId).find("#" + companyType + "_" + "AccountNumber").val(c.AccountNumber);
     $(currentModalId).find("#" + companyType + "_" + "BankCode").val(c.BankCode);
 
-    $(currentModalId).find("#" + companyType + "_" + "PhoneNumber").attr("disabled", "");
-    $(currentModalId).find("#" + companyType + "_" + "FaxNumber").attr("disabled", "");
-    $(currentModalId).find("#" + companyType + "_" + "Address").attr("disabled", "");
-    $(currentModalId).find("#" + companyType + "_" + "Website").attr("disabled", "");
-    $(currentModalId).find("#" + companyType + "_" + "Email").attr("disabled", "");
-    $(currentModalId).find("#" + companyType + "_" + "MIB").attr("disabled", "");
-    $(currentModalId).find("#" + companyType + "_" + "AccountNumber").attr("disabled", "");
-    $(currentModalId).find("#" + companyType + "_" + "BankCode").attr("disabled", "");
+    disableEnableFields(companyType, true);
 }
 
 function clearCompany(companyType) {
+    $(currentModalId).find("#" + companyType + "_" + "CompanyGuid").val("");
     $(currentModalId).find("#" + companyType + "_" + "Name").val("");
     $(currentModalId).find("#" + companyType + "_" + "PhoneNumber").val("");
     $(currentModalId).find("#" + companyType + "_" + "FaxNumber").val("");
@@ -250,17 +216,18 @@ function clearCompany(companyType) {
     $(currentModalId).find("#" + companyType + "_" + "MIB").val("");
     $(currentModalId).find("#" + companyType + "_" + "AccountNumber").val("");
     $(currentModalId).find("#" + companyType + "_" + "BankCode").val("");
-    $(currentModalId).find("#" + companyType + "_" + "CompanyGuid").val("");
 
-    $(currentModalId).find("#" + companyType + "_" + "PhoneNumber").removeAttr("disabled", "");
-    $(currentModalId).find("#" + companyType + "_" + "FaxNumber").removeAttr("disabled", "");
-    $(currentModalId).find("#" + companyType + "_" + "Address").removeAttr("disabled", "");
-    $(currentModalId).find("#" + companyType + "_" + "Website").removeAttr("disabled", "");
-    $(currentModalId).find("#" + companyType + "_" + "Email").removeAttr("disabled", "");
-    $(currentModalId).find("#" + companyType + "_" + "MIB").removeAttr("disabled", "");
-    $(currentModalId).find("#" + companyType + "_" + "AccountNumber").removeAttr("disabled", "");
-    $(currentModalId).find("#" + companyType + "_" + "BankCode").removeAttr("disabled", "");
+    disableEnableFields(companyType, false);
 }
 
-
+function disableEnableFields(companyType, enabled) {
+    $(currentModalId).find("#" + companyType + "_" + "PhoneNumber").prop("disabled", enabled);
+    $(currentModalId).find("#" + companyType + "_" + "FaxNumber").prop("disabled", enabled);
+    $(currentModalId).find("#" + companyType + "_" + "Address").prop("disabled", enabled);
+    $(currentModalId).find("#" + companyType + "_" + "Website").prop("disabled", enabled);
+    $(currentModalId).find("#" + companyType + "_" + "Email").prop("disabled", enabled);
+    $(currentModalId).find("#" + companyType + "_" + "MIB").prop("disabled", enabled);
+    $(currentModalId).find("#" + companyType + "_" + "AccountNumber").prop("disabled", enabled);
+    $(currentModalId).find("#" + companyType + "_" + "BankCode").prop("disabled", enabled);
+}
 

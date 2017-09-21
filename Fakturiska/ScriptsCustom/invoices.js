@@ -37,11 +37,17 @@ function setDataTables() {
         "dom": '<"pull-right"l>t<"pull-left"i><"pull-right"p>',
         responsive: true,
         language: { search: "" },
-        "columnDefs": [{
-            "targets": 2,
-            "searchable": false,
-            "orderable": false
-        }],
+        "columnDefs": [
+            {
+                "targets": 0,
+                "responsivePriority": 1,
+            },
+            {
+                "targets": -1,
+                "responsivePriority": 2,
+                "searchable": false,
+                "orderable": false
+            }],
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
     });
 
@@ -60,7 +66,18 @@ function setDataTablesArchive() {
         responsive: true,
         ordering: false,
         bFilter: true,
-        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        "columnDefs": [
+            {
+                "targets": 0,
+                "responsivePriority": 1,
+            },
+            {
+                "targets": -1,
+                "responsivePriority": 2,
+                "searchable": false,
+                "orderable": false
+            }],
     });
 
     $('#searchArchive').on('keyup change', function () {
@@ -87,7 +104,11 @@ function submitForm() {
 
     if (invoiceForm.valid()) {
 
+        disableEnableFields("CompanyReceiver", false);
+        disableEnableFields("CompanyPayer", false);
         var formArray = invoiceForm.serializeArray();
+        disableEnableFields("CompanyReceiver", true);
+        disableEnableFields("CompanyPayer", true);
         var formObject = {};
         for (var i = 0; i < formArray.length; i++) {
             formObject[formArray[i]['name']] = formArray[i]['value'];
@@ -95,7 +116,8 @@ function submitForm() {
         for (var key in formObject) {
             invoiceCompaniesModel.append(key, formObject[key]);
         }
-        invoiceCompaniesModel.append("Invoice.File", dropzoneForm.getQueuedFiles()[0]);
+        if (dropzoneForm !== null)
+            invoiceCompaniesModel.append("Invoice.File", dropzoneForm.getQueuedFiles()[0]);
 
         $.ajax({
             url: "/Invoice/CreateInvoice",
@@ -119,7 +141,11 @@ function submitForm() {
                     }
                 } else {
                     $("#invoiceModal").find(".modal-body").html(result);
-                    prepareModal();
+                    if (formObject["Invoice.Guid"] !== "") {
+                        prepareEditModal();
+                    } else {
+                        prepareCreateModal();
+                    }    
                 }
             }
         });
@@ -143,7 +169,7 @@ function createInvoice() {
         type: "GET",
         success: function (result) {
             $("#invoiceModalBody").html(result);
-            prepareModal();
+            prepareCreateModal();
             $("#invoiceModal").modal('toggle');
         }
     });
@@ -156,7 +182,7 @@ function editInvoice(invoiceId, archive) {
         data: { id: invoiceId },
         success: function (result) {
             $("#invoiceModalBody").html(result);
-            prepareModal();
+            prepareEditModal();
             $("#invoiceModal").modal('toggle');
             archived = archive;
         }

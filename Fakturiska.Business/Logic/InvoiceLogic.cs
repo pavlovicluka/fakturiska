@@ -16,10 +16,14 @@ namespace Fakturiska.Business.Logic
     {
         public static void CreateInvoice(InvoiceDTO invoice)
         {
-            if(invoice.Paid == 1)
+            if(invoice.Paid)
             {
                 invoice.PaidDate = DateTime.Now.Date;
             }
+
+            int? priorityId = null;
+            if (invoice.Priority != null)
+                priorityId = (int)invoice.Priority;
 
             Invoice i = new Invoice()
             {
@@ -33,7 +37,7 @@ namespace Fakturiska.Business.Logic
                 Risk = invoice.Risk,
                 Sum = invoice.Sum,
                 PaidDate = invoice.PaidDate,
-                PriorityId = invoice.PriorityId,
+                PriorityId = priorityId,
                 ReceiverId = invoice.ReceiverId,
                 PayerId = invoice.PayerId,
                 FilePath = invoice.FilePath
@@ -57,10 +61,14 @@ namespace Fakturiska.Business.Logic
 
         public static void EditInvoice(InvoiceDTO invoice)
         {
-            if (invoice.Paid == 1)
+            if (invoice.Paid)
             {
                 invoice.PaidDate = DateTime.Now.Date;
             }
+
+            int? priorityId = null;
+            if (invoice.Priority != null)
+                priorityId = (int)invoice.Priority;
 
             using (var dc = new FakturiskaDBEntities())
             {
@@ -75,7 +83,7 @@ namespace Fakturiska.Business.Logic
                    i.Risk = invoice.Risk;
                    i.Sum = invoice.Sum;
                    i.PaidDate = invoice.PaidDate;
-                   i.PriorityId = invoice.PriorityId;
+                   i.PriorityId = priorityId;
                    i.ReceiverId = invoice.ReceiverId;
                    i.PayerId = invoice.PayerId;
                 }
@@ -209,6 +217,11 @@ namespace Fakturiska.Business.Logic
                                 CreateInvoice(new InvoiceDTO
                                 {
                                     UserId = (int)userId,
+                                    InvoiceEstimate = false,
+                                    InvoiceTotal = false,
+                                    Incoming = false,
+                                    Paid = false,
+                                    Risk = false,
                                     FilePath = filePath
                                 });
                                 context.Clients.All.MailReceived("Invoice added by email");

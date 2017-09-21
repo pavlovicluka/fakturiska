@@ -59,11 +59,11 @@
     <Property Name="InvoiceUId" Type="uniqueidentifier" Nullable="false" />
     <Property Name="UserId" Type="int" Nullable="false" />
     <Property Name="Date" Type="datetime" Nullable="true" />
-    <Property Name="InvoiceEstimate" Type="int" Nullable="true" />
-    <Property Name="InvoiceTotal" Type="int" Nullable="true" />
-    <Property Name="Incoming" Type="int" Nullable="true" />
-    <Property Name="Paid" Type="int" Nullable="true" />
-    <Property Name="Risk" Type="int" Nullable="true" />
+    <Property Name="InvoiceEstimate" Type="bit" Nullable="false" />
+    <Property Name="InvoiceTotal" Type="bit" Nullable="false" />
+    <Property Name="Incoming" Type="bit" Nullable="false" />
+    <Property Name="Paid" Type="bit" Nullable="false" />
+    <Property Name="Risk" Type="bit" Nullable="false" />
     <Property Name="Sum" Type="int" Nullable="true" />
     <Property Name="PaidDate" Type="datetime" Nullable="true" />
     <Property Name="PriorityId" Type="int" Nullable="true" />
@@ -191,11 +191,11 @@
           <Property Name="InvoiceUId" Type="Guid" Nullable="false" />
           <Property Name="UserId" Type="Int32" Nullable="false" />
           <Property Name="Date" Type="DateTime" Precision="0" />
-          <Property Name="InvoiceEstimate" Type="Int32" />
-          <Property Name="InvoiceTotal" Type="Int32" />
-          <Property Name="Incoming" Type="Int32" />
-          <Property Name="Paid" Type="Int32" />
-          <Property Name="Risk" Type="Int32" />
+          <Property Name="InvoiceEstimate" Type="Boolean" Nullable="false" />
+          <Property Name="InvoiceTotal" Type="Boolean" Nullable="false" />
+          <Property Name="Incoming" Type="Boolean" Nullable="false" />
+          <Property Name="Paid" Type="Boolean" Nullable="false" />
+          <Property Name="Risk" Type="Boolean" Nullable="false" />
           <Property Name="Sum" Type="Int32" />
           <Property Name="PaidDate" Type="DateTime" Precision="3" />
           <Property Name="PriorityId" Type="Int32" />
@@ -298,7 +298,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="FakturiskaDBEntities1" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Companies" EntityType="Self.Company" />
           <EntitySet Name="Invoices" EntityType="Self.Invoice" />
           <EntitySet Name="Priorities" EntityType="Self.Priority" />
@@ -330,7 +330,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
     <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-  <EntityContainerMapping StorageEntityContainer="FakturiskaDBModelStoreContainer" CdmEntityContainer="FakturiskaDBEntities1">
+  <EntityContainerMapping StorageEntityContainer="FakturiskaDBModelStoreContainer" CdmEntityContainer="Entities">
     <EntitySetMapping Name="Companies">
       <EntityTypeMapping TypeName="IsTypeOf(FakturiskaDBModel.Company)">
         <MappingFragment StoreEntitySet="Companies">

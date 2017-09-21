@@ -1,4 +1,5 @@
-﻿using Fakturiska.Database;
+﻿using Fakturiska.Business.Enumerations;
+using Fakturiska.Database;
 using System;
 
 namespace Fakturiska.Business.DTOs
@@ -9,15 +10,14 @@ namespace Fakturiska.Business.DTOs
         public Guid InvoiceGuid { get; set; }
         public int UserId { get; set; }
         public DateTime? Date { get; set; }
-        public int? InvoiceEstimate { get; set; }
-        public int? InvoiceTotal { get; set; }
-        public int? Incoming { get; set; }
-        public int? Paid { get; set; }
-        public int? Risk { get; set; }
+        public bool InvoiceEstimate { get; set; }
+        public bool InvoiceTotal { get; set; }
+        public bool Incoming { get; set; }
+        public bool Paid { get; set; }
+        public bool Risk { get; set; }
         public int? Sum { get; set; }
         public DateTime? PaidDate { get; set; }
-        public int? PriorityId { get; set; }
-        public string PriorityName { get; set; }
+        public PriorityEnum? Priority { get; set; }
         public int? ReceiverId { get; set; }
         public string ReceiverName { get; set; }
         public int? PayerId { get; set; }
@@ -43,11 +43,11 @@ namespace Fakturiska.Business.DTOs
             Risk = invoice.Risk;
             Sum = invoice.Sum;
             PaidDate = invoice.PaidDate;
-            if (invoice.Priority != null)
-            {
-                PriorityId = invoice.PriorityId;
-                PriorityName = invoice.Priority.Description;
-            }
+            if(invoice.PriorityId != null)
+                Priority = (PriorityEnum)(invoice.PriorityId);
+            else
+                Priority = null;
+
             if (invoice.CompanyReceiver != null)
             {
                 ReceiverId = invoice.ReceiverId;

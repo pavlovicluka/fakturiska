@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Fakturiska.Models.UserModel>
+﻿@model IEnumerable<Fakturiska.Models.UserWithoutPasswordModel>
 
 <table id="tableUsersWaiting" class="table">
     <thead>
@@ -7,7 +7,7 @@
                 @Html.DisplayNameFor(model => model.Email)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RoleName)
+                @Html.DisplayNameFor(model => model.Role)
             </th>
             <th></th>
         </tr>
@@ -19,10 +19,11 @@
         {
             <tr id="@string.Concat("rowWaiting", count)">
                 <td>
-                    <a href="#" id="userEmail" class="editEmail" data-type="text" data-pk="@item.UserGuid" data-url="EditUser" data-title="Edit email">@item.Email</a>
+                    <!--<a href="#" id="userEmail" class="editEmail" data-type="text" data-pk="@item.UserGuid" data-url="EditUser" data-title="Edit email">@item.Email</a>-->
+                    <a href="mailto:" + @item.Email>@item.Email</a>
                 </td>
                 <td>
-                    <a href="#" id="userRole" class="editRole" data-type="select" data-pk="@item.UserGuid" data-url="EditUserRole" data-title="Edit Role">@item.RoleName</a>
+                    <a href="#" id="userRole" class="editRole" data-type="select" data-pk="@item.UserGuid" data-url="EditUserRole" data-title="Edit Role">@item.Role</a>
                 </td>
                 <td>
                     <a class="btn btn-danger" onclick="deleteUser('@item.UserGuid', @count, 'true')"><span class="glyphicon glyphicon-remove"></span></a>

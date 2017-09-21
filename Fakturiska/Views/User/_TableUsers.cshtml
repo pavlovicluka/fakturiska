@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Fakturiska.Models.UserModel>
+﻿@model IEnumerable<Fakturiska.Models.UserWithoutPasswordModel>
 
 <table id="tableUsers" class="table">
     <thead>
@@ -7,7 +7,7 @@
                 @Html.DisplayNameFor(model => model.Email)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RoleName)
+                @Html.DisplayNameFor(model => model.Role)
             </th>
             <th></th>
         </tr>
@@ -20,10 +20,11 @@
             count++;
             <tr id="@string.Concat("row", count)">
                 <td>
-                    <a href="#" id="userEmail" class="editEmail" data-type="text" data-pk="@item.UserGuid" data-url="EditUserEmail" data-title="Edit email">@item.Email</a>
+                    <!--<a href="#" id="userEmail" class="editEmail" data-type="text" data-pk="@item.UserGuid" data-url="EditUserEmail" data-title="Edit email">@item.Email</a>-->
+                    <a href="mailto:" + @item.Email>@item.Email</a>
                 </td>
                 <td>
-                    <a href="#" id="userRole" class="editRole" data-type="select" data-pk="@item.UserGuid" data-url="EditUserRole" data-title="Edit Role">@item.RoleName</a>
+                    <a href="#" id="userRole" class="editRole" data-type="select" data-pk="@item.UserGuid" data-url="EditUserRole" data-title="Edit Role">@item.Role</a>
                 </td>
                 <td>
                     <a class="btn btn-danger" onclick="deleteUser('@item.UserGuid', @count, 'false')"><span class="glyphicon glyphicon-remove"></span></a>

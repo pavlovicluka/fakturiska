@@ -2,13 +2,13 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 09/05/2017 21:43:06
--- Generated from EDMX file: D:\Mega\Documents\Svastara\Programiranje\ASP.NET\fakturiska\Fakturiska.Database\FakturiskaDB.edmx
+-- Date Created: 09/21/2017 14:18:08
+-- Generated from EDMX file: C:\Users\ING\source\repos\Fakturiska\Fakturiska.Database\FakturiskaDB.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
 GO
-USE [Fakturiska];
+USE [FakturiskaDB];
 GO
 IF SCHEMA_ID(N'dbo') IS NULL EXECUTE(N'CREATE SCHEMA [dbo]');
 GO
@@ -82,11 +82,11 @@ CREATE TABLE [dbo].[Invoices] (
     [InvoiceUId] uniqueidentifier  NOT NULL,
     [UserId] int  NOT NULL,
     [Date] datetime  NULL,
-    [InvoiceEstimate] int  NULL,
-    [InvoiceTotal] int  NULL,
-    [Incoming] int  NULL,
-    [Paid] int  NULL,
-    [Risk] int  NULL,
+    [InvoiceEstimate] bit  NOT NULL,
+    [InvoiceTotal] bit  NOT NULL,
+    [Incoming] bit  NOT NULL,
+    [Paid] bit  NOT NULL,
+    [Risk] bit  NOT NULL,
     [Sum] int  NULL,
     [PaidDate] datetime  NULL,
     [PriorityId] int  NULL,

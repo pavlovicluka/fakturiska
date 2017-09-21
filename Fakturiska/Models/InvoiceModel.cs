@@ -14,38 +14,27 @@ namespace Fakturiska.Models
     {
         [DisplayName("Broj fakture")]
         public int InvoiceId { get; set; }
-        public Guid InvoiceGuid { get; set; }
+        public Guid? InvoiceGuid { get; set; }
         [DisplayName("Datum kreiranja")]
         public DateTime? Date { get; set; }
         [DisplayName("Predračun")]
-        public int? InvoiceEstimate { get; set; }
-        [DisplayName("Predračun")]
-        public bool InvoiceEstimateChecked { get; set; }
+        public bool InvoiceEstimate { get; set; }
         [DisplayName("Račun")]
-        public int? InvoiceTotal { get; set; }
-        [DisplayName("Račun")]
-        public bool InvoiceTotalChecked { get; set; }
+        public bool InvoiceTotal { get; set; }
         [DisplayName("Ulazna")]
-        public int? Incoming { get; set; }
-        [DisplayName("Ulazna")]
-        public bool IncomingChecked { get; set; }
+        public bool Incoming { get; set; }
         [DisplayName("Plaćena")]
-        public int? Paid { get; set; }
-        [DisplayName("Plaćena")]
-        public bool PaidChecked { get; set; }
+        public bool Paid { get; set; }
         [DisplayName("Problematična")]
-        public int? Risk { get; set; }
-        [DisplayName("Problematična")]
-        public bool RiskChecked { get; set; }
+        public bool Risk { get; set; }
         [DisplayName("Suma")]
         public int? Sum { get; set; }
         [DisplayName("Datum plaćanja")]
         public DateTime? PaidDate { get; set; }
         [DisplayName("Važnost")]
-        [Required()]
-        public PriorityEnum Priority { get; set; }
+        public PriorityEnum? Priority { get; set; }
         [DisplayName("Važnost")]
-        public string PriorityName { get; set; }
+        public string PriorityName { get { return PriorityMethods.GetString(Priority); } }
         [DisplayName("Primalac")]
         public string ReceiverName { get; set; }
         [DisplayName("Uplatilac")]
@@ -73,11 +62,7 @@ namespace Fakturiska.Models
             Risk = invoice.Risk;
             Sum = invoice.Sum;
             PaidDate = invoice.PaidDate;
-            if (invoice.PriorityId != null)
-            {
-                Priority = (PriorityEnum)(invoice.PriorityId - 1);
-                PriorityName = invoice.PriorityName;
-            }
+            Priority = invoice.Priority;
             ReceiverName = invoice.ReceiverName;
             PayerName = invoice.PayerName;
             FilePath = invoice.FilePath;
@@ -98,17 +83,22 @@ namespace Fakturiska.Models
         {
             InvoiceDTO invoiceDTO = new InvoiceDTO();
             if (invoice.InvoiceGuid != null && invoice.InvoiceGuid != Guid.Empty)
-                invoiceDTO.InvoiceGuid = invoice.InvoiceGuid;
+                invoiceDTO.InvoiceGuid = (Guid)invoice.InvoiceGuid;
             if (userId != null)
                 invoiceDTO.UserId = (int)userId;
             invoiceDTO.Date = invoice.Date;
-            invoiceDTO.InvoiceEstimate = Convert.ToInt32(invoice.InvoiceEstimateChecked);
-            invoiceDTO.InvoiceTotal = Convert.ToInt32(invoice.InvoiceTotalChecked);
-            invoiceDTO.Incoming = Convert.ToInt32(invoice.IncomingChecked);
-            invoiceDTO.Paid = Convert.ToInt32(invoice.PaidChecked);
-            invoiceDTO.Risk = Convert.ToInt32(invoice.RiskChecked);
+            invoiceDTO.InvoiceEstimate = invoice.InvoiceEstimate;
+            invoiceDTO.InvoiceTotal = invoice.InvoiceTotal;
+            invoiceDTO.Incoming = invoice.Incoming;
+            invoiceDTO.Paid = invoice.Paid;
+            invoiceDTO.Risk = invoice.Risk;
             invoiceDTO.Sum = invoice.Sum;
-            invoiceDTO.PriorityId = (int)invoice.Priority + 1;
+
+            if (invoice.Priority != null)
+                invoiceDTO.Priority = (PriorityEnum)invoice.Priority;
+            else
+                invoiceDTO.Priority = null;
+
             if (receiverId != null)
                 invoiceDTO.ReceiverId = receiverId;
             if (payerId != null)
@@ -117,6 +107,35 @@ namespace Fakturiska.Models
                 invoiceDTO.FilePath = filePath;
 
             return invoiceDTO;
+        }
+    }
+
+    public static class EnumHelper<T>
+    {
+        public static T GetValueFromName(string name)
+        {
+            var type = typeof(T);
+            if (!type.IsEnum) throw new InvalidOperationException();
+
+            foreach (var field in type.GetFields())
+            {
+                var attribute = Attribute.GetCustomAttribute(field,
+                    typeof(DisplayAttribute)) as DisplayAttribute;
+                if (attribute != null)
+                {
+                    if (attribute.Name == name)
+                    {
+                        return (T)field.GetValue(null);
+                    }
+                }
+                else
+                {
+                    if (field.Name == name)
+                        return (T)field.GetValue(null);
+                }
+            }
+
+            throw new ArgumentOutOfRangeException("name");
         }
     }
 }

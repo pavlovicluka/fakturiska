@@ -18,11 +18,11 @@ namespace Fakturiska.Database
         public System.Guid InvoiceUId { get; set; }
         public int UserId { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
-        public Nullable<int> InvoiceEstimate { get; set; }
-        public Nullable<int> InvoiceTotal { get; set; }
-        public Nullable<int> Incoming { get; set; }
-        public Nullable<int> Paid { get; set; }
-        public Nullable<int> Risk { get; set; }
+        public bool InvoiceEstimate { get; set; }
+        public bool InvoiceTotal { get; set; }
+        public bool Incoming { get; set; }
+        public bool Paid { get; set; }
+        public bool Risk { get; set; }
         public Nullable<int> Sum { get; set; }
         public Nullable<System.DateTime> PaidDate { get; set; }
         public Nullable<int> PriorityId { get; set; }

@@ -25,11 +25,17 @@ function setDataTables() {
         "dom": '<"pull-right"l>t<"pull-left"i><"pull-right"p>',
         language: { search: "" },
         responsive: true,
-        "columnDefs": [{
-            "targets": 2,
-            "searchable": false,
-            "orderable": false
-        }]
+        "columnDefs": [
+            {
+                "targets": 0,
+                "responsivePriority": 1,
+            },
+            {
+                "targets": -1,
+                "responsivePriority": 2,
+                "searchable": false,
+                "orderable": false
+            }]
     });
 
     $('#searchUsers').on('keyup change', function () {
@@ -46,11 +52,17 @@ function setDataTablesWaiting() {
         "dom": '<"pull-right"l>t<"pull-left"i><"pull-right"p>',
         language: { search: "" },
         responsive: true,
-        "columnDefs": [{
-            "targets": 2,
-            "searchable": false,
-            "orderable": false
-        }]
+        "columnDefs": [
+            {
+                "targets": 0,
+                "responsivePriority": 1,
+            },
+            {
+                "targets": -1,
+                "responsivePriority": 2,
+                "searchable": false,
+                "orderable": false
+            }]
     });
 
     $('#searchUsersWaiting').on('keyup change', function () {

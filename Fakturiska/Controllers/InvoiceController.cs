@@ -9,7 +9,6 @@ using System.Web;
 using System.Collections.Generic;
 using System.IO;
 using MimeSharp;
-using Newtonsoft.Json;
 
 namespace Fakturiska.Controllers
 {
@@ -18,6 +17,7 @@ namespace Fakturiska.Controllers
     {
         public ActionResult Invoices()
         {
+
             return View();
         }
 
@@ -45,7 +45,7 @@ namespace Fakturiska.Controllers
             CompanyModel companyReceiver = invoiceCompaniesModel.CompanyReceiver;
             CompanyModel companyPayer = invoiceCompaniesModel.CompanyPayer;
 
-            if (invoice.InvoiceGuid != Guid.Empty && ModelState.ContainsKey("Invoice.File"))
+            if (invoice.InvoiceGuid != null && invoice.InvoiceGuid != Guid.Empty && ModelState.ContainsKey("Invoice.File"))
                 ModelState["Invoice.File"].Errors.Clear();
 
             if (ModelState.IsValid)
@@ -53,7 +53,7 @@ namespace Fakturiska.Controllers
                 int? receiverId = null;
                 if (companyReceiver != null)
                 {
-                    if(companyReceiver.CompanyGuid == Guid.Empty)
+                    if(companyReceiver.CompanyGuid == null || companyReceiver.CompanyGuid == Guid.Empty)
                     {
                         receiverId = CompanyLogic.CreateCompany(CompanyModel.MapModelToDTO(companyReceiver));
                     }
@@ -66,7 +66,7 @@ namespace Fakturiska.Controllers
                 int? payerId = null;
                 if (companyPayer != null)
                 {
-                    if (companyPayer.CompanyGuid == Guid.Empty)
+                    if (companyPayer.CompanyGuid == null || companyPayer.CompanyGuid == Guid.Empty)
                     {
                         payerId = CompanyLogic.CreateCompany(CompanyModel.MapModelToDTO(companyPayer));
                     }
@@ -76,7 +76,7 @@ namespace Fakturiska.Controllers
                     }
                 }
 
-                if (invoice.InvoiceGuid == Guid.Empty)
+                if (invoice.InvoiceGuid == null || invoice.InvoiceGuid == Guid.Empty)
                 {
                     string filePath = InvoiceLogic.SaveFile(invoice.File);
                     if(filePath != "")
@@ -146,24 +146,15 @@ namespace Fakturiska.Controllers
                 InvoiceLogic.CreateInvoice(new InvoiceDTO
                 {
                     UserId = int.Parse(identity.GetUserId()),
+                    InvoiceEstimate = false,
+                    InvoiceTotal = false,
+                    Incoming = false,
+                    Paid = false,
+                    Risk = false,
                     FilePath = filePath
                 });
             }
             return Json("Succeded");
-        }
-
-        [HttpPost]
-        public ActionResult UploadFromForm(HttpPostedFileBase file)
-        {
-            string filePath = InvoiceLogic.SaveFile(file);
-            if (filePath != "")
-            {
-                return Json("Succeded");
-            }
-            else
-            {
-                return Json("File is required");
-            }
         }
 
         [HttpPost]
