@@ -115,9 +115,12 @@ function submitForm() {
         }
         for (var key in formObject) {
             invoiceCompaniesModel.append(key, formObject[key]);
+            console.log(key);
         }
         if (dropzoneForm !== null)
             invoiceCompaniesModel.append("Invoice.File", dropzoneForm.getQueuedFiles()[0]);
+
+        console.log(invoiceCompaniesModel);
 
         $.ajax({
             url: "/Invoice/CreateInvoice",

@@ -60,7 +60,7 @@ namespace Fakturiska.Business.Logic
                     string body = "Click on this link to set your password: http://localhost:54276/Account/SetPassword/?id=" + newUserGuid;
                     SendMail(body, user.Email);
                 }
-                return "succeed";
+                return "success";
             } 
             return "exists";
         }

@@ -45,9 +45,6 @@ namespace Fakturiska.Controllers
             CompanyModel companyReceiver = invoiceCompaniesModel.CompanyReceiver;
             CompanyModel companyPayer = invoiceCompaniesModel.CompanyPayer;
 
-            if (invoice.InvoiceGuid != null && invoice.InvoiceGuid != Guid.Empty && ModelState.ContainsKey("Invoice.File"))
-                ModelState["Invoice.File"].Errors.Clear();
-
             if (ModelState.IsValid)
             {
                 int? receiverId = null;
@@ -55,11 +52,40 @@ namespace Fakturiska.Controllers
                 {
                     if(companyReceiver.CompanyGuid == null || companyReceiver.CompanyGuid == Guid.Empty)
                     {
-                        receiverId = CompanyLogic.CreateCompany(CompanyModel.MapModelToDTO(companyReceiver));
+                        List<int> response = CompanyLogic.CreateCompany(CompanyModel.MapModelToDTO(companyReceiver));
+
+                        foreach (var res in response)
+                        {
+                            receiverId = res;
+                            switch (res)
+                            {
+                                case -1:
+                                    ModelState.AddModelError("CompanyReceiver.Name", "Ovo ime vec postoji");
+                                    break;
+                                case -2:
+                                    ModelState.AddModelError("CompanyReceiver.PersonalNumber", "Ovaj licni broj vec postoji");
+                                    break;
+                                case -3:
+                                    ModelState.AddModelError("CompanyReceiver.PIB", "Ovaj PIB vec postoji");
+                                    break;
+                            }
+                        }
                     }
                     else
                     {
-                        receiverId = CompanyLogic.EditCompany(CompanyModel.MapModelToDTO(companyReceiver));
+                        receiverId = CompanyLogic.CheckCompany(CompanyModel.MapModelToDTO(companyReceiver));
+                        if(receiverId <= 0)
+                        {
+                            switch (receiverId)
+                            {
+                                case 0:
+                                    ModelState.AddModelError(string.Empty, "Greska!");
+                                    break;
+                                case -1:
+                                    ModelState.AddModelError(string.Empty, "Ne mozete menjati ime kompanije, njen licni broj ni PIB");
+                                    break;
+                            }
+                        }
                     }
                 }
 
@@ -68,12 +94,48 @@ namespace Fakturiska.Controllers
                 {
                     if (companyPayer.CompanyGuid == null || companyPayer.CompanyGuid == Guid.Empty)
                     {
-                        payerId = CompanyLogic.CreateCompany(CompanyModel.MapModelToDTO(companyPayer));
+                        List<int> response = CompanyLogic.CreateCompany(CompanyModel.MapModelToDTO(companyPayer));
+
+                        foreach (var res in response)
+                        {
+                            switch (res)
+                            {
+                                case -1:
+                                    ModelState.AddModelError("CompanyPayer.Name", "Ovo ime vec postoji");
+                                    break;
+                                case -2:
+                                    ModelState.AddModelError("CompanyPayer.PersonalNumber", "Ovaj licni broj vec postoji");
+                                    break;
+                                case -3:
+                                    ModelState.AddModelError("CompanyPayer.PIB", "Ovaj PIB vec postoji");
+                                    break;
+                                default:
+                                    payerId = res;
+                                    break;
+                            }
+                        }
                     }
                     else
                     {
-                        payerId = CompanyLogic.EditCompany(CompanyModel.MapModelToDTO(companyPayer));
+                        payerId = CompanyLogic.CheckCompany(CompanyModel.MapModelToDTO(companyPayer));
+                        if (payerId <= 0)
+                        {
+                            switch (payerId)
+                            {
+                                case 0:
+                                    ModelState.AddModelError(string.Empty, "Greska!");
+                                    break;
+                                case -1:
+                                    ModelState.AddModelError(string.Empty, "Ne mozete menjati ime kompanije, njen licni broj ni PIB");
+                                    break;
+                            }
+                        }
                     }
+                }
+
+                if(receiverId <= 0 || payerId <= 0)
+                {
+                    return PartialView("_CreateEditInvoice", invoiceCompaniesModel);
                 }
 
                 if (invoice.InvoiceGuid == null || invoice.InvoiceGuid == Guid.Empty)
@@ -154,7 +216,7 @@ namespace Fakturiska.Controllers
                     FilePath = filePath
                 });
             }
-            return Json("Succeded");
+            return Json("success");
         }
 
         [HttpPost]

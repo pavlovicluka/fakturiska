@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    $('.datepicker').datepicker();
+    //$('.datepicker').datepicker();
 
     $(".ui-autocomplete-input").css("z-index", 100);
 }); 

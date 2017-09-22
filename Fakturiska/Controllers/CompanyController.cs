@@ -16,12 +16,6 @@ namespace Fakturiska.Controllers
         }
 
         [HttpGet]
-        public ActionResult TableCompanies()
-        {
-            return PartialView("_TableCompanies", CompanyModel.GetAllCompanies());
-        }
-
-        [HttpGet]
         public ActionResult CreateCompany()
         {
             return PartialView("_CreateEditCompany");
@@ -32,15 +26,34 @@ namespace Fakturiska.Controllers
         {
             if (ModelState.IsValid)
             {
+                List<int> response = null;
                 if (company.CompanyGuid == null || company.CompanyGuid == Guid.Empty)
                 {
-                    CompanyLogic.CreateCompany(CompanyModel.MapModelToDTO(company));
+                    response = CompanyLogic.CreateCompany(CompanyModel.MapModelToDTO(company));
+
                 }
                 else
                 {
-                    CompanyLogic.EditCompany(CompanyModel.MapModelToDTO(company));
+                    response = CompanyLogic.EditCompany(CompanyModel.MapModelToDTO(company));
                 }
-                return PartialView("_TableCompanies", CompanyModel.GetAllCompanies());
+
+                foreach (var res in response)
+                {
+                    switch (res)
+                    {
+                        case -1:
+                            ModelState.AddModelError("Name", "Ovo ime vec postoji");
+                            break;
+                        case -2:
+                            ModelState.AddModelError("PersonalNumber", "Ovaj licni broj vec postoji");
+                            break;
+                        case -3:
+                            ModelState.AddModelError("PIB", "Ovaj PIB vec postoji");
+                            break;
+                        default:
+                            return Json("success");
+                    }
+                }
             }
             return PartialView("_CreateEditCompany", company);
         }
@@ -55,7 +68,7 @@ namespace Fakturiska.Controllers
         public ActionResult DeleteCompany(Guid id)
         {
             CompanyLogic.DeleteCompany(id);
-            return Json("Succeed");
+            return Json("success");
         }
 
         public JsonResult ServerSideSearchAction(DataTableAjaxPostModel model)

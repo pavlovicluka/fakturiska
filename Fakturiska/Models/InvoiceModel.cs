@@ -1,10 +1,12 @@
 ﻿using Fakturiska.Business.DTOs;
 using Fakturiska.Business.Enumerations;
 using Fakturiska.Business.Logic;
+using Foolproof;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -40,10 +42,19 @@ namespace Fakturiska.Models
         [DisplayName("Uplatilac")]
         public string PayerName { get; set; }
         [DisplayName("Faktura")]
-        [Required()]
+        [RequiredIf("CompanyEmpty", false, ErrorMessage = "Morate dodati fajl!")]
         public HttpPostedFileBase File { get; set; }
         public string FilePath { get; set; }
         public int? Archive { get; set; }
+
+        [NotMapped]
+        public bool IsCreateMode
+        {
+            get
+            {
+                return ((InvoiceGuid == Guid.Empty || InvoiceGuid == null));
+            }
+        }
 
         public InvoiceModel()
         {

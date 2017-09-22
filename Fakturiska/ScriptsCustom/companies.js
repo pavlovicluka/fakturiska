@@ -4,6 +4,7 @@
 });
 var changes;
 
+var tableCompanies;
 function setDataTables() {
     tableCompanies = $('#tableCompanies').DataTable({
         "dom": '<"pull-right"l>t<"pull-left"i><"pull-right"p>',
@@ -78,13 +79,11 @@ function submitForm() {
             type: "POST",
             data: companyForm.serialize(),
             success: function (result) {
-
-                if (result.substring(1, 2) === "t") {
+                if (result === "success") {
                     $("#companyModal").modal('hide');
                     $('body').removeClass('modal-open');
                     $('.modal-backdrop').remove();
-                    $('#result').html(result);
-                    setDataTables();
+                    tableCompanies.search("").draw();
                     changes.server.companiesChanged("refresh");
                 } else {
                     $("#companyModal").find(".modal-body").html(result);
@@ -135,14 +134,7 @@ $(function () {
     changes.client.companiesChanged = function (message) {
         $.notify(message, "success");
         if (message === "refresh") {
-            $.ajax({
-                url: "/Company/TableCompanies",
-                type: "GET",
-                success: function (result) {
-                    $('#result').html(result);
-                    setDataTables();
-                }
-            });
+            tableCompanies.search("").draw();
         }
     };
 

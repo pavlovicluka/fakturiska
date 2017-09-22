@@ -41,7 +41,7 @@ namespace Fakturiska.Controllers
                     Email = user.Email,
                     Role = (RoleEnum)user.Role,
                 });
-                if(response == "succeed")
+                if(response == "success")
                 {
                     return PartialView("_TableUsersWaiting", UserWithoutPasswordModel.GetUsersWaiting());
                 }
@@ -61,7 +61,7 @@ namespace Fakturiska.Controllers
                 UserGuid = new Guid(pk),
                 Email = value,
             });
-            return Json("Succeed");
+            return Json("success");
         }
 
         [HttpPost]
@@ -72,14 +72,14 @@ namespace Fakturiska.Controllers
                 UserGuid = new Guid(pk),
                 Role = (RoleEnum)int.Parse(value),
             });
-            return Json("Succeed");
+            return Json("success");
         }
 
         [HttpPost]
         public ActionResult DeleteUser(Guid id)
         {
             UserLogic.DeleteUser(id);
-            return Json("Succeed");
+            return Json("success");
         } 
     }
 }

@@ -3,24 +3,16 @@ using Fakturiska.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Linq.Dynamic;
-using Microsoft.AspNet.SignalR;
-using Microsoft.AspNet.SignalR.Hubs;
 
 namespace Fakturiska.Business.Logic
 {
     public class CompanyLogic
     {
-        public static int? CreateCompany(CompanyDTO company)
+        public static List<int> CreateCompany(CompanyDTO company)
         {
-            if(company.Name == null)
-            {
-                return null;
-            }
-
-            int companyId = CompanyExists(company);
-            if (companyId == 0)
+            List<int> response = CompanyExists(company);
+            if (response.Count == 0)
             {
                 Company com = new Company()
                 {
@@ -43,20 +35,71 @@ namespace Fakturiska.Business.Logic
                     dc.Companies.Add(com);
                     dc.SaveChanges();
 
-                    companyId =  dc.Companies.FirstOrDefault(c => c.CompanyUId == com.CompanyUId).CompanyId;
+                    response.Add(dc.Companies.FirstOrDefault(c => c.CompanyUId == com.CompanyUId).CompanyId);
                 }
             }
-            return companyId;
+            return response;
         }
 
-        public static int CompanyExists(CompanyDTO company)
+        public static List<int> EditCompany(CompanyDTO company)
+        {
+            List<int> response = CompanyExists(company);
+            if (response.Count == 0)
+            {
+                using (var dc = new FakturiskaDBEntities())
+                {
+                    var c = GetCompanyByGuid(company.CompanyGuid, dc);
+                    if (c != null)
+                    {
+                        c.Name = company.Name;
+                        c.PhoneNumber = company.PhoneNumber;
+                        c.FaxNumber = company.FaxNumber;
+                        c.Address = company.Address;
+                        c.Website = company.Website;
+                        c.Email = company.Email;
+                        c.PersonalNumber = company.PersonalNumber;
+                        c.PIB = company.PIB;
+                        c.MIB = company.MIB;
+                        c.AccountNumber = company.AccountNumber;
+                        c.BankCode = company.BankCode;
+                    }
+                    dc.SaveChanges();
+
+                    response.Add(c.CompanyId);
+                }
+            }
+            return response;
+        }
+
+        public static void DeleteCompany(Guid companyGuid)
         {
             using (var dc = new FakturiskaDBEntities())
             {
-                var com = dc.Companies.FirstOrDefault(c => c.Name == company.Name);
-                if(com != null)
+                var company = GetCompanyByGuid(companyGuid, dc);
+                if (company != null)
                 {
-                    return com.CompanyId;
+                    company.DeleteDate = DateTime.Now;
+                }
+                dc.SaveChanges();
+            }
+        }
+
+        public static int CheckCompany(CompanyDTO company)
+        {
+            using (var dc = new FakturiskaDBEntities())
+            {
+                var c = GetCompanyByGuid(company.CompanyGuid, dc);
+
+                if (c != null)
+                {
+                    if(company.Name != c.Name || company.PersonalNumber != c.PersonalNumber || company.PIB != c.PIB)
+                    {
+                        return -1;
+                    }
+                    else
+                    {
+                        return c.CompanyId;
+                    }
                 }
                 return 0;
             }
@@ -77,45 +120,6 @@ namespace Fakturiska.Business.Logic
             {
                 var company = dc.Companies.FirstOrDefault(c => c.CompanyId == companyId);
                 return new CompanyDTO(company);
-            }
-        }
-
-        public static int EditCompany(CompanyDTO company)
-        {
-            int companyId = 0;
-            using (var dc = new FakturiskaDBEntities())
-            {
-                var c = GetCompanyById(company.CompanyGuid, dc);
-                if (c != null)
-                {
-                    c.Name = company.Name;
-                    c.PhoneNumber = company.PhoneNumber;
-                    c.FaxNumber = company.FaxNumber;
-                    c.Address = company.Address;
-                    c.Website = company.Website;
-                    c.Email = company.Email;
-                    c.PersonalNumber = company.PersonalNumber;
-                    c.PIB = company.PIB;
-                    c.MIB = company.MIB;
-                    c.AccountNumber = company.AccountNumber;
-                    c.BankCode = company.BankCode;
-                }
-                dc.SaveChanges();
-                companyId = c.CompanyId;
-            }
-            return companyId;
-        }
-
-        public static void DeleteCompany(Guid companyGuid)
-        {
-            using (var dc = new FakturiskaDBEntities())
-            {
-                var company = GetCompanyById(companyGuid, dc);
-                if (company != null)
-                {
-                    company.DeleteDate = DateTime.Now;
-                }
-                dc.SaveChanges();
             }
         }
 
@@ -210,9 +214,33 @@ namespace Fakturiska.Business.Logic
             return companyDTOs;
         }
 
-        private static Company GetCompanyById(Guid companyGuid, FakturiskaDBEntities dc)
+        private static Company GetCompanyByGuid(Guid companyGuid, FakturiskaDBEntities dc)
         {
             return dc.Companies.FirstOrDefault(c => c.CompanyUId == companyGuid && c.DeleteDate == null);
+        }
+
+        private static List<int> CompanyExists(CompanyDTO company)
+        {
+            List<int> response = new List<int>();
+            using (var dc = new FakturiskaDBEntities())
+            {
+                var com = dc.Companies.FirstOrDefault(c => c.Name.Trim().ToLower() == company.Name.Trim().ToLower());
+                if (com != null)
+                {
+                    response.Add(-1);
+                }
+                com = dc.Companies.FirstOrDefault(c => c.PersonalNumber.Trim().ToLower() == company.PersonalNumber.Trim().ToLower());
+                if (com != null)
+                {
+                    response.Add(-2);
+                }
+                com = dc.Companies.FirstOrDefault(c => c.PIB.Trim().ToLower() == company.PIB.Trim().ToLower());
+                if (com != null)
+                {
+                    response.Add(-3);
+                }
+                return response;
+            }
         }
     }
 }

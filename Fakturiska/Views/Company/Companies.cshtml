@@ -1,4 +1,6 @@
-﻿<div class="modal fade" id="companyModal" role="dialog">
+﻿@model IEnumerable<Fakturiska.Models.CompanyModel>
+
+<div class="modal fade" id="companyModal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -29,7 +31,48 @@
 </div>
 
 <div id="result">
-    @Html.Action("TableCompanies", "Company")
+    <table id="tableCompanies" class="table">
+        <thead class="row">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PhoneNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FaxNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Address)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Website)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PersonalNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PIB)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MIB)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AccountNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BankCode)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody class="row"></tbody>
+    </table>
 </div>
 
 @section Scripts {
