@@ -130,10 +130,10 @@ function deleteCompany(companyId, modalId) {
 
 $(function () {
     changes = $.connection.realTime;
-    
+
     changes.client.companiesChanged = function (message) {
-        $.notify(message, "success");
         if (message === "refresh") {
+            $.notify(message, "success");
             tableCompanies.search("").draw();
         }
     };

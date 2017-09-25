@@ -14,7 +14,74 @@ namespace Fakturiska.Business.Logic
 {
     public class InvoiceLogic
     {
-        public static void CreateInvoice(InvoiceDTO invoice)
+        public static Dictionary<string, int?> CreateEditInvoice(InvoiceDTO invoice, CompanyDTO companyReceiver, CompanyDTO companyPayer)
+        {
+            Dictionary<string, int?> response = null;
+            using (var dc = new FakturiskaDBEntities())
+            {   
+                int? receiverId = null;
+                if (companyReceiver != null)
+                {
+                    if (companyReceiver.CompanyGuid == null || companyReceiver.CompanyGuid == Guid.Empty)
+                    {
+                        response = CompanyLogic.CreateCompany(companyReceiver, dc, "Receiver");
+                    }
+                    else
+                    {
+                        response = CompanyLogic.CheckCompany(companyReceiver, dc, "Receiver");
+                    }
+                }
+
+                int? payerId = null;
+                if (companyPayer != null)
+                {
+                    if (companyPayer.CompanyGuid == null || companyPayer.CompanyGuid == Guid.Empty)
+                    {
+                        response = CompanyLogic.CreateCompany(companyPayer, dc, "Payer");
+                    }
+                    else
+                    {
+                        response = CompanyLogic.CheckCompany(companyPayer, dc, "Payer");
+
+                    }
+                }
+
+                receiverId = response["companyReceiver"];
+                payerId = response["companyPayer"];
+
+                if (receiverId <= 0 || payerId <= 0)
+                {
+                    return response;
+                }
+
+                if (invoice.InvoiceGuid == null || invoice.InvoiceGuid == Guid.Empty)
+                {
+                    string filePath = SaveFile(invoice.File);
+                    if (filePath != "")
+                    {
+                        invoice.ReceiverId = receiverId;
+                        invoice.PayerId = payerId;
+                        invoice.FilePath = filePath;
+                        CreateInvoice(invoice, dc);
+                    } else
+                    {
+                        response.Add("FileProblem", 1);
+                        return response;
+                    }
+                }
+                else
+                {
+                    invoice.ReceiverId = receiverId;
+                    invoice.PayerId = payerId;
+                    EditInvoice(invoice, dc);
+                }
+                response.Add("success", 1);
+                dc.SaveChanges();
+            }
+            return response;
+        }
+
+        public static void CreateInvoice(InvoiceDTO invoice, FakturiskaDBEntities db = null)
         {
             if(invoice.Paid)
             {
@@ -43,19 +110,16 @@ namespace Fakturiska.Business.Logic
                 FilePath = invoice.FilePath
             };
 
-            using (var dc = new FakturiskaDBEntities())
+            if(db == null)
             {
-                dc.Invoices.Add(i);
-                dc.SaveChanges();
-            }
-        }
-
-        public static InvoiceDTO GetInvoiceByGuid(Guid invoiceGuid)
-        {
-            using (var dc = new FakturiskaDBEntities())
+                using (var dc = new FakturiskaDBEntities())
+                {
+                    dc.Invoices.Add(i);
+                    dc.SaveChanges();
+                }
+            } else
             {
-                var invoice = dc.Invoices.FirstOrDefault(i => i.InvoiceUId == invoiceGuid);
-                return new InvoiceDTO(invoice);
+                db.Invoices.Add(i);
             }
         }
 
@@ -91,6 +155,34 @@ namespace Fakturiska.Business.Logic
             }
         }
 
+        public static void EditInvoice(InvoiceDTO invoice, FakturiskaDBEntities dc)
+        {
+            if (invoice.Paid)
+            {
+                invoice.PaidDate = DateTime.Now.Date;
+            }
+
+            int? priorityId = null;
+            if (invoice.Priority != null)
+                priorityId = (int)invoice.Priority;
+
+            var i = GetInvoiceByGuid(invoice.InvoiceGuid, dc);
+            if (i != null)
+            {
+                i.Date = invoice.Date;
+                i.InvoiceEstimate = invoice.InvoiceEstimate;
+                i.InvoiceTotal = invoice.InvoiceTotal;
+                i.Incoming = invoice.Incoming;
+                i.Paid = invoice.Paid;
+                i.Risk = invoice.Risk;
+                i.Sum = invoice.Sum;
+                i.PaidDate = invoice.PaidDate;
+                i.PriorityId = priorityId;
+                i.ReceiverId = invoice.ReceiverId;
+                i.PayerId = invoice.PayerId;
+            }
+        }
+
         public static void ArchiveInvoice(Guid invoiceGuid)
         {
             using (var dc = new FakturiskaDBEntities())
@@ -114,6 +206,15 @@ namespace Fakturiska.Business.Logic
                     invoice.DeleteDate = DateTime.Now;
                 }
                 dc.SaveChanges();
+            }
+        }
+
+        public static InvoiceDTO GetInvoiceByGuid(Guid invoiceGuid)
+        {
+            using (var dc = new FakturiskaDBEntities())
+            {
+                var invoice = dc.Invoices.FirstOrDefault(i => i.InvoiceUId == invoiceGuid);
+                return new InvoiceDTO(invoice);
             }
         }
 

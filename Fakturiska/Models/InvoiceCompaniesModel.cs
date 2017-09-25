@@ -16,6 +16,15 @@ namespace Fakturiska.Models
 
         public InvoiceCompaniesModel()
         {
+            Invoice = new InvoiceModel();
+            CompanyReceiver = new CompanyModel
+            {
+                InInvoice = true
+            };
+            CompanyPayer = new CompanyModel
+            {
+                InInvoice = true
+            };
         }
 
         public InvoiceCompaniesModel(Guid id)
@@ -24,7 +33,7 @@ namespace Fakturiska.Models
             InvoiceModel i = new InvoiceModel(invoice);
 
             int? receiverId = invoice.ReceiverId;
-            CompanyModel comReceiver = null;
+            CompanyModel comReceiver = new CompanyModel();
             if (receiverId != null)
             {
                 var companyReceiver = CompanyLogic.GetCompanyById((int)receiverId);
@@ -32,16 +41,18 @@ namespace Fakturiska.Models
             }
 
             int? payerId = invoice.PayerId;
-            CompanyModel comPayer = null;
+            CompanyModel comPayer = new CompanyModel();
             if (payerId != null)
             {
                 var companyPayer = CompanyLogic.GetCompanyById((int)payerId);
                 comPayer = new CompanyModel(companyPayer);
             }
 
-            this.Invoice = i;
-            this.CompanyReceiver = comReceiver;
-            this.CompanyPayer = comPayer;
+            Invoice = i;
+            CompanyReceiver = comReceiver;
+            CompanyReceiver.InInvoice = true;
+            CompanyPayer = comPayer;
+            CompanyPayer.InInvoice = true;
         }
     }
 }

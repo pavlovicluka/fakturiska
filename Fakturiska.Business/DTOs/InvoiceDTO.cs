@@ -1,6 +1,7 @@
 ﻿using Fakturiska.Business.Enumerations;
 using Fakturiska.Database;
 using System;
+using System.Web;
 
 namespace Fakturiska.Business.DTOs
 {
@@ -23,6 +24,7 @@ namespace Fakturiska.Business.DTOs
         public int? PayerId { get; set; }
         public string PayerName { get; set; }
         public string FilePath { get; set; }
+        public HttpPostedFileBase File { get; set; }
         public int? Archive { get; set; }
         public DateTime? DeleteDate { get; set; }
 

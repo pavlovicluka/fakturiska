@@ -1,6 +1,4 @@
 ﻿$(document).ready(function () {
-    //$('.datepicker').datepicker();
-
     $(".ui-autocomplete-input").css("z-index", 100);
 }); 
 
@@ -161,6 +159,7 @@ function prepareCreateModal() {
             previewsContainer: "#dzContainer",
             init: function () {
                 this.on("maxfilesexceeded", function (file) {
+                    invoiceFile = null;
                     this.removeAllFiles();
                     this.addFile(file);
                 });
@@ -187,6 +186,8 @@ function prepareCreateModal() {
 }
 
 function setCompanyInfo(companyType, c) {
+    disableEnableFields(companyType, true);
+
     $(currentModalId).find("#" + companyType + "_" + "CompanyGuid").val(c.CompanyGuid);
     $(currentModalId).find("#" + companyType + "_" + "Name").val(c.Name);
     $(currentModalId).find("#" + companyType + "_" + "PhoneNumber").val(c.PhoneNumber);
@@ -198,9 +199,7 @@ function setCompanyInfo(companyType, c) {
     $(currentModalId).find("#" + companyType + "_" + "PIB").val(c.PIB);
     $(currentModalId).find("#" + companyType + "_" + "MIB").val(c.MIB);
     $(currentModalId).find("#" + companyType + "_" + "AccountNumber").val(c.AccountNumber);
-    $(currentModalId).find("#" + companyType + "_" + "BankCode").val(c.BankCode);
-
-    disableEnableFields(companyType, true);
+    $(currentModalId).find("#" + companyType + "_" + "BankCode").val(c.BankCode); 
 }
 
 function clearCompany(companyType) {
@@ -221,13 +220,15 @@ function clearCompany(companyType) {
 }
 
 function disableEnableFields(companyType, enabled) {
-    $(currentModalId).find("#" + companyType + "_" + "PhoneNumber").prop("disabled", enabled);
-    $(currentModalId).find("#" + companyType + "_" + "FaxNumber").prop("disabled", enabled);
-    $(currentModalId).find("#" + companyType + "_" + "Address").prop("disabled", enabled);
-    $(currentModalId).find("#" + companyType + "_" + "Website").prop("disabled", enabled);
-    $(currentModalId).find("#" + companyType + "_" + "Email").prop("disabled", enabled);
-    $(currentModalId).find("#" + companyType + "_" + "MIB").prop("disabled", enabled);
-    $(currentModalId).find("#" + companyType + "_" + "AccountNumber").prop("disabled", enabled);
-    $(currentModalId).find("#" + companyType + "_" + "BankCode").prop("disabled", enabled);
+    if ($(currentModalId).find("#" + companyType + "_" + "Name").val() !== null && $(currentModalId).find("#" + companyType + "_" + "Name").val() !== "") {
+        $(currentModalId).find("#" + companyType + "_" + "PhoneNumber").prop("disabled", enabled);
+        $(currentModalId).find("#" + companyType + "_" + "FaxNumber").prop("disabled", enabled);
+        $(currentModalId).find("#" + companyType + "_" + "Address").prop("disabled", enabled);
+        $(currentModalId).find("#" + companyType + "_" + "Website").prop("disabled", enabled);
+        $(currentModalId).find("#" + companyType + "_" + "Email").prop("disabled", enabled);
+        $(currentModalId).find("#" + companyType + "_" + "MIB").prop("disabled", enabled);
+        $(currentModalId).find("#" + companyType + "_" + "AccountNumber").prop("disabled", enabled);
+        $(currentModalId).find("#" + companyType + "_" + "BankCode").prop("disabled", enabled);
+    }
 }
 

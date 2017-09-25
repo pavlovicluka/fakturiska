@@ -98,6 +98,7 @@ function setDataTablesArchive() {
     });
 }
 
+var invoiceFile = null; 
 function submitForm() {
     var invoiceCompaniesModel = new FormData();
     var invoiceForm = $("#invoiceForm");
@@ -115,12 +116,14 @@ function submitForm() {
         }
         for (var key in formObject) {
             invoiceCompaniesModel.append(key, formObject[key]);
-            console.log(key);
         }
-        if (dropzoneForm !== null)
-            invoiceCompaniesModel.append("Invoice.File", dropzoneForm.getQueuedFiles()[0]);
 
-        console.log(invoiceCompaniesModel);
+        if (dropzoneForm !== null) {
+            if (invoiceFile === null) {
+                invoiceFile = dropzoneForm.getQueuedFiles()[0];
+            }
+            invoiceCompaniesModel.append("Invoice.File", invoiceFile);
+        }
 
         $.ajax({
             url: "/Invoice/CreateInvoice",
@@ -144,12 +147,20 @@ function submitForm() {
                     }
                 } else {
                     $("#invoiceModal").find(".modal-body").html(result);
-                    if (formObject["Invoice.Guid"] !== "") {
+                    if (invoiceCompaniesModel.get("Invoice.Guid") !== null && invoiceCompaniesModel.get("Invoice.Guid") !== "") {
                         prepareEditModal();
                     } else {
                         prepareCreateModal();
+
+                        if (invoiceFile !== null) {
+                            dropzoneForm.emit("addedfile", invoiceFile);
+                            dropzoneForm.files.push(invoiceFile);
+                        }
                     }    
                 }
+            },
+            error: function (result) {
+                console.log(result);
             }
         });
     }
@@ -172,6 +183,7 @@ function createInvoice() {
         type: "GET",
         success: function (result) {
             $("#invoiceModalBody").html(result);
+            invoiceFile = null;
             prepareCreateModal();
             $("#invoiceModal").modal('toggle');
         }
@@ -185,6 +197,7 @@ function editInvoice(invoiceId, archive) {
         data: { id: invoiceId },
         success: function (result) {
             $("#invoiceModalBody").html(result);
+            invoiceFile = null;
             prepareEditModal();
             $("#invoiceModal").modal('toggle');
             archived = archive;

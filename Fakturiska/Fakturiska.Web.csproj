@@ -399,6 +399,10 @@
       <Project>{fce14be1-66ca-4ac1-bac4-19e68e52e4ad}</Project>
       <Name>Fakturiska.Business</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fakturiska.Database\Fakturiska.Database.csproj">
+      <Project>{E7258BD8-68E6-4EB7-B8B0-966493FA64AA}</Project>
+      <Name>Fakturiska.Database</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

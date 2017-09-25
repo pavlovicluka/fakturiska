@@ -34,7 +34,7 @@ namespace Fakturiska.Controllers
         [HttpGet]
         public ActionResult CreateInvoice()
         {
-            return PartialView("_CreateEditInvoice");
+            return PartialView("_CreateEditInvoice", new InvoiceCompaniesModel());
         }
 
         [HttpPost]
@@ -47,115 +47,56 @@ namespace Fakturiska.Controllers
 
             if (ModelState.IsValid)
             {
-                int? receiverId = null;
-                if (companyReceiver != null)
-                {
-                    if(companyReceiver.CompanyGuid == null || companyReceiver.CompanyGuid == Guid.Empty)
-                    {
-                        List<int> response = CompanyLogic.CreateCompany(CompanyModel.MapModelToDTO(companyReceiver));
+                Dictionary<string, int?> response = InvoiceLogic.CreateEditInvoice(InvoiceModel.MapModelToDTO(invoice, int.Parse(identity.GetUserId())), 
+                                                                                  CompanyModel.MapModelToDTO(companyReceiver), 
+                                                                                  CompanyModel.MapModelToDTO(companyPayer));
 
-                        foreach (var res in response)
-                        {
-                            receiverId = res;
-                            switch (res)
+                foreach (KeyValuePair<string, int?> entry in response)
+                {
+                    switch (entry.Key)
+                    {
+                        case "companyReceiver":
+                            if(entry.Value == null || entry.Value == 0)
                             {
-                                case -1:
-                                    ModelState.AddModelError("CompanyReceiver.Name", "Ovo ime vec postoji");
-                                    break;
-                                case -2:
-                                    ModelState.AddModelError("CompanyReceiver.PersonalNumber", "Ovaj licni broj vec postoji");
-                                    break;
-                                case -3:
-                                    ModelState.AddModelError("CompanyReceiver.PIB", "Ovaj PIB vec postoji");
-                                    break;
+                                ModelState.AddModelError("CompanyReceiver", "Forma nije popunjena");
                             }
-                        }
-                    }
-                    else
-                    {
-                        receiverId = CompanyLogic.CheckCompany(CompanyModel.MapModelToDTO(companyReceiver));
-                        if(receiverId <= 0)
-                        {
-                            switch (receiverId)
+                            break;
+                        case "companyReceiverNameExists":
+                            ModelState.AddModelError("CompanyReceiver.Name", "Ovo ime vec postoji");
+                            break;
+                        case "companyReceiverPersonalNumberExists":
+                            ModelState.AddModelError("CompanyReceiver.PersonalNumber", "Ovaj licni broj vec postoji");
+                            break;
+                        case "companyReceiverPIBExists":
+                            ModelState.AddModelError("CompanyReceiver.PIB", "Ovaj PIB vec postoji");
+                            break;
+                        case "companyPayer":
+                            if (entry.Value == null || entry.Value == 0)
                             {
-                                case 0:
-                                    ModelState.AddModelError(string.Empty, "Greska!");
-                                    break;
-                                case -1:
-                                    ModelState.AddModelError(string.Empty, "Ne mozete menjati ime kompanije, njen licni broj ni PIB");
-                                    break;
+                                ModelState.AddModelError("CompanyPayer", "Forma nije popunjena");
                             }
-                        }
-                    }
-                }
-
-                int? payerId = null;
-                if (companyPayer != null)
-                {
-                    if (companyPayer.CompanyGuid == null || companyPayer.CompanyGuid == Guid.Empty)
-                    {
-                        List<int> response = CompanyLogic.CreateCompany(CompanyModel.MapModelToDTO(companyPayer));
-
-                        foreach (var res in response)
-                        {
-                            switch (res)
+                            break;
+                        case "companyPayerNameExists":
+                            ModelState.AddModelError("CompanyPayer.Name", "Ovo ime vec postoji");
+                            break;
+                        case "companyPayerrPersonalNumberExists":
+                            ModelState.AddModelError("CompanyPayer.PersonalNumber", "Ovaj licni broj vec postoji");
+                            break;
+                        case "companyPayerPIBExists":
+                            ModelState.AddModelError("CompanyPayer.PIB", "Ovaj PIB vec postoji");
+                            break;
+                        case "FileProblem":
+                            ModelState.AddModelError("Invoice", "Greska pri dodavanju fajla");
+                            break;
+                        case "success":
+                            if (invoice.Archive == null)
                             {
-                                case -1:
-                                    ModelState.AddModelError("CompanyPayer.Name", "Ovo ime vec postoji");
-                                    break;
-                                case -2:
-                                    ModelState.AddModelError("CompanyPayer.PersonalNumber", "Ovaj licni broj vec postoji");
-                                    break;
-                                case -3:
-                                    ModelState.AddModelError("CompanyPayer.PIB", "Ovaj PIB vec postoji");
-                                    break;
-                                default:
-                                    payerId = res;
-                                    break;
+                                return PartialView("_TableInvoices", InvoiceModel.GetInvoices());
                             }
-                        }
-                    }
-                    else
-                    {
-                        payerId = CompanyLogic.CheckCompany(CompanyModel.MapModelToDTO(companyPayer));
-                        if (payerId <= 0)
-                        {
-                            switch (payerId)
-                            {
-                                case 0:
-                                    ModelState.AddModelError(string.Empty, "Greska!");
-                                    break;
-                                case -1:
-                                    ModelState.AddModelError(string.Empty, "Ne mozete menjati ime kompanije, njen licni broj ni PIB");
-                                    break;
-                            }
-                        }
+                            return PartialView("_TableArchivedInvoices", InvoiceModel.GetArchivedInvoices());
                     }
                 }
 
-                if(receiverId <= 0 || payerId <= 0)
-                {
-                    return PartialView("_CreateEditInvoice", invoiceCompaniesModel);
-                }
-
-                if (invoice.InvoiceGuid == null || invoice.InvoiceGuid == Guid.Empty)
-                {
-                    string filePath = InvoiceLogic.SaveFile(invoice.File);
-                    if(filePath != "")
-                    {
-                        InvoiceLogic.CreateInvoice(InvoiceModel.MapModelToDTO(invoice, int.Parse(identity.GetUserId()), receiverId, payerId, filePath));
-                    }
-                }
-                else
-                {
-                    InvoiceLogic.EditInvoice(InvoiceModel.MapModelToDTO(invoice, null, receiverId, payerId, null));
-                }
-
-                if (invoice.Archive == null)
-                {
-                    return PartialView("_TableInvoices", InvoiceModel.GetInvoices());
-                }
-                return PartialView("_TableArchivedInvoices", InvoiceModel.GetArchivedInvoices());
             }
             return PartialView("_CreateEditInvoice", invoiceCompaniesModel);
         }

@@ -16,35 +16,52 @@ namespace Fakturiska.Models
     {
         [DisplayName("Broj fakture")]
         public int InvoiceId { get; set; }
+
         public Guid? InvoiceGuid { get; set; }
+
         [DisplayName("Datum kreiranja")]
         public DateTime? Date { get; set; }
+
         [DisplayName("Predračun")]
         public bool InvoiceEstimate { get; set; }
+
         [DisplayName("Račun")]
         public bool InvoiceTotal { get; set; }
+
         [DisplayName("Ulazna")]
         public bool Incoming { get; set; }
+
         [DisplayName("Plaćena")]
         public bool Paid { get; set; }
+
         [DisplayName("Problematična")]
         public bool Risk { get; set; }
+
         [DisplayName("Suma")]
+        [Range(0, 99999, ErrorMessage = "Suma mora biti izmedju 0 i 99999")]
         public int? Sum { get; set; }
+
         [DisplayName("Datum plaćanja")]
         public DateTime? PaidDate { get; set; }
+
         [DisplayName("Važnost")]
         public PriorityEnum? Priority { get; set; }
+
         [DisplayName("Važnost")]
         public string PriorityName { get { return PriorityMethods.GetString(Priority); } }
+
         [DisplayName("Primalac")]
         public string ReceiverName { get; set; }
+
         [DisplayName("Uplatilac")]
         public string PayerName { get; set; }
+
         [DisplayName("Faktura")]
-        [RequiredIf("CompanyEmpty", false, ErrorMessage = "Morate dodati fajl!")]
+        [RequiredIf("IsCreateMode", true, ErrorMessage = "Morate dodati fajl!")]
         public HttpPostedFileBase File { get; set; }
+
         public string FilePath { get; set; }
+
         public int? Archive { get; set; }
 
         [NotMapped]
@@ -90,7 +107,7 @@ namespace Fakturiska.Models
             return InvoiceLogic.GetArchivedInvoices().Select(invoice => new InvoiceModel(invoice));
         }
 
-        public static InvoiceDTO MapModelToDTO(InvoiceModel invoice, int? userId, int? receiverId, int? payerId, string filePath)
+        public static InvoiceDTO MapModelToDTO(InvoiceModel invoice, int? userId)
         {
             InvoiceDTO invoiceDTO = new InvoiceDTO();
             if (invoice.InvoiceGuid != null && invoice.InvoiceGuid != Guid.Empty)
@@ -109,14 +126,8 @@ namespace Fakturiska.Models
                 invoiceDTO.Priority = (PriorityEnum)invoice.Priority;
             else
                 invoiceDTO.Priority = null;
-
-            if (receiverId != null)
-                invoiceDTO.ReceiverId = receiverId;
-            if (payerId != null)
-                invoiceDTO.PayerId = payerId;
-            if (filePath != null)
-                invoiceDTO.FilePath = filePath;
-
+            
+            invoiceDTO.File = invoice.File;
             return invoiceDTO;
         }
     }

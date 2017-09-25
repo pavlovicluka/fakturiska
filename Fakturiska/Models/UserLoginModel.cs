@@ -12,6 +12,7 @@ namespace Fakturiska.Models
         [DisplayName("Email")]
         [Required()]
         public String Email { get; set; }
+
         [DisplayName("Šifra")]
         [Required()]
         public String Password { get; set; }

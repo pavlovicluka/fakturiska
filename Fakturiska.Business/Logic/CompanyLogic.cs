@@ -9,9 +9,42 @@ namespace Fakturiska.Business.Logic
 {
     public class CompanyLogic
     {
-        public static List<int> CreateCompany(CompanyDTO company)
+        public static Dictionary<string, int?> CreateCompany(CompanyDTO company, string type = "")
         {
-            List<int> response = CompanyExists(company);
+            Dictionary<string, int?> response = null;
+            using (var dc = new FakturiskaDBEntities())
+            {
+                response = CompanyExists(company, type, dc);
+                if (response.Count == 0)
+                {
+                    Company com = new Company()
+                    {
+                        CompanyUId = Guid.NewGuid(),
+                        Name = company.Name,
+                        PhoneNumber = company.PhoneNumber,
+                        FaxNumber = company.FaxNumber,
+                        Address = company.Address,
+                        Website = company.Website,
+                        Email = company.Email,
+                        PersonalNumber = company.PersonalNumber,
+                        PIB = company.PIB,
+                        MIB = company.MIB,
+                        AccountNumber = company.AccountNumber,
+                        BankCode = company.BankCode
+                    };
+
+                    dc.Companies.Add(com);
+                    dc.SaveChanges();
+
+                    response.Add("company" + type, dc.Companies.FirstOrDefault(c => c.CompanyUId == com.CompanyUId).CompanyId);
+                }
+            }
+            return response;
+        }
+
+        public static Dictionary<string, int?> CreateCompany(CompanyDTO company, FakturiskaDBEntities dc, string type = "")
+        {
+            Dictionary<string, int?> response = CompanyExists(company, type, dc);
             if (response.Count == 0)
             {
                 Company com = new Company()
@@ -29,24 +62,19 @@ namespace Fakturiska.Business.Logic
                     AccountNumber = company.AccountNumber,
                     BankCode = company.BankCode
                 };
-
-                using (var dc = new FakturiskaDBEntities())
-                {
-                    dc.Companies.Add(com);
-                    dc.SaveChanges();
-
-                    response.Add(dc.Companies.FirstOrDefault(c => c.CompanyUId == com.CompanyUId).CompanyId);
-                }
+                dc.Companies.Add(com);
+                response.Add("companyId", dc.Companies.FirstOrDefault(c => c.CompanyUId == com.CompanyUId).CompanyId);
             }
             return response;
         }
 
-        public static List<int> EditCompany(CompanyDTO company)
+        public static Dictionary<string, int?> EditCompany(CompanyDTO company, string type = "")
         {
-            List<int> response = CompanyExists(company);
-            if (response.Count == 0)
+            Dictionary<string, int?> response = null;
+            using (var dc = new FakturiskaDBEntities())
             {
-                using (var dc = new FakturiskaDBEntities())
+                response = CompanyExists(company, type, dc);
+                if (response.Count == 0)
                 {
                     var c = GetCompanyByGuid(company.CompanyGuid, dc);
                     if (c != null)
@@ -65,7 +93,7 @@ namespace Fakturiska.Business.Logic
                     }
                     dc.SaveChanges();
 
-                    response.Add(c.CompanyId);
+                    response.Add("company" + type, c.CompanyId);
                 }
             }
             return response;
@@ -84,25 +112,31 @@ namespace Fakturiska.Business.Logic
             }
         }
 
-        public static int CheckCompany(CompanyDTO company)
+        public static Dictionary<string, int?> CheckCompany(CompanyDTO company, FakturiskaDBEntities dc, string type = "")
         {
-            using (var dc = new FakturiskaDBEntities())
-            {
-                var c = GetCompanyByGuid(company.CompanyGuid, dc);
+            Dictionary<string, int?> response = new Dictionary<string, int?>();
 
-                if (c != null)
+            var c = GetCompanyByGuid(company.CompanyGuid, dc);
+
+            if (c != null)
+            {
+                if (company.Name == "" || company.Name == null)
                 {
-                    if(company.Name != c.Name || company.PersonalNumber != c.PersonalNumber || company.PIB != c.PIB)
-                    {
-                        return -1;
-                    }
-                    else
-                    {
-                        return c.CompanyId;
-                    }
+                    response.Add("company" + type, null);
                 }
-                return 0;
+                if (company.Name != c.Name || company.PersonalNumber != c.PersonalNumber || company.PIB != c.PIB)
+                {
+                    response.Add("company" + type + "cannotEdit", 1); ;
+                }
+                else
+                {
+                    response.Add("company" + type, c.CompanyId);
+                }
+            } else {
+                response.Add("company" + type, 0);
             }
+
+            return response;
         }
 
         public static CompanyDTO GetCompanyByGuid(Guid companyGuid)
@@ -219,28 +253,33 @@ namespace Fakturiska.Business.Logic
             return dc.Companies.FirstOrDefault(c => c.CompanyUId == companyGuid && c.DeleteDate == null);
         }
 
-        private static List<int> CompanyExists(CompanyDTO company)
+        private static Dictionary<string, int?> CompanyExists(CompanyDTO company, string type, FakturiskaDBEntities dc)
         {
-            List<int> response = new List<int>();
-            using (var dc = new FakturiskaDBEntities())
+            Dictionary<string, int?> response = new Dictionary<string, int?>();
+
+            if (company.Name == "" || company.Name == null)
             {
-                var com = dc.Companies.FirstOrDefault(c => c.Name.Trim().ToLower() == company.Name.Trim().ToLower());
-                if (com != null)
-                {
-                    response.Add(-1);
-                }
-                com = dc.Companies.FirstOrDefault(c => c.PersonalNumber.Trim().ToLower() == company.PersonalNumber.Trim().ToLower());
-                if (com != null)
-                {
-                    response.Add(-2);
-                }
-                com = dc.Companies.FirstOrDefault(c => c.PIB.Trim().ToLower() == company.PIB.Trim().ToLower());
-                if (com != null)
-                {
-                    response.Add(-3);
-                }
-                return response;
+                response.Add("company" + type, null);
             }
+            else
+            {
+                var com = dc.Companies.FirstOrDefault(c => c.Name.Trim().ToLower() == company.Name.Trim().ToLower() && c.CompanyUId != company.CompanyGuid);
+                if (com != null)
+                {
+                    response.Add("company" + type + "NameExists", 1);
+                }
+                com = dc.Companies.FirstOrDefault(c => c.PersonalNumber.Trim().ToLower() == company.PersonalNumber.Trim().ToLower() && c.CompanyUId != company.CompanyGuid);
+                if (com != null)
+                {
+                    response.Add("company" + type + "PersonalNumberExists", 1);
+                }
+                com = dc.Companies.FirstOrDefault(c => c.PIB.Trim().ToLower() == company.PIB.Trim().ToLower() && c.CompanyUId != company.CompanyGuid);
+                if (com != null)
+                {
+                    response.Add("company" + type + "PIBExists", 1);
+                }
+            }
+            return response;
         }
     }
 }

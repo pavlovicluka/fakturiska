@@ -12,10 +12,12 @@ namespace Fakturiska.Models
     public class UserWithoutPasswordModel
     {
         public Guid UserGuid { get; set; }
+
         [DisplayName("Email")]
         [Required()]
         [EmailAddress]
         public String Email { get; set; }
+
         [DisplayName("Rola")]
         [Required()]
         public RoleEnum Role { get; set; }

@@ -26,7 +26,7 @@ namespace Fakturiska.Controllers
         {
             if (ModelState.IsValid)
             {
-                List<int> response = null;
+                Dictionary<string, int?> response = null;
                 if (company.CompanyGuid == null || company.CompanyGuid == Guid.Empty)
                 {
                     response = CompanyLogic.CreateCompany(CompanyModel.MapModelToDTO(company));
@@ -37,17 +37,20 @@ namespace Fakturiska.Controllers
                     response = CompanyLogic.EditCompany(CompanyModel.MapModelToDTO(company));
                 }
 
-                foreach (var res in response)
+                foreach (KeyValuePair<string, int?> entry in response)
                 {
-                    switch (res)
+                    switch (entry.Key)
                     {
-                        case -1:
+                        case "company":
+                            ModelState.AddModelError(string.Empty, "Forma nije popunjena");
+                            break;
+                        case "companyNameExists":
                             ModelState.AddModelError("Name", "Ovo ime vec postoji");
                             break;
-                        case -2:
+                        case "companyPersonalNumberExists":
                             ModelState.AddModelError("PersonalNumber", "Ovaj licni broj vec postoji");
                             break;
-                        case -3:
+                        case "companyPIBExists":
                             ModelState.AddModelError("PIB", "Ovaj PIB vec postoji");
                             break;
                         default:
