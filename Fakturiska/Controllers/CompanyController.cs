@@ -42,7 +42,10 @@ namespace Fakturiska.Controllers
                     switch (entry.Key)
                     {
                         case "company":
-                            ModelState.AddModelError(string.Empty, "Forma nije popunjena");
+                            if (entry.Value == null || entry.Value == 0)
+                            {
+                                ModelState.AddModelError(string.Empty, "Forma nije popunjena");
+                            }
                             break;
                         case "companyNameExists":
                             ModelState.AddModelError("Name", "Ovo ime vec postoji");
@@ -53,7 +56,7 @@ namespace Fakturiska.Controllers
                         case "companyPIBExists":
                             ModelState.AddModelError("PIB", "Ovaj PIB vec postoji");
                             break;
-                        default:
+                        case "success":
                             return Json("success");
                     }
                 }

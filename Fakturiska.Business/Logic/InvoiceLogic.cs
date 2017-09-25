@@ -31,25 +31,24 @@ namespace Fakturiska.Business.Logic
                         response = CompanyLogic.CheckCompany(companyReceiver, dc, "Receiver");
                     }
                 }
-
+                
                 int? payerId = null;
                 if (companyPayer != null)
                 {
                     if (companyPayer.CompanyGuid == null || companyPayer.CompanyGuid == Guid.Empty)
                     {
-                        response = CompanyLogic.CreateCompany(companyPayer, dc, "Payer");
+                        response = response.Concat(CompanyLogic.CreateCompany(companyPayer, dc, "Payer")).GroupBy(d => d.Key).ToDictionary(d => d.Key, d => d.First().Value);
                     }
                     else
                     {
-                        response = CompanyLogic.CheckCompany(companyPayer, dc, "Payer");
-
+                        response = response.Concat(CompanyLogic.CheckCompany(companyPayer, dc, "Payer")).GroupBy(d => d.Key).ToDictionary(d => d.Key, d => d.First().Value);
                     }
                 }
 
-                receiverId = response["companyReceiver"];
-                payerId = response["companyPayer"];
+                response.TryGetValue("companyReceiver", out receiverId);
+                response.TryGetValue("companyPayer", out payerId);
 
-                if (receiverId <= 0 || payerId <= 0)
+                if (response.Count > 2)
                 {
                     return response;
                 }

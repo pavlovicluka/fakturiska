@@ -70,6 +70,9 @@ namespace Fakturiska.Controllers
                         case "companyReceiverPIBExists":
                             ModelState.AddModelError("CompanyReceiver.PIB", "Ovaj PIB vec postoji");
                             break;
+                        case "companyReceiverCannotEdit":
+                            ModelState.AddModelError("CompanyReceiver", "Ne mozete menjati ime, licni broj ni pib");
+                            break;
                         case "companyPayer":
                             if (entry.Value == null || entry.Value == 0)
                             {
@@ -84,6 +87,9 @@ namespace Fakturiska.Controllers
                             break;
                         case "companyPayerPIBExists":
                             ModelState.AddModelError("CompanyPayer.PIB", "Ovaj PIB vec postoji");
+                            break;
+                        case "companyPayerCannotEdit":
+                            ModelState.AddModelError("CompanyPayer", "Ne mozete menjati ime, licni broj ni pib");
                             break;
                         case "FileProblem":
                             ModelState.AddModelError("Invoice", "Greska pri dodavanju fajla");

@@ -37,6 +37,7 @@ namespace Fakturiska.Business.Logic
                     dc.SaveChanges();
 
                     response.Add("company" + type, dc.Companies.FirstOrDefault(c => c.CompanyUId == com.CompanyUId).CompanyId);
+                    response.Add("success", 1);
                 }
             }
             return response;
@@ -94,6 +95,7 @@ namespace Fakturiska.Business.Logic
                     dc.SaveChanges();
 
                     response.Add("company" + type, c.CompanyId);
+                    response.Add("success", 1);
                 }
             }
             return response;
@@ -126,7 +128,7 @@ namespace Fakturiska.Business.Logic
                 }
                 if (company.Name != c.Name || company.PersonalNumber != c.PersonalNumber || company.PIB != c.PIB)
                 {
-                    response.Add("company" + type + "cannotEdit", 1); ;
+                    response.Add("company" + type + "CannotEdit", 1); ;
                 }
                 else
                 {

@@ -23,6 +23,7 @@ namespace Fakturiska.Models
         public DateTime? Date { get; set; }
 
         [DisplayName("Predračun")]
+        [Required()]
         public bool InvoiceEstimate { get; set; }
 
         [DisplayName("Račun")]
