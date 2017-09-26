@@ -20,7 +20,7 @@ namespace Fakturiska.App_Start
             .WithIdentity("trigger1", "group1")
             .StartNow()
             .WithSimpleSchedule(x => x
-            .WithIntervalInSeconds(10)
+            .WithIntervalInSeconds(60)
             .RepeatForever())
             .Build();
 

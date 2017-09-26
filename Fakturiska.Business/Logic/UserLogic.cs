@@ -1,5 +1,6 @@
 ﻿using Fakturiska.Business.DTOs;
 using Fakturiska.Database;
+using Microsoft.AspNet.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,16 @@ namespace Fakturiska.Business.Logic
                 } 
                 return null;
             }
+        }
+
+        public static UserDTO AuthorizeUser(string email, string password, FakturiskaDBEntities dc)
+        {
+            var user = dc.Users.Where(u => u.Email == email && u.Password == password && u.DeleteDate == null).ToList();
+            if (user.Any())
+            {
+                return new UserDTO(user.First());
+            }
+            return null;
         }
 
         public static void CreateUser(UserDTO user)
@@ -57,7 +68,7 @@ namespace Fakturiska.Business.Logic
                     dc.Users.Add(u);
                     dc.SaveChanges();
 
-                    string body = "Click on this link to set your password: http://localhost:54276/Account/SetPassword/?id=" + newUserGuid;
+                    string body = "Kliknite na ovaj link kako biste podesili šifru: http://localhost:54278/Account/SetPassword/?id=" + newUserGuid;
                     SendMail(body, user.Email);
                 }
                 return "success";
@@ -69,31 +80,41 @@ namespace Fakturiska.Business.Logic
         {
             using (var dc = new FakturiskaDBEntities())
             {
-                var u = GetUserById(user.UserGuid, dc);
+                var u = GetUserByGuid(user.UserGuid, dc);
                 if (u != null && u.Password == null)
                 {
                     u.Password = user.Password;
                 }
                 dc.SaveChanges();
+                var context = GlobalHost.ConnectionManager.GetHubContext<RealTime>();
+                context.Clients.All.NewUser("Korisnik " + user.Email + " se prijavio prvi put na portal Fakturiška");
             }
         }
 
         public static string ChangePassword(UserDTO user)
         {
-            var u = AuthorizeUser(user.Email, user.OldPassword);
-            if (u != null)
+            string response = "";
+            using (var dc = new FakturiskaDBEntities())
             {
-                SetPassword(user);
-                return "success";
+                var u = GetUserByGuid(user.UserGuid, dc);
+                if (u != null && u.Email == user.Email && u.Password == user.OldPassword)
+                {
+                    u.Password = user.Password;
+                    response  = "success";
+                } else
+                {
+                    response = "wrongPassword";
+                }
+                dc.SaveChanges();
             }
-            return "wrongPassword";
+            return response;
         }
 
         public static void EditUserEmail(UserDTO user)
         {
             using (var dc = new FakturiskaDBEntities())
             {
-                var u = GetUserById(user.UserGuid, dc);
+                var u = GetUserByGuid(user.UserGuid, dc);
                 if (u != null)
                 {
                     u.Email = user.Email;
@@ -106,7 +127,7 @@ namespace Fakturiska.Business.Logic
         {
             using (var dc = new FakturiskaDBEntities())
             {
-                var u = GetUserById(user.UserGuid, dc);
+                var u = GetUserByGuid(user.UserGuid, dc);
                 if (u != null)
                 {
                     u.RoleId = (int)user.Role;
@@ -119,7 +140,7 @@ namespace Fakturiska.Business.Logic
         {
             using (var dc = new FakturiskaDBEntities())
             {
-                var user = GetUserById(userGuid, dc);
+                var user = GetUserByGuid(userGuid, dc);
                 if (user != null)
                 {
                     user.DeleteDate = DateTime.Now;
@@ -194,8 +215,8 @@ namespace Fakturiska.Business.Logic
             };
             MailMessage mail = new MailMessage
             {
-                Subject = "Otvoren nalog na portalu Fakturiska",
-                From = new MailAddress("pavlovicluka.99@mail.com", "Fakturiska"),
+                Subject = "Otvoren nalog na portalu Fakturiška",
+                From = new MailAddress("pavlovicluka.99@mail.com", "Fakturiška"),
                 Body = body
             };
             mail.To.Add(new MailAddress(to));
@@ -203,7 +224,7 @@ namespace Fakturiska.Business.Logic
             smtpClient.Send(mail);
         }
 
-        private static User GetUserById(Guid userGuid, FakturiskaDBEntities dc)
+        private static User GetUserByGuid(Guid userGuid, FakturiskaDBEntities dc)
         {
             return dc.Users.FirstOrDefault(u => u.UserUId == userGuid && u.DeleteDate == null);
         }

@@ -204,12 +204,8 @@ function submitForm() {
             }
         }
 
-        //console.log(formArray);
-        //console.log(formObject);
-
         for (var key in formObject) {
             invoiceCompaniesModel.append(key, formObject[key]);
-            //console.log(key + " " + formObject[key]);
         }
 
         //console.log(invoiceCompaniesModel);
@@ -279,6 +275,7 @@ function createInvoice() {
         type: "GET",
         success: function (result) {
             $("#invoiceModalBody").html(result);
+            $("#invoiceModalTitle").html("Dodaj novu fakturu");
             invoiceFile = null;
             prepareCreateModal();
             $("#invoiceModal").modal('toggle');
@@ -293,6 +290,7 @@ function editInvoice(invoiceId, archive) {
         data: { id: invoiceId },
         success: function (result) {
             $("#invoiceModalBody").html(result);
+            $("#invoiceModalTitle").html("Izmeni fakturu");
             invoiceFile = null;
             prepareEditModal();
             $("#invoiceModal").modal('toggle');

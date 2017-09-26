@@ -47,7 +47,7 @@ namespace Fakturiska.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Korisnik sa istim email-om je vec kreiran!");
+                    ModelState.AddModelError(string.Empty, "Korisnik sa istim email-om je već kreiran!");
                 }
             }
             return PartialView("_CreateUserWithoutPassword", user);

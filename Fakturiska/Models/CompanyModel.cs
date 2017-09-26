@@ -44,28 +44,28 @@ namespace Fakturiska.Models
         public String Email { get; set; }
 
         [DisplayName("Maticni broj")]
-        [RequiredIf("CompanyEmpty", false, ErrorMessage = "Polje Maticni broj je obavezno")]
-        //[RegularExpression("[0-9]{13}", ErrorMessage = "Maticni broj se sastoji od tacno 13 cifara")]
+        [RequiredIf("CompanyEmpty", false, ErrorMessage = "Polje Matični broj je obavezno")]
+        [RegularExpression("[0-9]{13}", ErrorMessage = "Matični broj se sastoji od tačno 13 cifara")]
         public String PersonalNumber { get; set; }
 
         [DisplayName("PIB")]
         [RequiredIf("CompanyEmpty", false, ErrorMessage = "Polje PIB je obavezno")]
-        //[RegularExpression("[0-9]{8}", ErrorMessage = "PIB se sastoji od tacno 8 cifara")]
+        [RegularExpression("[0-9]{8}", ErrorMessage = "PIB se sastoji od tacno 8 cifara")]
         public String PIB { get; set; }
 
         [DisplayName("MIB")]
         [RequiredIf("CompanyEmpty", false, ErrorMessage = "Polje MIB je obavezno")]
-        //[RegularExpression("[0-9]{8}", ErrorMessage = "MIB se sastoji od tacno 8 cifara")]
+        [RegularExpression("[0-9]{8}", ErrorMessage = "MIB se sastoji od tacno 8 cifara")]
         public String MIB { get; set; }
 
         [DisplayName("Broj tekućeg računa")]
         [RequiredIf("CompanyEmpty", false, ErrorMessage = "Polje Broj tekućeg računa je obavezno")]
-        //[RegularExpression("[0-9]{18}", ErrorMessage = "Broj tekuceg racuna se sastoji od tacno 18 cifara")]
+        [RegularExpression("[0-9]{18}", ErrorMessage = "Broj tekućeg racuna se sastoji od tačno 18 cifara")]
         public String AccountNumber { get; set; }
 
         [DisplayName("Šifra za uplatu")]
         [RequiredIf("CompanyEmpty", false, ErrorMessage = "Polje Šifra za uplatu je obavezno")]
-        //[RegularExpression("[0-9]{3}", ErrorMessage = " Šifra za uplatu se sastoji od tacno 3 cifre")]
+        [RegularExpression("[0-9]{3}", ErrorMessage = "Šifra za uplatu se sastoji od tačno 3 cifre")]
         public String BankCode { get; set; }
 
         public bool? InInvoice { get; set; }

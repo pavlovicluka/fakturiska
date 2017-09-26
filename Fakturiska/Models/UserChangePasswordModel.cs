@@ -40,6 +40,7 @@ namespace Fakturiska.Models
         public UserChangePasswordModel(int id)
         {
             var user = UserLogic.GetUserById(id);
+            this.UserGuid = user.UserGuid;
             this.Role = user.Role;
             this.Email = user.Email;
         }

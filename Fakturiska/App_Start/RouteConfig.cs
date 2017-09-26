@@ -18,6 +18,18 @@ namespace Fakturiska
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Invoice", action = "Invoices", id = UrlParameter.Optional }
             );
+
+            /* routes.MapRoute(
+                 name: "404-PageNotFound",
+                 url: "{*url}",
+                 defaults: new { controller = "Account", action = "PageNotFound" }
+             );*/
+
+            routes.MapRoute(
+                "404-PageNotFound",
+                "{*url}",
+                new { controller = "Account", action = "PageNotFound" }
+            );
         }
     }
 }

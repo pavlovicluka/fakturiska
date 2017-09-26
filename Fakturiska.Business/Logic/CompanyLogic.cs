@@ -35,8 +35,7 @@ namespace Fakturiska.Business.Logic
 
                     dc.Companies.Add(com);
                     dc.SaveChanges();
-
-                    response.Add("company" + type, dc.Companies.FirstOrDefault(c => c.CompanyUId == com.CompanyUId).CompanyId);
+                    response.Add("company" + type, com.CompanyId);
                     response.Add("success", 1);
                 }
             }
@@ -64,12 +63,13 @@ namespace Fakturiska.Business.Logic
                     BankCode = company.BankCode
                 };
                 dc.Companies.Add(com);
-                response.Add("company" + type, dc.Companies.FirstOrDefault(c => c.CompanyUId == com.CompanyUId).CompanyId);
+                dc.SaveChanges();
+                response.Add("company" + type, com.CompanyId);
             } else
             {
-                int? companyValue = -1;
+                int? companyValue = -10;
                 response.TryGetValue("company" + type, out companyValue);
-                if (companyValue == -1)
+                if (companyValue == -10)
                 {
                     response.Add("company" + type, 0);
                 }
@@ -274,20 +274,28 @@ namespace Fakturiska.Business.Logic
             }
             else
             {
+                bool errors = false;
                 var com = dc.Companies.FirstOrDefault(c => c.Name.Trim().ToLower() == company.Name.Trim().ToLower() && c.CompanyUId != company.CompanyGuid);
                 if (com != null)
                 {
                     response.Add("company" + type + "NameExists", 1);
+                    errors = true;
                 }
                 com = dc.Companies.FirstOrDefault(c => c.PersonalNumber.Trim().ToLower() == company.PersonalNumber.Trim().ToLower() && c.CompanyUId != company.CompanyGuid);
                 if (com != null)
                 {
                     response.Add("company" + type + "PersonalNumberExists", 1);
+                    errors = true;
                 }
                 com = dc.Companies.FirstOrDefault(c => c.PIB.Trim().ToLower() == company.PIB.Trim().ToLower() && c.CompanyUId != company.CompanyGuid);
                 if (com != null)
                 {
                     response.Add("company" + type + "PIBExists", 1);
+                    errors = true;
+                }
+                if(errors)
+                {
+                    response.Add("company" + type, -1);
                 }
             }
             return response;

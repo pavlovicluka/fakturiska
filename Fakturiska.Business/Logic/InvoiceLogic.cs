@@ -18,64 +18,75 @@ namespace Fakturiska.Business.Logic
         {
             Dictionary<string, int?> response = null;
             using (var dc = new FakturiskaDBEntities())
-            {   
-                int? receiverId = null;
-                if (companyReceiver != null)
+            {
+                using (var dbTransaction = dc.Database.BeginTransaction())
                 {
-                    if (companyReceiver.CompanyGuid == null || companyReceiver.CompanyGuid == Guid.Empty)
+                    int? receiverId = null;
+                    if (companyReceiver != null)
                     {
-                        response = CompanyLogic.CreateCompany(companyReceiver, dc, "Receiver");
+                        if (companyReceiver.CompanyGuid == null || companyReceiver.CompanyGuid == Guid.Empty)
+                        {
+                            response = CompanyLogic.CreateCompany(companyReceiver, dc, "Receiver");
+                        }
+                        else
+                        {
+                            response = CompanyLogic.CheckCompany(companyReceiver, dc, "Receiver");
+                        }
+                    }
+
+                    int? payerId = null;
+                    if (companyPayer != null)
+                    {
+                        if (companyPayer.CompanyGuid == null || companyPayer.CompanyGuid == Guid.Empty)
+                        {
+                            response = response.Concat(CompanyLogic.CreateCompany(companyPayer, dc, "Payer")).GroupBy(d => d.Key).ToDictionary(d => d.Key, d => d.First().Value);
+                        }
+                        else
+                        {
+                            response = response.Concat(CompanyLogic.CheckCompany(companyPayer, dc, "Payer")).GroupBy(d => d.Key).ToDictionary(d => d.Key, d => d.First().Value);
+                        }
+                    }
+
+                    response.TryGetValue("companyReceiver", out receiverId);
+                    response.TryGetValue("companyPayer", out payerId);
+
+                    if (receiverId <= 0 || payerId <= 0)
+                    {
+                        dbTransaction.Rollback();
+                        return response;
+                    }
+
+                    if (invoice.InvoiceGuid == null || invoice.InvoiceGuid == Guid.Empty)
+                    {
+                        string filePath = SaveFile(invoice.File);
+                        if (filePath != "")
+                        {
+                            invoice.ReceiverId = receiverId;
+                            invoice.PayerId = payerId;
+                            invoice.FilePath = filePath;
+                            CreateInvoice(invoice, dc);
+                        } else
+                        {
+                            response.Add("FileProblem", 1);
+                            dbTransaction.Rollback();
+                            return response;
+                        }
                     }
                     else
-                    {
-                        response = CompanyLogic.CheckCompany(companyReceiver, dc, "Receiver");
-                    }
-                }
-                
-                int? payerId = null;
-                if (companyPayer != null)
-                {
-                    if (companyPayer.CompanyGuid == null || companyPayer.CompanyGuid == Guid.Empty)
-                    {
-                        response = response.Concat(CompanyLogic.CreateCompany(companyPayer, dc, "Payer")).GroupBy(d => d.Key).ToDictionary(d => d.Key, d => d.First().Value);
-                    }
-                    else
-                    {
-                        response = response.Concat(CompanyLogic.CheckCompany(companyPayer, dc, "Payer")).GroupBy(d => d.Key).ToDictionary(d => d.Key, d => d.First().Value);
-                    }
-                }
-
-                response.TryGetValue("companyReceiver", out receiverId);
-                response.TryGetValue("companyPayer", out payerId);
-
-                if (receiverId <= 0 || payerId <= 0)
-                {
-                    return response;
-                }
-
-                if (invoice.InvoiceGuid == null || invoice.InvoiceGuid == Guid.Empty)
-                {
-                    string filePath = SaveFile(invoice.File);
-                    if (filePath != "")
                     {
                         invoice.ReceiverId = receiverId;
                         invoice.PayerId = payerId;
-                        invoice.FilePath = filePath;
-                        CreateInvoice(invoice, dc);
-                    } else
+                        EditInvoice(invoice, dc);
+                    }
+                    try
                     {
-                        response.Add("FileProblem", 1);
-                        return response;
+                        dc.SaveChanges();
+                        dbTransaction.Commit();
+                        response.Add("success", 1);
+                    } catch (Exception e) {
+                        dbTransaction.Rollback();
                     }
                 }
-                else
-                {
-                    invoice.ReceiverId = receiverId;
-                    invoice.PayerId = payerId;
-                    EditInvoice(invoice, dc);
-                }
-                dc.SaveChanges();
-                response.Add("success", 1);
             }
             return response;
         }
@@ -270,6 +281,7 @@ namespace Fakturiska.Business.Logic
         }
 
         static string SERVER_PATH = @"C:\Users\ING\source\repos\Fakturiska\Fakturiska\Files\";
+        //static string SERVER_PATH = @"D:\Mega\Documents\Svastara\Programiranje\ASP.NET\fakturiska\Fakturiska\Files\";
         public static void ReceiveMail()
         {
             var context = GlobalHost.ConnectionManager.GetHubContext<RealTime>();
@@ -324,7 +336,7 @@ namespace Fakturiska.Business.Logic
                                     Risk = false,
                                     FilePath = filePath
                                 });
-                                context.Clients.All.MailReceived("Invoice added by email");
+                                context.Clients.All.MailReceived("Faktura dodata putem email-a");
                             }
                         }
                     }

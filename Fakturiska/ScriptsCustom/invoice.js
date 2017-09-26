@@ -132,17 +132,24 @@ function prepareEditModal() {
         }
     });
 
-    $(".receiverAutocomplete").keydown(function (event) {
-        if ($(this).val().length === 0) {
-            clearCompany("CompanyReceiver");
+    $(".receiverAutocomplete").on('keydown', function () {
+        var key = event.keyCode || event.charCode;
+        if (key == 8 || key == 46) {
+            if ($(this).val().length === 0) {
+                clearCompany("CompanyReceiver");
+                return false;
+            }
         }
     });
 
-    $(".payerAutocomplete").keyup(function (event) {
-        console.log($(this).val());
-        if ($(this).val().length === 0) {
-            clearCompany("CompanyPayer");
-        }
+    $(".payerAutocomplete").on('keydown', function () {
+        var key = event.keyCode || event.charCode;
+        if (key == 8 || key == 46) {
+            if ($(this).val().length === 0) {
+                clearCompany("CompanyPayer");
+                return false;
+            }
+        }  
     });
 
     disableEnableFields("CompanyReceiver", true);

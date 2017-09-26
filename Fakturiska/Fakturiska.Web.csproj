@@ -389,6 +389,7 @@
     <Content Include="Views\User\_TableUsersWaiting.cshtml" />
     <Content Include="Views\User\_CreateUserWithoutPassword.cshtml" />
     <Content Include="Views\Account\ChangePassword.cshtml" />
+    <Content Include="Views\PageNotFound.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -424,7 +425,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>50367</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:54276/</IISUrl>
+          <IISUrl>http://localhost:54278/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

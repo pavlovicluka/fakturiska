@@ -41,7 +41,7 @@ namespace Fakturiska.Controllers
                     return RedirectToAction("Invoices", "Invoice");
                 } else
                 {
-                    ModelState.AddModelError(string.Empty, "Pogresan email i/ili sifra");
+                    ModelState.AddModelError(string.Empty, "Pogrešan email i/ili šifra");
                 }
             }
             return View(model);
@@ -90,7 +90,7 @@ namespace Fakturiska.Controllers
                     UserGuid = model.UserGuid,
                     Password = model.Password,
                 });
-                return RedirectToAction("Login");
+                return Logout();
             }
             return View(model);
         }
@@ -119,9 +119,14 @@ namespace Fakturiska.Controllers
                 {
                     return Logout();
                 }
-                ModelState.AddModelError("OldPassword", "Pogresna sifra");
+                ModelState.AddModelError("OldPassword", "Pogrešna šifra");
             }
             return View(model);
+        }
+
+        public ActionResult PageNotFound()
+        {
+            return View();
         }
     }
 }

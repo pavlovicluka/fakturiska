@@ -1,16 +1,20 @@
-﻿<!DOCTYPE html>
+﻿@{
+    ViewBag.Title = "Stranica nije pronađena";
+}
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Greška 404</title>
+    <title>404 Greška</title>
 </head>
 <body>
     <hgroup>
-        <h1>Greška 404</h1>
-        <h3>Stranica koju ste tražili nije pronađena</h3>
+        <h1>404 Greška</h1>
+        <h2>Stranica koju ste tražili nije pronađena</h2>
     </hgroup>
 
-    <br />
     @Html.ActionLink("Idi na početnu stranu", "Invoices", "Invoice")
 </body>
 </html>
+

@@ -62,16 +62,16 @@ namespace Fakturiska.Controllers
                             }
                             break;
                         case "companyReceiverNameExists":
-                            ModelState.AddModelError("CompanyReceiver.Name", "Ovo ime vec postoji");
+                            ModelState.AddModelError("CompanyReceiver.Name", "Ovo ime već postoji");
                             break;
                         case "companyReceiverPersonalNumberExists":
-                            ModelState.AddModelError("CompanyReceiver.PersonalNumber", "Ovaj licni broj vec postoji");
+                            ModelState.AddModelError("CompanyReceiver.PersonalNumber", "Ovaj lični broj već postoji");
                             break;
                         case "companyReceiverPIBExists":
-                            ModelState.AddModelError("CompanyReceiver.PIB", "Ovaj PIB vec postoji");
+                            ModelState.AddModelError("CompanyReceiver.PIB", "Ovaj PIB već postoji");
                             break;
                         case "companyReceiverCannotEdit":
-                            ModelState.AddModelError("CompanyReceiver", "Ne mozete menjati ime, licni broj ni pib");
+                            ModelState.AddModelError("CompanyReceiver", "Ne možete menjati podatke pravnog lica");
                             break;
                         case "companyPayer":
                             if (entry.Value == null || entry.Value == 0)
@@ -80,19 +80,19 @@ namespace Fakturiska.Controllers
                             }
                             break;
                         case "companyPayerNameExists":
-                            ModelState.AddModelError("CompanyPayer.Name", "Ovo ime vec postoji");
+                            ModelState.AddModelError("CompanyPayer.Name", "Ovo ime već postoji");
                             break;
                         case "companyPayerrPersonalNumberExists":
-                            ModelState.AddModelError("CompanyPayer.PersonalNumber", "Ovaj licni broj vec postoji");
+                            ModelState.AddModelError("CompanyPayer.PersonalNumber", "Ovaj lični broj već postoji");
                             break;
                         case "companyPayerPIBExists":
-                            ModelState.AddModelError("CompanyPayer.PIB", "Ovaj PIB vec postoji");
+                            ModelState.AddModelError("CompanyPayer.PIB", "Ovaj PIB već postoji");
                             break;
                         case "companyPayerCannotEdit":
-                            ModelState.AddModelError("CompanyPayer", "Ne mozete menjati ime, licni broj ni pib");
+                            ModelState.AddModelError("CompanyReceiver", "Ne možete menjati podatke pravnog lica");
                             break;
                         case "FileProblem":
-                            ModelState.AddModelError("Invoice", "Greska pri dodavanju fajla");
+                            ModelState.AddModelError("Invoice", "Greška pri dodavanju fajla");
                             break;
                         case "success":
                             if (invoice.Archive == null)

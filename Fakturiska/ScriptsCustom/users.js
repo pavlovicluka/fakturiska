@@ -96,6 +96,29 @@ function submitForm() {
     }
 }
 
+function getUsers() {
+    $.ajax({
+        url: "/User/TableUsers",
+        type: "GET",
+        success: function (result) {
+            $('#result').html(result);
+            setDataTables();
+        }
+    });
+}
+
+function getUsersWaiting() {
+    $.ajax({
+        url: "/User/TableUsersWaiting",
+        type: "GET",
+        success: function (result) {
+            $('#resultWaiting').html(result);
+            setDataTablesWaiting();
+        }
+    });
+}
+
+
 var popoverOpened = false;
 function createUser() {
     if (!popoverOpened) {
@@ -127,3 +150,14 @@ function deleteUser(userId, rowId, waiting) {
         }
     });
 }
+
+$(function () {
+    var changes = $.connection.realTime;
+    changes.client.NewUser = function (message) {
+        $.notify(message, "success");
+        getUsers();
+        getUsersWaiting();
+    };
+
+    $.connection.hub.start();
+});

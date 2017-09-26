@@ -99,6 +99,7 @@ function createCompany() {
         type: "GET",
         success: function (result) {
             $("#companyModalBody").html(result);
+            $("#companyModalTitle").html("Kreiraj pravno lice");
             $("#companyModal").modal('toggle');
         }
     });
@@ -111,6 +112,7 @@ function editCompany(companyId) {
         data: { id: companyId },
         success: function (result) {
             $("#companyModalBody").html(result);
+            $("#companyModalTitle").html("Izmeni pravno lice");
             $("#companyModal").modal('toggle');
         }
     });
@@ -133,7 +135,7 @@ $(function () {
 
     changes.client.companiesChanged = function (message) {
         if (message === "refresh") {
-            $.notify(message, "success");
+            $.notify("Promene su ažurirane", "success");
             tableCompanies.search("").draw();
         }
     };

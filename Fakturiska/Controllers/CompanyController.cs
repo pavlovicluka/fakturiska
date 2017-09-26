@@ -48,13 +48,13 @@ namespace Fakturiska.Controllers
                             }
                             break;
                         case "companyNameExists":
-                            ModelState.AddModelError("Name", "Ovo ime vec postoji");
+                            ModelState.AddModelError("Name", "Ovo ime već postoji");
                             break;
                         case "companyPersonalNumberExists":
-                            ModelState.AddModelError("PersonalNumber", "Ovaj licni broj vec postoji");
+                            ModelState.AddModelError("PersonalNumber", "Ovaj lični broj već postoji");
                             break;
                         case "companyPIBExists":
-                            ModelState.AddModelError("PIB", "Ovaj PIB vec postoji");
+                            ModelState.AddModelError("PIB", "Ovaj PIB već postoji");
                             break;
                         case "success":
                             return Json("success");

@@ -8,7 +8,6 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -33,13 +32,13 @@
                             <li id="navbarLoggedIn_Invoices"><a href="/Invoice/Invoices">Upravljanje fakturama</a></li>
                             <li id="navbarLoggedIn_Companies"><a href="/Company/Companies">Pravna lica</a></li>
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     @identity.Name
                                 </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" href="/Account/Logout" id="navbarLoggedIn_logOut">Odjavite se</a>
-                                    <a class="dropdown-item" href="/Account/ChangePassword">Promenite sifru</a>
-                                </div>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <li><a class="dropdown-item" href="/Account/Logout" id="navbarLoggedIn_logOut">Odjavite se</a></li>
+                                    <li><a class="dropdown-item" href="/Account/ChangePassword">Promenite sifru</a></li>
+                                </ul>
                             </li>
                         }
                     </ul>
@@ -49,27 +48,24 @@
     </div>
 
     @Scripts.Render("~/bundles/jquery")
-
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("https://cdn.datatables.net/v/bs/dt-1.10.15/r-2.1.1/datatables.min.js")
     @Scripts.Render("https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js")
     @Scripts.Render("https://code.jquery.com/ui/1.12.1/jquery-ui.min.js")
-
     @Scripts.Render("~/Scripts/dropzone.js")
     @Scripts.Render("~/Scripts/moment.js")
-
+    @Scripts.Render("~/Scripts/notify.min.js")
     @Scripts.Render("~/Scripts/jquery.signalR-2.2.2.js")
     <script src="/signalr/hubs"></script>
-    @Scripts.Render("~/Scripts/notify.min.js")
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.15/r-2.1.1/datatables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/v/bs/dt-1.10.15/r-2.1.1/datatables.min.css" />
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" />
     <link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
-    <link rel="stylesheet" href="~/Content/Custom/main.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="~/Content/Custom/main.css" />
 
     @RenderSection("scripts", required: false)
 
@@ -77,7 +73,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - Fakturiška</p>
         </footer>
     </div>
 </body>

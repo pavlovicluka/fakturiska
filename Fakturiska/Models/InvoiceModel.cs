@@ -40,7 +40,7 @@ namespace Fakturiska.Models
         public bool Risk { get; set; }
 
         [DisplayName("Suma")]
-        [Range(0, 99999, ErrorMessage = "Suma mora biti izmedju 0 i 99999")]
+        [Range(0, 99999, ErrorMessage = "Suma mora biti između 0 i 99999")]
         public int? Sum { get; set; }
 
         [DisplayName("Datum plaćanja")]
