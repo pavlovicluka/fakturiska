@@ -28,15 +28,19 @@ namespace Fakturiska.Models
         public bool InvoiceEstimate { get; set; }
 
         [DisplayName("Račun")]
+        [Required()]
         public bool InvoiceTotal { get; set; }
 
         [DisplayName("Ulazna")]
+        [Required()]
         public bool Incoming { get; set; }
 
         [DisplayName("Plaćena")]
+        [Required()]
         public bool Paid { get; set; }
 
         [DisplayName("Problematična")]
+        [Required()]
         public bool Risk { get; set; }
 
         [DisplayName("Suma")]

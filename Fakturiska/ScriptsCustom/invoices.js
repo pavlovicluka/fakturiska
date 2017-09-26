@@ -63,7 +63,7 @@ function setDataTables() {
 function setDataTablesArchive() {
     var tableArchive = $('#tableArchive').DataTable({
         "dom": '<"pull-right"l>t<"pull-left"i><"pull-right"p>',
-        responsive: true,
+        responsive: false,
         bFilter: true,
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
         "columnDefs": [
@@ -194,8 +194,7 @@ function submitForm() {
         disableEnableFields("CompanyReceiver", false);
         disableEnableFields("CompanyPayer", false);
         var formArray = invoiceForm.serializeArray();
-        disableEnableFields("CompanyReceiver", true);
-        disableEnableFields("CompanyPayer", true);
+        
         var formObject = {};
         for (var i = 0; i < formArray.length; i++) {
             if (formObject[formArray[i]['name']] == null) {
@@ -209,12 +208,14 @@ function submitForm() {
 
         if (dropzoneForm !== null) {
             if (invoiceFile === null) {
-                invoiceFile = dropzoneForm.getQueuedFiles()[0];
+                if (dropzoneForm.getQueuedFiles().length === 1) {
+                    invoiceFile = dropzoneForm.getQueuedFiles()[0];
+                }
             }
             invoiceCompaniesModel.append("Invoice.File", invoiceFile);
         }
 
-        console.log(formObject);
+        //console.log(formObject);
 
         $.ajax({
             url: "/Invoice/CreateInvoice",
@@ -238,10 +239,25 @@ function submitForm() {
                     }
                 } else {
                     $("#invoiceModal").find(".modal-body").html(result);
-                    if (invoiceCompaniesModel.get("Invoice.Guid") !== null && invoiceCompaniesModel.get("Invoice.Guid") !== "") {
+
+                    if (invoiceCompaniesModel.get("Invoice.InvoiceGuid") !== null && invoiceCompaniesModel.get("Invoice.InvoiceGuid") !== "") {
                         prepareEditModal();
+
+                        if (invoiceCompaniesModel.get("CompanyReceiver.CompanyGuid") === null || invoiceCompaniesModel.get("CompanyReceiver.CompanyGuid") === "") {
+                            disableEnableFields("CompanyReceiver", false);
+                        }
+                        if (invoiceCompaniesModel.get("CompanyPayer.CompanyGuid") === null || invoiceCompaniesModel.get("CompanyPayer.CompanyGuid") === "") {
+                            disableEnableFields("CompanyPayer", false);
+                        }
                     } else {
                         prepareCreateModal();
+
+                        if (invoiceCompaniesModel.get("CompanyReceiver.CompanyGuid") === null || invoiceCompaniesModel.get("CompanyReceiver.CompanyGuid") === "") {
+                            disableEnableFields("CompanyReceiver", false);
+                        }
+                        if (invoiceCompaniesModel.get("CompanyPayer.CompanyGuid") === null || invoiceCompaniesModel.get("CompanyPayer.CompanyGuid") === "") {
+                            disableEnableFields("CompanyPayer", false);
+                        }
 
                         if (invoiceFile !== null) {
                             dropzoneForm.emit("addedfile", invoiceFile);

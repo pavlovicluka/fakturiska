@@ -79,9 +79,7 @@ namespace Fakturiska.Controllers
 
         public JsonResult ServerSideSearchAction(DataTableAjaxPostModel model)
         {
-            int filteredResultsCount;
-            int totalResultsCount;
-            var res = SearchCompanies(model, out filteredResultsCount, out totalResultsCount);
+            var res = SearchCompanies(model, out int filteredResultsCount, out int totalResultsCount);
 
             return Json(new
             {
