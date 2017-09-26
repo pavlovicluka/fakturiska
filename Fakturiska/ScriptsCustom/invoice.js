@@ -138,11 +138,15 @@ function prepareEditModal() {
         }
     });
 
-    $(".payerAutocomplete").keypress(function (event) {
+    $(".payerAutocomplete").keyup(function (event) {
+        console.log($(this).val());
         if ($(this).val().length === 0) {
             clearCompany("CompanyPayer");
         }
     });
+
+    disableEnableFields("CompanyReceiver", true);
+    disableEnableFields("CompanyPayer", true);
 }
 
 function prepareCreateModal() {
@@ -219,16 +223,16 @@ function clearCompany(companyType) {
     disableEnableFields(companyType, false);
 }
 
-function disableEnableFields(companyType, enabled) {
-    if ($(currentModalId).find("#" + companyType + "_" + "Name").val() !== null && $(currentModalId).find("#" + companyType + "_" + "Name").val() !== "") {
-        $(currentModalId).find("#" + companyType + "_" + "PhoneNumber").prop("disabled", enabled);
-        $(currentModalId).find("#" + companyType + "_" + "FaxNumber").prop("disabled", enabled);
-        $(currentModalId).find("#" + companyType + "_" + "Address").prop("disabled", enabled);
-        $(currentModalId).find("#" + companyType + "_" + "Website").prop("disabled", enabled);
-        $(currentModalId).find("#" + companyType + "_" + "Email").prop("disabled", enabled);
-        $(currentModalId).find("#" + companyType + "_" + "MIB").prop("disabled", enabled);
-        $(currentModalId).find("#" + companyType + "_" + "AccountNumber").prop("disabled", enabled);
-        $(currentModalId).find("#" + companyType + "_" + "BankCode").prop("disabled", enabled);
+function disableEnableFields(companyType, disabled) {
+    if (($(currentModalId).find("#" + companyType + "_" + "Name").val() !== null && $(currentModalId).find("#" + companyType + "_" + "Name").val() !== "") || disabled === false) {
+        $(currentModalId).find("#" + companyType + "_" + "PhoneNumber").prop("disabled", disabled);
+        $(currentModalId).find("#" + companyType + "_" + "FaxNumber").prop("disabled", disabled);
+        $(currentModalId).find("#" + companyType + "_" + "Address").prop("disabled", disabled);
+        $(currentModalId).find("#" + companyType + "_" + "Website").prop("disabled", disabled);
+        $(currentModalId).find("#" + companyType + "_" + "Email").prop("disabled", disabled);
+        $(currentModalId).find("#" + companyType + "_" + "MIB").prop("disabled", disabled);
+        $(currentModalId).find("#" + companyType + "_" + "AccountNumber").prop("disabled", disabled);
+        $(currentModalId).find("#" + companyType + "_" + "BankCode").prop("disabled", disabled);
     }
 }
 

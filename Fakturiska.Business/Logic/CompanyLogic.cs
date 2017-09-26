@@ -64,7 +64,15 @@ namespace Fakturiska.Business.Logic
                     BankCode = company.BankCode
                 };
                 dc.Companies.Add(com);
-                response.Add("companyId", dc.Companies.FirstOrDefault(c => c.CompanyUId == com.CompanyUId).CompanyId);
+                response.Add("company" + type, dc.Companies.FirstOrDefault(c => c.CompanyUId == com.CompanyUId).CompanyId);
+            } else
+            {
+                int? companyValue = -1;
+                response.TryGetValue("company" + type, out companyValue);
+                if (companyValue == -1)
+                {
+                    response.Add("company" + type, 0);
+                }
             }
             return response;
         }
@@ -126,9 +134,10 @@ namespace Fakturiska.Business.Logic
                 {
                     response.Add("company" + type, null);
                 }
-                if (company.Name != c.Name || company.PersonalNumber != c.PersonalNumber || company.PIB != c.PIB)
+                else if (company.Name != c.Name || company.PersonalNumber != c.PersonalNumber || company.PIB != c.PIB)
                 {
-                    response.Add("company" + type + "CannotEdit", 1); ;
+                    response.Add("company" + type, -1);
+                    response.Add("company" + type + "CannotEdit", 1);
                 }
                 else
                 {

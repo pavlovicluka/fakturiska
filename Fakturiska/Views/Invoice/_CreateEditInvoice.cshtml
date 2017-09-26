@@ -14,7 +14,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.Invoice.Date, htmlAttributes: new { @class = "control-label col-md-2"})
                 <div class="col-md-10">
-                    @Html.TextBoxFor(model => model.Invoice.Date, new { @class = "form-control datepicker", @type = "date", placeholder = "Odaberite datum..." })
+                    @Html.TextBoxFor(model => model.Invoice.Date, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker", @type = "date", placeholder = "Odaberite datum..." })
                     @Html.ValidationMessageFor(model => model.Invoice.Date, "", new { @class = "text-danger" })
                 </div>
             </div>

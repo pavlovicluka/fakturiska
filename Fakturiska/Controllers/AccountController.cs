@@ -94,5 +94,34 @@ namespace Fakturiska.Controllers
             }
             return View(model);
         }
+
+        [Authorize]
+        public ActionResult ChangePassword()
+        {
+            var identity = (ClaimsIdentity)User.Identity;
+            return View(new UserChangePasswordModel(int.Parse(identity.GetUserId())));
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult ChangePassword(UserChangePasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = UserLogic.ChangePassword(new UserDTO
+                {
+                    UserGuid = model.UserGuid,
+                    Email = model.Email,
+                    OldPassword = model.OldPassword,
+                    Password = model.Password,
+                });
+                if(response == "success")
+                {
+                    return Logout();
+                }
+                ModelState.AddModelError("OldPassword", "Pogresna sifra");
+            }
+            return View(model);
+        }
     }
 }

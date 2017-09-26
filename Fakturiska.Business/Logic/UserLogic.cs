@@ -78,6 +78,17 @@ namespace Fakturiska.Business.Logic
             }
         }
 
+        public static string ChangePassword(UserDTO user)
+        {
+            var u = AuthorizeUser(user.Email, user.OldPassword);
+            if (u != null)
+            {
+                SetPassword(user);
+                return "success";
+            }
+            return "wrongPassword";
+        }
+
         public static void EditUserEmail(UserDTO user)
         {
             using (var dc = new FakturiskaDBEntities())

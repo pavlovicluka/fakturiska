@@ -48,7 +48,7 @@ namespace Fakturiska.Business.Logic
                 response.TryGetValue("companyReceiver", out receiverId);
                 response.TryGetValue("companyPayer", out payerId);
 
-                if (response.Count > 2)
+                if (receiverId <= 0 || payerId <= 0)
                 {
                     return response;
                 }
@@ -74,8 +74,8 @@ namespace Fakturiska.Business.Logic
                     invoice.PayerId = payerId;
                     EditInvoice(invoice, dc);
                 }
-                response.Add("success", 1);
                 dc.SaveChanges();
+                response.Add("success", 1);
             }
             return response;
         }

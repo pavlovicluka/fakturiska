@@ -73,6 +73,71 @@ function setDataTablesArchive() {
                 "responsivePriority": 1,
             },
             {
+                "targets": 2,
+                "render": function (data, type, row) {
+                    if (type === "display") {
+                        if (data === "True") {
+                            return '<input checked="checked" class="check-box" disabled="disabled" type="checkbox">';
+                        } else {
+                            return '<input class="check- box" disabled="disabled" type="checkbox">';
+                        }
+                    }
+                    return data;
+                }
+            },
+            {
+                "targets": 3,
+                "render": function (data, type, row) {
+                    if (type === "display") {
+                        if (data === "True") {
+                            return '<input checked="checked" class="check-box" disabled="disabled" type="checkbox">';
+                        } else {
+                            return '<input class="check- box" disabled="disabled" type="checkbox">';
+                        }
+                    }
+                    return data;
+                }
+            },
+            {
+                "targets": 4,
+                "render": function (data, type, row) {
+                    if (type === "display") {
+                        if (data === "True") {
+                            return '<input checked="checked" class="check-box" disabled="disabled" type="checkbox">';
+                        } else {
+                            return '<input class="check- box" disabled="disabled" type="checkbox">';
+                        }
+                    }
+                    return data;
+                }
+            },
+            {
+                "targets": 5,
+                "render": function (data, type, row) {
+                    if (type === "display") {
+                        if (data === "True") {
+                            return '<input checked="checked" class="check-box" disabled="disabled" type="checkbox">';
+                        } else {
+                            return '<input class="check- box" disabled="disabled" type="checkbox">';
+                        }
+                    }
+                    return data;
+                }
+            },
+            {
+                "targets": 6,
+                "render": function (data, type, row) {
+                    if (type === "display") {
+                        if (data === "True") {
+                            return '<input checked="checked" class="check-box" disabled="disabled" type="checkbox">';
+                        } else {
+                            return '<input class="check- box" disabled="disabled" type="checkbox">';
+                        }
+                    }
+                    return data;
+                }
+            },
+            {
                 "targets": -1,
                 "responsivePriority": 2,
                 "searchable": false,
@@ -90,11 +155,33 @@ function setDataTablesArchive() {
     });
 
     $('#categorySelect').change(function () {
+        var selected = $('#checkboxSelect').val();
         $('#searchArchive').val("");
         tableArchive
             .columns()
-            .search("")
-            .draw();
+            .search("");
+        for (var i = 0; i < selected.length; i++) {
+            tableArchive
+                .columns(selected[i])
+                .search("True");
+        }
+        tableArchive.draw();
+    });
+
+    $('#checkboxSelect').change(function () {
+        var selected = $('#checkboxSelect').val();
+        tableArchive
+            .columns()
+            .search("");
+        tableArchive
+            .columns($('#categorySelect').val())
+            .search($('#searchArchive').val());
+        for (var i = 0; i < selected.length; i++) {
+            tableArchive
+                .columns(selected[i])
+                .search("True");
+        }
+        tableArchive.draw();
     });
 }
 
@@ -112,11 +199,20 @@ function submitForm() {
         disableEnableFields("CompanyPayer", true);
         var formObject = {};
         for (var i = 0; i < formArray.length; i++) {
-            formObject[formArray[i]['name']] = formArray[i]['value'];
+            if (formObject[formArray[i]['name']] == null) {
+                formObject[formArray[i]['name']] = formArray[i]['value'];
+            }
         }
+
+        //console.log(formArray);
+        //console.log(formObject);
+
         for (var key in formObject) {
             invoiceCompaniesModel.append(key, formObject[key]);
+            //console.log(key + " " + formObject[key]);
         }
+
+        //console.log(invoiceCompaniesModel);
 
         if (dropzoneForm !== null) {
             if (invoiceFile === null) {

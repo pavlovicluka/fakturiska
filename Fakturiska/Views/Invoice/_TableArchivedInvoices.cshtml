@@ -60,47 +60,19 @@
                     @Html.DisplayFor(modelItem => item.Date)
                 </td>
                 <td>
-                   @Html.DisplayFor(modelItem => item.InvoiceEstimate)
+                   @item.InvoiceEstimate
                 </td>
                 <td>
-                    @if (item.InvoiceTotal)
-                    {
-                        @: DA
-                             }
-                    else if (!item.InvoiceTotal)
-                    {
-                        @: NE
-                             }
+                    @item.InvoiceTotal
                 </td>
                 <td>
-                    @if (item.Incoming)
-                    {
-                        @: DA
-                             }
-                    else if (!item.Incoming)
-                    {
-                        @: NE
-                            }
+                    @item.Incoming
                 </td>
                 <td>
-                    @if (item.Paid)
-                    {
-                        @: DA
-                            }
-                    else if (!item.Paid)
-                    {
-                        @: NE
-                             }
+                    @item.Paid
                 </td>
                 <td>
-                    @if (item.Risk)
-                    {
-                        @: DA
-                             }
-                    else if (!item.Risk)
-                    {
-                        @: NE
-                            }
+                    @item.Risk
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Sum)

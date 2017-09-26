@@ -20,6 +20,7 @@ namespace Fakturiska.Models
         public Guid? InvoiceGuid { get; set; }
 
         [DisplayName("Datum kreiranja")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime? Date { get; set; }
 
         [DisplayName("Predračun")]
@@ -43,6 +44,7 @@ namespace Fakturiska.Models
         public int? Sum { get; set; }
 
         [DisplayName("Datum plaćanja")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime? PaidDate { get; set; }
 
         [DisplayName("Važnost")]

@@ -7,12 +7,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Fakturiska.Models
 {
-    public class UserSetPasswordModel
+    public class UserChangePasswordModel
     {
         public Guid UserGuid { get; set; }
 
         [DisplayName("Email")]
         public String Email { get; set; }
+
+        [DisplayName("Stara Šifra")]
+        [Required()]
+        public String OldPassword { get; set; }
 
         [DisplayName("Šifra")]
         [Required()]
@@ -28,24 +32,16 @@ namespace Fakturiska.Models
         [DisplayName("Rola")]
         public RoleEnum Role { get; set; }
 
-        public UserSetPasswordModel()
+        public UserChangePasswordModel()
         {
 
         }
 
-        public UserSetPasswordModel(string id)
+        public UserChangePasswordModel(int id)
         {
-            try
-            {
-                Guid userGuid = new Guid(id);
-                var user = UserLogic.GetUserByGuid(userGuid);
-                this.UserGuid = userGuid;
-                this.Role = user.Role;
-                this.Email = user.Email;
-            } catch (Exception e)
-            {
-                throw e;
-            }
+            var user = UserLogic.GetUserById(id);
+            this.Role = user.Role;
+            this.Email = user.Email;
         }
     }
 }

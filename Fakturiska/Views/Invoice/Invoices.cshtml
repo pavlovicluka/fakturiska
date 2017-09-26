@@ -63,20 +63,24 @@
                 <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
             </div>
         </div>
-        <div class="col-md-2" style="padding-left:0px">
-            <select id="categorySelect" class="form-control">
+        <div class="col-md-2" style="padding-left:0px;">
+            <select id="categorySelect" class="selectpicker">
                 <option value="0">Broj fakture</option>
                 <option value="1">Datum kreiranja</option>
-                <option value="2">Predracun</option>
-                <option value="3">Racun</option>
-                <option value="4">Ulazna</option>
-                <option value="5">Placena</option>
-                <option value="6">Problematicna</option>
                 <option value="7">Suma</option>
                 <option value="8">Datum placanja</option>
                 <option value="9">Prioritet</option>
                 <option value="10">Primalac</option>
                 <option value="11">Uplatilac</option>
+            </select>
+        </div>
+        <div class="col-md-2" style="padding-left:25px">
+            <select id="checkboxSelect" class="selectpicker" title="Odaberi..." multiple>
+                <option value="2">Predračun</option>
+                <option value="3">Račun</option>
+                <option value="4">Ulazna</option>
+                <option value="5">Plaćena</option>
+                <option value="6">Problematična</option>
             </select>
         </div>
     </div>
