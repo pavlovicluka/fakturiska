@@ -4,7 +4,7 @@
     setDataTables();
     setDataTablesWaiting();
 
-    $('.editEmail').editable();
+    //$('.editEmail').editable();
     $('.editRole').editable({
         source: [{ value: 1, text: "Admin" }, { value: 2, text: "User" }],
     });
@@ -157,6 +157,9 @@ $(function () {
         $.notify(message, "success");
         getUsers();
         getUsersWaiting();
+        $('.editRole').editable({
+            source: [{ value: 1, text: "Admin" }, { value: 2, text: "User" }],
+        });
     };
 
     $.connection.hub.start();

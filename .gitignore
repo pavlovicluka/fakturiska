@@ -75,6 +75,7 @@ _[Ss]cripts
 *.dot[Cc]over
 
 .vs/
+Fakturiska/Files
 Fakturiska/Web.config
 Fakturiska.Business/App.config
 Fakturiska.Database/App.config

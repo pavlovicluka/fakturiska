@@ -64,7 +64,6 @@ function setDataTablesArchive() {
     var tableArchive = $('#tableArchive').DataTable({
         "dom": '<"pull-right"l>t<"pull-left"i><"pull-right"p>',
         responsive: true,
-        ordering: false,
         bFilter: true,
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
         "columnDefs": [
@@ -208,14 +207,14 @@ function submitForm() {
             invoiceCompaniesModel.append(key, formObject[key]);
         }
 
-        //console.log(invoiceCompaniesModel);
-
         if (dropzoneForm !== null) {
             if (invoiceFile === null) {
                 invoiceFile = dropzoneForm.getQueuedFiles()[0];
             }
             invoiceCompaniesModel.append("Invoice.File", invoiceFile);
         }
+
+        console.log(formObject);
 
         $.ajax({
             url: "/Invoice/CreateInvoice",

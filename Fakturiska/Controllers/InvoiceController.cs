@@ -89,7 +89,7 @@ namespace Fakturiska.Controllers
                             ModelState.AddModelError("CompanyPayer.PIB", "Ovaj PIB već postoji");
                             break;
                         case "companyPayerCannotEdit":
-                            ModelState.AddModelError("CompanyReceiver", "Ne možete menjati podatke pravnog lica");
+                            ModelState.AddModelError("CompanyPayer", "Ne možete menjati podatke pravnog lica");
                             break;
                         case "FileProblem":
                             ModelState.AddModelError("Invoice", "Greška pri dodavanju fajla");

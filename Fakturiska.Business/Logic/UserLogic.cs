@@ -87,7 +87,7 @@ namespace Fakturiska.Business.Logic
                 }
                 dc.SaveChanges();
                 var context = GlobalHost.ConnectionManager.GetHubContext<RealTime>();
-                context.Clients.All.NewUser("Korisnik " + user.Email + " se prijavio prvi put na portal Fakturiška");
+                context.Clients.All.NewUser("Korisnik " + u.Email + " se prijavio prvi put na portal Fakturiška");
             }
         }
 
