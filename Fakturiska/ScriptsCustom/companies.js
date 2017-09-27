@@ -25,6 +25,7 @@ function setDataTables() {
             { mData: 'CompanyGuid' },
         ],
         responsive: true,
+        "autoWidth": false,
         "proccessing": true,
         "serverSide": true,
         "ajax": {

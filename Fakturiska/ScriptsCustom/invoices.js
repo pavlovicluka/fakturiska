@@ -36,8 +36,12 @@ function setDataTables() {
     tableInvoices = $('#tableInvoices').DataTable({
         "dom": '<"pull-right"l>t<"pull-left"i><"pull-right"p>',
         responsive: true,
+        "autoWidth": false,
         language: { search: "" },
         "columnDefs": [
+            {
+                "type": "date-eu", targets: 1
+            },
             {
                 "targets": 0,
                 "responsivePriority": 1,
@@ -63,10 +67,14 @@ function setDataTables() {
 function setDataTablesArchive() {
     var tableArchive = $('#tableArchive').DataTable({
         "dom": '<"pull-right"l>t<"pull-left"i><"pull-right"p>',
-        responsive: false,
+        responsive: true,
+        "autoWidth": false,
         bFilter: true,
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
         "columnDefs": [
+            {
+                "type": "date-eu", targets: 1
+            },
             {
                 "targets": 0,
                 "responsivePriority": 1,

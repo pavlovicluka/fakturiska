@@ -25,6 +25,7 @@ function setDataTables() {
         "dom": '<"pull-right"l>t<"pull-left"i><"pull-right"p>',
         language: { search: "" },
         responsive: true,
+        "autoWidth": false,
         "columnDefs": [
             {
                 "targets": 0,
@@ -52,6 +53,7 @@ function setDataTablesWaiting() {
         "dom": '<"pull-right"l>t<"pull-left"i><"pull-right"p>',
         language: { search: "" },
         responsive: true,
+        "autoWidth": false,
         "columnDefs": [
             {
                 "targets": 0,
