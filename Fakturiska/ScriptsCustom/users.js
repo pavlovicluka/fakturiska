@@ -139,17 +139,23 @@ function createUser() {
 }
 
 function deleteUser(userId, rowId, waiting) {
-    $.ajax({
-        url: "/User/DeleteUser",
-        type: "POST",
-        data: { id: userId },
-        success: function (result) {
-            if (waiting === "true") {
-                $("#rowWaiting" + rowId).remove();
-            } else {
-                $("#row" + rowId).remove();
+    $("#deleteModal").modal('toggle');
+    $("#submitDelete").click(function () {
+        $.ajax({
+            url: "/User/DeleteUser",
+            type: "POST",
+            data: { id: userId },
+            success: function (result) {
+                if (waiting === "true") {
+                    $("#rowWaiting" + rowId).remove();
+                } else {
+                    $("#row" + rowId).remove();
+                }
+                $("#deleteModal").modal('hide');
+                $('body').removeClass('modal-open');
+                $('.modal-backdrop').remove();
             }
-        }
+        });
     });
 }
 

@@ -323,17 +323,23 @@ function editInvoice(invoiceId, archive) {
 }
 
 function deleteInvoice(invoiceId, rowId, archived) {
-    $.ajax({
-        url: "/Invoice/DeleteInvoice",
-        type: "POST",
-        data: { id: invoiceId },
-        success: function (result) {
-            if (archived === "true") {
-                $("#rowArchive" + rowId).remove();
-            } else {
-                $("#row" + rowId).remove();
+    $("#deleteModal").modal('toggle');
+    $("#submitDelete").click(function () {
+        $.ajax({
+            url: "/Invoice/DeleteInvoice",
+            type: "POST",
+            data: { id: invoiceId },
+            success: function (result) {
+                if (archived === "true") {
+                    $("#rowArchive" + rowId).remove();
+                } else {
+                    $("#row" + rowId).remove();
+                }
+                $("#deleteModal").modal('hide');
+                $('body').removeClass('modal-open');
+                $('.modal-backdrop').remove();
             }
-        }
+        });
     });
 }
 
@@ -349,7 +355,6 @@ function archiveInvoice(invoiceId, rowId) {
         }
     });
 }
-
 
 function printInvoice(guid) {   
     var w = window.open("/Invoice/PrintInvoice?guid=" + guid);

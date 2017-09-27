@@ -12,50 +12,56 @@
 
         <div class="col-md-4">
             <div class="form-group">
-                @Html.LabelFor(model => model.Invoice.Date, htmlAttributes: new { @class = "control-label col-md-2"})
+                @Html.LabelFor(model => model.Invoice.Date, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.Invoice.Date, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker", @type = "date", placeholder = "Odaberite datum..." })
                     @Html.ValidationMessageFor(model => model.Invoice.Date, "", new { @class = "text-danger" })
                 </div>
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Invoice.InvoiceEstimate, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.CheckBoxFor(model => model.Invoice.InvoiceEstimate, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Invoice.InvoiceEstimate, "", new { @class = "text-danger" })
-                </div>
-            </div>
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Invoice.InvoiceEstimate, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.CheckBoxFor(model => model.Invoice.InvoiceEstimate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Invoice.InvoiceEstimate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Invoice.InvoiceTotal, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.CheckBoxFor(model => model.Invoice.InvoiceTotal, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Invoice.InvoiceTotal, "", new { @class = "text-danger" })
-                </div>
-            </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Invoice.InvoiceTotal, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.CheckBoxFor(model => model.Invoice.InvoiceTotal, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Invoice.InvoiceTotal, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Invoice.Incoming, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.CheckBoxFor(model => model.Invoice.Incoming, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Invoice.Incoming, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Invoice.Incoming, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.CheckBoxFor(model => model.Invoice.Incoming, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Invoice.Incoming, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Invoice.Paid, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.CheckBoxFor(model => model.Invoice.Paid, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Invoice.Paid, "", new { @class = "text-danger" })
-                </div>
-            </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Invoice.Paid, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.CheckBoxFor(model => model.Invoice.Paid, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Invoice.Paid, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Invoice.Risk, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.CheckBoxFor(model => model.Invoice.Risk, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Invoice.Risk, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Invoice.Risk, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.CheckBoxFor(model => model.Invoice.Risk, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Invoice.Risk, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -76,7 +82,7 @@
             </div>
 
             @if (Model == null || Model.Invoice.InvoiceGuid == null || Model.Invoice.InvoiceGuid == Guid.Empty)
-            {
+                {
                 <div class="form-group">
                     @Html.LabelFor(model => model.Invoice.File, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
@@ -85,7 +91,7 @@
                     </div>
                 </div>
 
-                <div id="dzContainer"></div>
+                    <div id="dzContainer"></div>
             }
         </div>
 

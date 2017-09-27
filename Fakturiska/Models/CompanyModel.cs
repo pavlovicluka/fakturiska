@@ -43,7 +43,7 @@ namespace Fakturiska.Models
         [EmailAddress]
         public String Email { get; set; }
 
-        [DisplayName("Maticni broj")]
+        [DisplayName("Matični broj")]
         [RequiredIf("CompanyEmpty", false, ErrorMessage = "Polje Matični broj je obavezno")]
         [RegularExpression("[0-9]{13}", ErrorMessage = "Matični broj se sastoji od tačno 13 cifara")]
         public String PersonalNumber { get; set; }

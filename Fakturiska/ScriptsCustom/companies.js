@@ -120,14 +120,20 @@ function editCompany(companyId) {
 }
 
 function deleteCompany(companyId, modalId) {
-    $.ajax({
-        url: "/Company/DeleteCompany",
-        type: "POST",
-        data: { id: companyId },
-        success: function (result) {
-            $("#" + modalId).parent().closest('tr').remove();
-            changes.server.companiesChanged("refresh");
-        }
+    $("#deleteModal").modal('toggle');
+    $("#submitDelete").click(function () {
+        $.ajax({
+            url: "/Company/DeleteCompany",
+            type: "POST",
+            data: { id: companyId },
+            success: function (result) {
+                $("#" + modalId).parent().closest('tr').remove();
+                $("#deleteModal").modal('hide');
+                $('body').removeClass('modal-open');
+                $('.modal-backdrop').remove();
+                changes.server.companiesChanged("refresh");
+            }
+        });
     });
 }
 
