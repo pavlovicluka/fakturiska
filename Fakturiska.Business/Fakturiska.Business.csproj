@@ -129,6 +129,7 @@
     <Compile Include="Enumerations\RoleEnum.cs" />
     <Compile Include="Logic\CompanyLogic.cs" />
     <Compile Include="Logic\InvoiceLogic.cs" />
+    <Compile Include="PasswordStorage.cs" />
     <Compile Include="RealTime.cs" />
     <Compile Include="Logic\UserLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

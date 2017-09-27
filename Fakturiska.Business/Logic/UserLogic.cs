@@ -15,22 +15,16 @@ namespace Fakturiska.Business.Logic
         {
             using (var dc = new FakturiskaDBEntities())
             {
-                var user = dc.Users.Where(u => u.Email == email && u.Password == password && u.DeleteDate == null).ToList();
-                if (user.Any()) {
-                    return new UserDTO(user.First());
-                } 
+                var user = dc.Users.FirstOrDefault(u => u.Email == email && u.DeleteDate == null);
+                if (user != null)
+                {
+                    if (PasswordStorage.VerifyPassword(password, user.Password))
+                    {
+                        return new UserDTO(user);
+                    }
+                }
                 return null;
             }
-        }
-
-        public static UserDTO AuthorizeUser(string email, string password, FakturiskaDBEntities dc)
-        {
-            var user = dc.Users.Where(u => u.Email == email && u.Password == password && u.DeleteDate == null).ToList();
-            if (user.Any())
-            {
-                return new UserDTO(user.First());
-            }
-            return null;
         }
 
         public static void CreateUser(UserDTO user)
@@ -39,11 +33,11 @@ namespace Fakturiska.Business.Logic
             {
                 UserUId = Guid.NewGuid(),
                 Email = user.Email,
-                Password = user.Password,
+                Password = PasswordStorage.CreateHash(user.Password),
                 RoleId = (int)user.Role + 1
             };
 
-            using(var dc = new FakturiskaDBEntities())
+            using (var dc = new FakturiskaDBEntities())
             {
                 dc.Users.Add(u);
                 dc.SaveChanges();
@@ -53,7 +47,7 @@ namespace Fakturiska.Business.Logic
         public static string CreateUserWithoutPassword(UserDTO user)
         {
             var us = GetUserIdByEmail(user.Email);
-            if(us == null)
+            if (us == null)
             {
                 Guid newUserGuid = Guid.NewGuid();
                 User u = new User()
@@ -72,7 +66,7 @@ namespace Fakturiska.Business.Logic
                     SendMail(body, user.Email);
                 }
                 return "success";
-            } 
+            }
             return "exists";
         }
 
@@ -83,7 +77,7 @@ namespace Fakturiska.Business.Logic
                 var u = GetUserByGuid(user.UserGuid, dc);
                 if (u != null && u.Password == null)
                 {
-                    u.Password = user.Password;
+                    u.Password = PasswordStorage.CreateHash(user.Password);
                 }
                 dc.SaveChanges();
                 var context = GlobalHost.ConnectionManager.GetHubContext<RealTime>();
@@ -97,11 +91,12 @@ namespace Fakturiska.Business.Logic
             using (var dc = new FakturiskaDBEntities())
             {
                 var u = GetUserByGuid(user.UserGuid, dc);
-                if (u != null && u.Email == user.Email && u.Password == user.OldPassword)
+                if (u != null && u.Email == user.Email && PasswordStorage.VerifyPassword(user.OldPassword, u.Password))
                 {
-                    u.Password = user.Password;
-                    response  = "success";
-                } else
+                    u.Password = PasswordStorage.CreateHash(user.Password);
+                    response = "success";
+                }
+                else
                 {
                     response = "wrongPassword";
                 }
@@ -172,10 +167,11 @@ namespace Fakturiska.Business.Logic
             using (var dc = new FakturiskaDBEntities())
             {
                 var user = dc.Users.FirstOrDefault(u => u.DeleteDate == null && u.Email == email);
-                if(user != null)
+                if (user != null)
                 {
                     return user.UserId;
-                } else
+                }
+                else
                 {
                     return null;
                 }

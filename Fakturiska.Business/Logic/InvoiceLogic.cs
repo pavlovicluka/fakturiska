@@ -21,7 +21,6 @@ namespace Fakturiska.Business.Logic
             {
                 using (var dbTransaction = dc.Database.BeginTransaction())
                 {
-                    int? receiverId = null;
                     if (companyReceiver != null)
                     {
                         if (companyReceiver.CompanyGuid == null || companyReceiver.CompanyGuid == Guid.Empty)
@@ -34,7 +33,6 @@ namespace Fakturiska.Business.Logic
                         }
                     }
 
-                    int? payerId = null;
                     if (companyPayer != null)
                     {
                         if (companyPayer.CompanyGuid == null || companyPayer.CompanyGuid == Guid.Empty)
@@ -47,8 +45,8 @@ namespace Fakturiska.Business.Logic
                         }
                     }
 
-                    response.TryGetValue("companyReceiver", out receiverId);
-                    response.TryGetValue("companyPayer", out payerId);
+                    response.TryGetValue("companyReceiver", out int? receiverId);
+                    response.TryGetValue("companyPayer", out int? payerId);
 
                     if (receiverId <= 0 || payerId <= 0)
                     {
@@ -65,7 +63,8 @@ namespace Fakturiska.Business.Logic
                             invoice.PayerId = payerId;
                             invoice.FilePath = filePath;
                             CreateInvoice(invoice, dc);
-                        } else
+                        }
+                        else
                         {
                             response.Add("FileProblem", 1);
                             dbTransaction.Rollback();
@@ -83,7 +82,9 @@ namespace Fakturiska.Business.Logic
                         dc.SaveChanges();
                         dbTransaction.Commit();
                         response.Add("success", 1);
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e)
+                    {
                         dbTransaction.Rollback();
                     }
                 }
@@ -93,7 +94,7 @@ namespace Fakturiska.Business.Logic
 
         public static void CreateInvoice(InvoiceDTO invoice, FakturiskaDBEntities db = null)
         {
-            if(invoice.Paid)
+            if (invoice.Paid)
             {
                 invoice.PaidDate = DateTime.Now.Date;
             }
@@ -120,14 +121,15 @@ namespace Fakturiska.Business.Logic
                 FilePath = invoice.FilePath
             };
 
-            if(db == null)
+            if (db == null)
             {
                 using (var dc = new FakturiskaDBEntities())
                 {
                     dc.Invoices.Add(i);
                     dc.SaveChanges();
                 }
-            } else
+            }
+            else
             {
                 db.Invoices.Add(i);
             }
@@ -149,17 +151,17 @@ namespace Fakturiska.Business.Logic
                 var i = GetInvoiceByGuid(invoice.InvoiceGuid, dc);
                 if (i != null)
                 {
-                   i.Date = invoice.Date;
-                   i.InvoiceEstimate = invoice.InvoiceEstimate;
-                   i.InvoiceTotal = invoice.InvoiceTotal;
-                   i.Incoming = invoice.Incoming;
-                   i.Paid = invoice.Paid;
-                   i.Risk = invoice.Risk;
-                   i.Sum = invoice.Sum;
-                   i.PaidDate = invoice.PaidDate;
-                   i.PriorityId = priorityId;
-                   i.ReceiverId = invoice.ReceiverId;
-                   i.PayerId = invoice.PayerId;
+                    i.Date = invoice.Date;
+                    i.InvoiceEstimate = invoice.InvoiceEstimate;
+                    i.InvoiceTotal = invoice.InvoiceTotal;
+                    i.Incoming = invoice.Incoming;
+                    i.Paid = invoice.Paid;
+                    i.Risk = invoice.Risk;
+                    i.Sum = invoice.Sum;
+                    i.PaidDate = invoice.PaidDate;
+                    i.PriorityId = priorityId;
+                    i.ReceiverId = invoice.ReceiverId;
+                    i.PayerId = invoice.PayerId;
                 }
                 dc.SaveChanges();
             }
@@ -275,7 +277,7 @@ namespace Fakturiska.Business.Logic
                 {
                     path = Path.Combine(HttpContext.Current.Server.MapPath("~/Files/"), name + extension);
                     invoiceFile.SaveAs(path);
-                }  
+                }
             }
             return path;
         }
@@ -306,10 +308,11 @@ namespace Fakturiska.Business.Logic
                 string email = msg.Headers.From.Address;
                 int? userId = 0;
                 userId = UserLogic.GetUserIdByEmail(email);
-                foreach (var attachment in msg.FindAllAttachments())
+                try
                 {
-                    try
+                    foreach (var attachment in msg.FindAllAttachments())
                     {
+
                         string filePath = "";
                         string name = Guid.NewGuid().ToString();
                         string extension = Path.GetExtension(attachment.FileName);
@@ -339,11 +342,12 @@ namespace Fakturiska.Business.Logic
                                 context.Clients.All.MailReceived("Faktura dodata putem email-a");
                             }
                         }
+
                     }
-                    finally
-                    {
-                        PopClient.DeleteMessage(count);
-                    }
+                }
+                finally
+                {
+                    PopClient.DeleteMessage(count);
                 }
             }
             PopClient.Disconnect();

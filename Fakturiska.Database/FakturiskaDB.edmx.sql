@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 09/21/2017 14:18:08
+-- Date Created: 09/27/2017 11:49:06
 -- Generated from EDMX file: C:\Users\ING\source\repos\Fakturiska\Fakturiska.Database\FakturiskaDB.edmx
 -- --------------------------------------------------
 
@@ -117,7 +117,7 @@ CREATE TABLE [dbo].[Users] (
     [UserId] int IDENTITY(1,1) NOT NULL,
     [UserUId] uniqueidentifier  NOT NULL,
     [Email] nvarchar(50)  NOT NULL,
-    [Password] nvarchar(50)  NULL,
+    [Password] nvarchar(128)  NULL,
     [RoleId] int  NOT NULL,
     [DeleteDate] datetime  NULL
 );

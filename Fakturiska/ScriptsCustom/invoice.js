@@ -197,8 +197,6 @@ function prepareCreateModal() {
 }
 
 function setCompanyInfo(companyType, c) {
-    disableEnableFields(companyType, true);
-
     $(currentModalId).find("#" + companyType + "_" + "CompanyGuid").val(c.CompanyGuid);
     $(currentModalId).find("#" + companyType + "_" + "Name").val(c.Name);
     $(currentModalId).find("#" + companyType + "_" + "PhoneNumber").val(c.PhoneNumber);
@@ -211,6 +209,8 @@ function setCompanyInfo(companyType, c) {
     $(currentModalId).find("#" + companyType + "_" + "MIB").val(c.MIB);
     $(currentModalId).find("#" + companyType + "_" + "AccountNumber").val(c.AccountNumber);
     $(currentModalId).find("#" + companyType + "_" + "BankCode").val(c.BankCode); 
+
+    disableEnableFields(companyType, true);
 }
 
 function clearCompany(companyType) {
