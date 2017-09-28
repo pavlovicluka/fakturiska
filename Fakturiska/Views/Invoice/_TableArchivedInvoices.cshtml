@@ -40,7 +40,7 @@
                 @Html.DisplayNameFor(model => model.PayerName)
             </th>
             <th>
-
+                Izmeni/Štampaj/Obriši
             </th>
         </tr>
     </thead>
@@ -91,8 +91,8 @@
                 </td>
                 <td>
                     <a class="btn btn-info" onclick="editInvoice('@item.InvoiceGuid', 'true')"><span class="glyphicon glyphicon-edit"></span></a>
-                    <a class="btn btn-danger" onclick="deleteInvoice('@item.InvoiceGuid', @count, 'true')"><span class="glyphicon glyphicon-remove"></span></a>
                     <a class="btn btn-primary" onclick="printInvoice('@item.InvoiceGuid')"><span class="glyphicon glyphicon-print"></span></a>
+                    <a class="btn btn-danger" onclick="deleteInvoice('@item.InvoiceGuid', @count, 'true')"><span class="glyphicon glyphicon-remove"></span></a>
                 </td>
             </tr>       
         }

@@ -9,7 +9,23 @@ function setDataTables() {
     tableCompanies = $('#tableCompanies').DataTable({
         "dom": '<"pull-right"l>t<"pull-left"i><"pull-right"p>',
         paging: true,
-        language: { search: "" },
+        language: {
+            "sProcessing": "Procesiranje u toku...",
+            "sLengthMenu": "Prikaži _MENU_ elemenata",
+            "sZeroRecords": "Nije pronađen nijedan rezultat",
+            "sInfo": "Prikaz _START_ do _END_ od ukupno _TOTAL_ elemenata",
+            "sInfoEmpty": "Prikaz 0 do 0 od ukupno 0 elemenata",
+            "sInfoFiltered": "(filtrirano od ukupno _MAX_ elemenata)",
+            "sInfoPostFix": "",
+            "sSearch": "Pretraga:",
+            "sUrl": "",
+            "oPaginate": {
+                "sFirst": "Početna",
+                "sPrevious": "Prethodna",
+                "sNext": "Sledeća",
+                "sLast": "Poslednja"
+            }
+        },
         aoColumns: [
             { mData: 'Name' },
             { mData: 'PhoneNumber' },
@@ -38,16 +54,54 @@ function setDataTables() {
                 "responsivePriority": 1,
             },
             {
+                "targets": 1,
+                "render": $.fn.dataTable.render.ellipsis()
+            },
+            {
+                "targets": 2,
+                "render": $.fn.dataTable.render.ellipsis()
+            },
+            {
+                "targets": 3,
+                "render": $.fn.dataTable.render.ellipsis()
+            },
+            {
                 "targets": 4,
                 "render": function (data, type, row) {
-                    return '<a href="' + data + '">' + data + '</a>';
+                    dataShort = (type === 'display' && data.length > 10 ?
+                        data.substr(0, 10) + '…' :
+                        data);
+                    return '<a href="' + data + '">' + dataShort + '</a>';
                 }
             },
             {
                 "targets": 5,
                 "render": function (data, type, row) {
-                    return '<a href="mailto:' + data + '">' + data + '</a>';
+                    dataShort = (type === 'display' && data.length > 10 ?
+                        data.substr(0, 10) + '…' :
+                        data);
+                    return '<a href="mailto:' + data + '">' + dataShort + '</a>';
                 }
+            },
+            {
+                "targets": 6,
+                "render": $.fn.dataTable.render.ellipsis()
+            },
+            {
+                "targets": 7,
+                "render": $.fn.dataTable.render.ellipsis()
+            },
+            {
+                "targets": 6,
+                "render": $.fn.dataTable.render.ellipsis()
+            },
+            {
+                "targets": 9,
+                "render": $.fn.dataTable.render.ellipsis()
+            },
+            {
+                "targets": 10,
+                "render": $.fn.dataTable.render.ellipsis()
             },
             {
                 "targets": 11,
@@ -70,6 +124,14 @@ function setDataTables() {
         }
     });
 }
+
+$.fn.dataTable.render.ellipsis = function () {
+    return function (data, type, row) {
+        return type === 'display' && data.length > 8 ?
+            data.substr(0, 8) + '…' :
+            data;
+    }
+};
 
 function submitForm() {
     var companyForm = $("#companyForm");

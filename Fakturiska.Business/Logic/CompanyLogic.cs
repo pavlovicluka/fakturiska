@@ -275,19 +275,19 @@ namespace Fakturiska.Business.Logic
             else
             {
                 bool errors = false;
-                var com = dc.Companies.FirstOrDefault(c => c.Name.Trim().ToLower() == company.Name.Trim().ToLower() && c.CompanyUId != company.CompanyGuid);
+                var com = dc.Companies.FirstOrDefault(c => c.DeleteDate == null && c.Name.Trim().ToLower() == company.Name.Trim().ToLower() && c.CompanyUId != company.CompanyGuid);
                 if (com != null)
                 {
                     response.Add("company" + type + "NameExists", 1);
                     errors = true;
                 }
-                com = dc.Companies.FirstOrDefault(c => c.PersonalNumber.Trim().ToLower() == company.PersonalNumber.Trim().ToLower() && c.CompanyUId != company.CompanyGuid);
+                com = dc.Companies.FirstOrDefault(c => c.DeleteDate == null && c.PersonalNumber.Trim().ToLower() == company.PersonalNumber.Trim().ToLower() && c.CompanyUId != company.CompanyGuid);
                 if (com != null)
                 {
                     response.Add("company" + type + "PersonalNumberExists", 1);
                     errors = true;
                 }
-                com = dc.Companies.FirstOrDefault(c => c.PIB.Trim().ToLower() == company.PIB.Trim().ToLower() && c.CompanyUId != company.CompanyGuid);
+                com = dc.Companies.FirstOrDefault(c => c.DeleteDate == null && c.PIB.Trim().ToLower() == company.PIB.Trim().ToLower() && c.CompanyUId != company.CompanyGuid);
                 if (com != null)
                 {
                     response.Add("company" + type + "PIBExists", 1);

@@ -78,10 +78,10 @@ namespace Fakturiska.Business.Logic
                 if (u != null && u.Password == null)
                 {
                     u.Password = PasswordStorage.CreateHash(user.Password);
+                    dc.SaveChanges();
+                    var context = GlobalHost.ConnectionManager.GetHubContext<RealTime>();
+                    context.Clients.All.NewUser("Korisnik " + u.Email + " se prijavio prvi put na portal Fakturiška");
                 }
-                dc.SaveChanges();
-                var context = GlobalHost.ConnectionManager.GetHubContext<RealTime>();
-                context.Clients.All.NewUser("Korisnik " + u.Email + " se prijavio prvi put na portal Fakturiška");
             }
         }
 

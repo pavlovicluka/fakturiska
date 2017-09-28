@@ -37,7 +37,23 @@ function setDataTables() {
         "dom": '<"pull-right"l>t<"pull-left"i><"pull-right"p>',
         responsive: true,
         "autoWidth": false,
-        language: { search: "" },
+        language: {
+            "sProcessing": "Procesiranje u toku...",
+            "sLengthMenu": "Prikaži _MENU_ elemenata",
+            "sZeroRecords": "Nije pronađen nijedan rezultat",
+            "sInfo": "Prikaz _START_ do _END_ od ukupno _TOTAL_ elemenata",
+            "sInfoEmpty": "Prikaz 0 do 0 od ukupno 0 elemenata",
+            "sInfoFiltered": "(filtrirano od ukupno _MAX_ elemenata)",
+            "sInfoPostFix": "",
+            "sSearch": "Pretraga:",
+            "sUrl": "",
+            "oPaginate": {
+                "sFirst": "Početna",
+                "sPrevious": "Prethodna",
+                "sNext": "Sledeća",
+                "sLast": "Poslednja"
+            }
+        },
         "columnDefs": [
             {
                 "type": "date-eu", targets: 1
@@ -69,7 +85,23 @@ function setDataTablesArchive() {
         "dom": '<"pull-right"l>t<"pull-left"i><"pull-right"p>',
         responsive: true,
         "autoWidth": false,
-        bFilter: true,
+        language: {
+            "sProcessing": "Procesiranje u toku...",
+            "sLengthMenu": "Prikaži _MENU_ elemenata",
+            "sZeroRecords": "Nije pronađen nijedan rezultat",
+            "sInfo": "Prikaz _START_ do _END_ od ukupno _TOTAL_ elemenata",
+            "sInfoEmpty": "Prikaz 0 do 0 od ukupno 0 elemenata",
+            "sInfoFiltered": "(filtrirano od ukupno _MAX_ elemenata)",
+            "sInfoPostFix": "",
+            "sSearch": "Pretraga:",
+            "sUrl": "",
+            "oPaginate": {
+                "sFirst": "Početna",
+                "sPrevious": "Prethodna",
+                "sNext": "Sledeća",
+                "sLast": "Poslednja"
+            }
+        },
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
         "columnDefs": [
             {
@@ -292,6 +324,17 @@ function getInvoices() {
     });
 }
 
+function getArchivedInvoices() {
+    $.ajax({
+        url: "/Invoice/TableArchivedInvoices",
+        type: "GET",
+        success: function (result) {
+            $('#resultArchive').html(result);
+            setDataTablesArchive();
+        }
+    });
+}
+
 function createInvoice() {
     $.ajax({
         url: "/Invoice/CreateInvoice",
@@ -331,9 +374,9 @@ function deleteInvoice(invoiceId, rowId, archived) {
             data: { id: invoiceId },
             success: function (result) {
                 if (archived === "true") {
-                    $("#rowArchive" + rowId).remove();
+                    getArchivedInvoices();
                 } else {
-                    $("#row" + rowId).remove();
+                    getInvoices();
                 }
                 $("#deleteModal").modal('hide');
                 $('body').removeClass('modal-open');
@@ -349,7 +392,7 @@ function archiveInvoice(invoiceId, rowId) {
         type: "POST",
         data: { id: invoiceId },
         success: function (result) {
-            $("#row" + rowId).remove();
+            getInvoices();
             $('#resultArchive').html(result);
             setDataTablesArchive();
         }
