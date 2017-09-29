@@ -35,9 +35,9 @@
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     @identity.Name
                                 </a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <li><a class="dropdown-item" href="/Account/Logout" id="navbarLoggedIn_logOut">Odjavite se</a></li>
-                                    <li><a class="dropdown-item" href="/Account/ChangePassword">Promenite sifru</a></li>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="width:100%">
+                                    <li><a class="dropdown-item text-center" href="/Account/Logout" id="navbarLoggedIn_logOut">Odjavite se</a></li>
+                                    <li><a class="dropdown-item text-center" href="/Account/ChangePassword">Promenite sifru</a></li>
                                 </ul>
                             </li>
                         }
@@ -51,8 +51,8 @@
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("https://cdn.datatables.net/v/bs/dt-1.10.15/r-2.1.1/datatables.min.js")
-    @Scripts.Render("https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js")
     @Scripts.Render("https://cdn.datatables.net/plug-ins/1.10.16/sorting/date-eu.js")
+    @Scripts.Render("https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js")
     @Scripts.Render("https://code.jquery.com/ui/1.12.1/jquery-ui.min.js")
     @Scripts.Render("~/Scripts/dropzone.js")
     @Scripts.Render("~/Scripts/moment.js")

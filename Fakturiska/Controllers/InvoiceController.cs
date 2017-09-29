@@ -56,7 +56,7 @@ namespace Fakturiska.Controllers
                     switch (entry.Key)
                     {
                         case "companyReceiver":
-                            if(entry.Value == null || entry.Value == 0)
+                            if((entry.Value == null || entry.Value == 0) && !companyReceiver.CompanyEmpty)
                             {
                                 ModelState.AddModelError("CompanyReceiver", "Forma nije popunjena");
                             }
@@ -74,7 +74,7 @@ namespace Fakturiska.Controllers
                             ModelState.AddModelError("CompanyReceiver", "Ne možete menjati podatke pravnog lica");
                             break;
                         case "companyPayer":
-                            if (entry.Value == null || entry.Value == 0)
+                            if ((entry.Value == null || entry.Value == 0) && !companyPayer.CompanyEmpty)
                             {
                                 ModelState.AddModelError("CompanyPayer", "Forma nije popunjena");
                             }
@@ -82,7 +82,7 @@ namespace Fakturiska.Controllers
                         case "companyPayerNameExists":
                             ModelState.AddModelError("CompanyPayer.Name", "Ovo ime već postoji");
                             break;
-                        case "companyPayerrPersonalNumberExists":
+                        case "companyPayerPersonalNumberExists":
                             ModelState.AddModelError("CompanyPayer.PersonalNumber", "Ovaj lični broj već postoji");
                             break;
                         case "companyPayerPIBExists":
