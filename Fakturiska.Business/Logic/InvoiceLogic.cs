@@ -282,8 +282,8 @@ namespace Fakturiska.Business.Logic
             return path;
         }
 
-        static string SERVER_PATH = @"C:\Users\ING\source\repos\Fakturiska\Fakturiska\Files\";
-        //static string SERVER_PATH = @"D:\Mega\Documents\Svastara\Programiranje\ASP.NET\fakturiska\Fakturiska\Files\";
+        //static string SERVER_PATH = @"C:\Users\ING\source\repos\Fakturiska\Fakturiska\Files\";
+        static string SERVER_PATH = @"D:\Mega\Documents\Svastara\Programiranje\ASP.NET\fakturiska\Fakturiska\Files\";
         public static void ReceiveMail()
         {
             var context = GlobalHost.ConnectionManager.GetHubContext<RealTime>();
